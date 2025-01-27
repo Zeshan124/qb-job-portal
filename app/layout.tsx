@@ -10,9 +10,8 @@ const font = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Your Job Portal Name",
-  description:
-    "Find the best job opportunities across various industries on Your Job Portal Name.",
+  title: "Qist-Bazaar Job Portal",
+  description: "Find the best job opportunities across Qist-Bazaar",
 };
 
 export default function RootLayout({

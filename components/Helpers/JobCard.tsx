@@ -3,7 +3,6 @@ import Image from "next/image";
 import React from "react";
 import { BiMoney } from "react-icons/bi";
 import { FaMapLocation, FaRegBookmark } from "react-icons/fa6";
-import { ApplyButton } from "@/components/Helpers/ApplyButton"; // Adjust the import path as needed
 
 interface Props {
   job: Job;

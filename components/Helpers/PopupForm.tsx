@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-Modal.setAppElement("#__next");
-
-export const PopupForm = ({
+const PopupForm = ({
   isOpen,
   onRequestClose,
   onSubmit,
@@ -24,6 +22,10 @@ export const PopupForm = ({
     coverLetter: "",
     availability: "",
   });
+
+  useEffect(() => {
+    Modal.setAppElement("#__next");
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -150,3 +152,5 @@ export const PopupForm = ({
     </Modal>
   );
 };
+
+export default PopupForm;
