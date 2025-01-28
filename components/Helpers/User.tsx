@@ -4,6 +4,7 @@ import { Session } from "next-auth";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
+import Link from "next/link";
 
 interface Props {
   session: Session;
@@ -39,7 +40,7 @@ const User = ({ session }: Props) => {
               <button
                 onClick={() =>
                   signOut({
-                    callbackUrl: `${process.env.NEXT_PUBLIC_URL}/signup`,
+                    callbackUrl: `${process.env.NEXT_PUBLIC_URL}/`,
                   })
                 }
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -49,14 +50,22 @@ const User = ({ session }: Props) => {
             </li>
             {/* Add more menu items here in the future */}
             <li>
-              <button
-                onClick={() => {
-                  /* Add logic for other future menu items */
-                }}
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                Future Option
-              </button>
+              <Link href="/candidates">
+                {" "}
+                {/* Use Link for navigation */}
+                <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Candidates
+                </button>
+              </Link>
+            </li>
+            <li>
+              <Link href="/postedjobs">
+                {" "}
+                {/* Use Link for navigation */}
+                <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Posted Jobs
+                </button>
+              </Link>
             </li>
           </ul>
         </div>

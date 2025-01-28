@@ -13,7 +13,6 @@ const Player = dynamic(
 const Hero = () => {
   const [isClient, setIsClient] = useState(false);
 
-  // Ensure this component is only rendered on the client
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -53,14 +52,13 @@ const Hero = () => {
               </button>
             </div>
           </div>
-          {/* Lottie animation */}
           <div className="hidden lg:block">
             {isClient && (
               <Player
                 autoplay
                 loop
                 src={animationData}
-                style={{ height: "550px", width: "700px" }}
+                style={{ height: "570px", width: "700px" }}
                 keepLastFrame
               />
             )}

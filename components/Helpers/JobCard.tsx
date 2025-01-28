@@ -58,10 +58,6 @@ export const JobCard = ({ job }: Props) => {
       <div className="absolute z-40 top-4 right-4">
         <FaRegBookmark className="hover:text-orange-600" />
       </div>
-
-      {/* <div className="mt-4">
-        <ApplyButton />
-      </div> */}
     </div>
   );
 };

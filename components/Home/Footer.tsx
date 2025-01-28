@@ -6,6 +6,7 @@ interface Props {
   bgColor: string;
   Icon: IconType;
 }
+
 const Footer = () => {
   const aboutItems = ["Home", "About", "Categories", "Contact"];
   const quickLinkItems = [
@@ -14,6 +15,7 @@ const Footer = () => {
     "How To Apply",
     "Resume",
   ];
+
   return (
     <div className="pt-20 pb-12 bg-black">
       <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-8 border-b-2 border-white border-opacity-10">
@@ -34,9 +36,9 @@ const Footer = () => {
             <SocialIcon bgColor={"pink"} Icon={FaInstagram} />
           </div>
         </div>
-        {/* 2nd part of footer  */}
+        {/* 2nd part of footer */}
         <FooterSection title={"QuickLinks"} data={aboutItems} />
-        {/* 3rd part of footer  */}
+        {/* 3rd part of footer */}
         <FooterSection title={"Terms & Updates"} data={quickLinkItems} />
         {/* 4th part of footer */}
         <FooterSection
@@ -44,10 +46,26 @@ const Footer = () => {
           data={["+01234567", "example@gmail.com", "Jami Commercial, DHA"]}
         />
       </div>
+      {/* Copyright Section */}
+      <div className="text-center mt-8">
+        <p className="text-sm text-white text-opacity-70 p-2">
+          Copyright © 2025{" "}
+          <a
+            href="https://qistbazaar.pk/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:underline text-[#8570C5]"
+          >
+            Qist Bazaar
+          </a>{" "}
+          Private Limited. All Rights Reserved.
+        </p>
+      </div>
     </div>
   );
 };
-// COMPONENT FOR SECIAL ICON
+
+// COMPONENT FOR SOCIAL ICON
 const SocialIcon = ({ bgColor, Icon }: Props) => (
   <div
     className={`w-10 h-10 bg-${bgColor}-600 rounded-full flex items-center justify-center flex-col`}
@@ -55,10 +73,12 @@ const SocialIcon = ({ bgColor, Icon }: Props) => (
     <Icon className="text-white" />
   </div>
 );
+
 interface SectionProps {
   data: String[];
   title: String;
 }
+
 // COMPONENT FOR FOOTER SECTION
 const FooterSection = ({ data, title }: SectionProps) => (
   <div>
@@ -73,4 +93,5 @@ const FooterSection = ({ data, title }: SectionProps) => (
     ))}
   </div>
 );
+
 export default Footer;
