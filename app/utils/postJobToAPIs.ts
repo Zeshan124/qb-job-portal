@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { getSession } from 'next-auth/react';
+import axios from "axios";
 
 export type JobDetails = {
   title: string;
@@ -9,34 +8,21 @@ export type JobDetails = {
 };
 
 export default async function postJobToAPIs(jobDetails: JobDetails) {
-  const session = await getSession();
-  const { apiKeyIndeed, apiKeyLinkedIn } = (session?.user as any)?.apiKeys || {};
-
-
-  if (!apiKeyIndeed || !apiKeyLinkedIn) {
-    throw new Error('API keys not found');
-  }
-
   try {
-    // Post to Indeed API
-    await axios.post('https://api.indeed.com/jobposting', jobDetails, {
+    // Post to your backend API
+    const response = await axios.post("http://localhost:4000/apis/job/add", jobDetails, {
       headers: {
-        'Authorization': `Bearer ${apiKeyIndeed}`,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
-    // Post to LinkedIn API
-    await axios.post('https://api.linkedin.com/jobposting', jobDetails, {
-      headers: {
-        'Authorization': `Bearer ${apiKeyLinkedIn}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    return { success: true };
+    // Check if the response indicates success
+    if (response.status === 201 || response.status === 200) {
+      return { success: true };
+    } else {
+      return { success: false, error: `Unexpected status code: ${response.status}` };
+    }
   } catch (error) {
     return { success: false, error: (error as Error).message };
-
   }
 }

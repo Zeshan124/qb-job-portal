@@ -10,7 +10,7 @@ interface Props {
 
 export const JobCard = ({ job }: Props) => {
   return (
-    <div className="relative transition-transform duration-300 hover:scale-105 border-gray-600 rounded-lg border-2 border-opacity-20 p-1 md:p-2">
+    <div className="relative transition-transform duration-300 hover:scale-105 border-gray-600 rounded-lg border-2 border-opacity-20 p-1 md:p-2 md:mb-2">
       <div className="flex items-center space-x-6">
         {/* Image */}
         <div>

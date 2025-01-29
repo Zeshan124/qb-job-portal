@@ -1,53 +1,51 @@
+// components/Home/AdminLogin.tsx
 "use client";
 
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import signupImage from "@/public/images/chair.jpg";
 import Image from "next/image";
+import { authenticate } from "../../app/utils/action";
 
 const AdminLogin = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const username = formData.get("username") as string;
-    const password = formData.get("password") as string;
-
-    const res = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-    });
-
-    setLoading(false);
-
-    if (res?.error) {
-      setError(res.error);
-    } else {
-      router.push("/"); // Redirect after successful login
+  const handleLogin = async () => {
+    try {
+      const result = await authenticate({ username, password });
+      if (result) {
+        router.push("/");
+      }
+    } catch (error) {
+      alert("Login failed. Please check your credentials.");
     }
   };
 
   return (
     <div className="h-[100vh] flex flex-col items-center justify-center">
-
-      {/* image */}
       <Image src={signupImage} alt="signupImage" width={400} height={200} />
-      {/* button */}
+      <input
+        type="username"
+        placeholder="username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className="px-4 py-2 mt-2 border rounded"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="px-4 py-2 mt-2 border rounded"
+      />
       <button
         type="submit"
-        onClick={() => {
-          signIn("google", { callbackUrl: process.env.NEXT_PUBLIC_URL });
-        }}
+        onClick={handleLogin}
         className="px-12 py-3 mt-[2rem] bg-purple-700 hover:bg-purple-900 transition-colors duration-300 font-semibold text-white rounded-lg"
       >
-        Sign Up Now
+        Log In
       </button>
     </div>
   );

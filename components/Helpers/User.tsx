@@ -1,35 +1,41 @@
+// components/Helpers/User.tsx
 "use client";
 
-import { Session } from "next-auth";
 import Image from "next/image";
-import { signOut } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
 
-interface Props {
-  session: Session;
+interface UserProps {
+  user: {
+    userName: string;
+    role: string;
+  };
 }
 
-const User = ({ session }: Props) => {
+const User: React.FC<UserProps> = ({ user }) => {
   const [showMenu, setShowMenu] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = `${process.env.NEXT_PUBLIC_URL_API}/`;
+  };
 
   return (
     <div className="relative">
-      {session?.user?.image && (
+      {user && (
         <div
           onClick={() => setShowMenu(!showMenu)}
           className="flex flex-col items-center justify-center cursor-pointer"
         >
           <Image
-            src={session.user.image}
+            src="/images/user-avatar.png"
             alt="logged_img"
             className="rounded-full mt-3"
             width={50}
             height={50}
           />
-          <span className="hidden sm:block sm:text-xs">
-            {session?.user?.name}
-          </span>
+          <span className="hidden sm:block sm:text-xs">{user.userName}</span>
         </div>
       )}
 
@@ -38,21 +44,14 @@ const User = ({ session }: Props) => {
           <ul className="py-1">
             <li>
               <button
-                onClick={() =>
-                  signOut({
-                    callbackUrl: `${process.env.NEXT_PUBLIC_URL}/`,
-                  })
-                }
+                onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Logout
               </button>
             </li>
-            {/* Add more menu items here in the future */}
             <li>
               <Link href="/candidates">
-                {" "}
-                {/* Use Link for navigation */}
                 <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Candidates
                 </button>
@@ -60,8 +59,6 @@ const User = ({ session }: Props) => {
             </li>
             <li>
               <Link href="/postedjobs">
-                {" "}
-                {/* Use Link for navigation */}
                 <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Posted Jobs
                 </button>

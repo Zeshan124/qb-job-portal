@@ -17,14 +17,15 @@ export default function JobPosting() {
     e.preventDefault();
     const response = await postJobToAPIs(jobDetails);
     if (response.success) {
+      alert("Job posted successfully!");
       router.push("/");
     } else {
-      alert(response.error);
+      alert(`Error: ${response.error}`);
     }
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-8 h-[90vh] mt-10">
       <div className="bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold text-center mb-6 text-indigo-600">
           Post a Job
