@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
-import ClientProvider from "@/components/HOC/ClientProvider";
-import { Nav, Footer, ScrollToTop } from "@/paths";
 import { UserProvider } from "@/contexts/UserContext";
+import ClientLayout from "@/components/HOC/ClientLayout"; // Import the client layout
 
 const font = Plus_Jakarta_Sans({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -24,10 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body id="__next" className={font.className}>
         <UserProvider>
-          <Nav />
-          {children}
-          <ScrollToTop />
-          <Footer />
+          <ClientLayout>{children}</ClientLayout>
         </UserProvider>
       </body>
     </html>

@@ -5,14 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import LogoImage from "@/public/images/QB-logo.webp";
 import User from "../Helpers/User";
-import { useUser } from "../../contexts/UserContext";
+import { useUser } from "@/contexts/UserContext"; // Import UserContext
 
 const Nav = () => {
-  const { user } = useUser();
+  const { user } = useUser(); // Get user from UserContext
 
   return (
     <div className="h-[13vh] shadow-md">
-      <div className="w-[90%] md:w-[80%] h-full mx-auto flex items-center justify-between">
+      <div className="w-[90%] md:w-[80%] p-2 h-full mx-auto flex items-center justify-between">
         <div>
           <Link href="/">
             <div className="w-[100px] h-[45px] md:w-[180px] md:h-[50px]">
@@ -25,11 +25,11 @@ const Nav = () => {
         {user && user.role === "superadmin" && (
           <div className="flex space-x-4 items-center">
             <User user={user} />
-            <Link href="/jobposting">
+            {/* <Link href="/jobposting">
               <button className="px-4 py-1.5 text-[14px] sm:text-[16px] bg-[#8570C5] text-white font-semibold rounded-lg hover:bg-purple-500 transition-colors">
                 Post a Job
               </button>
-            </Link>
+            </Link> */}
           </div>
         )}
       </div>

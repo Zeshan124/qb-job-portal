@@ -1,49 +1,50 @@
-// context/UserContext.tsx
 "use client";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-interface UserType {
-  token: string;
-  userName: string;
-  roleID: number;
+interface User {
+  id: string;
+  name: string;
+  email: string;
   role: string;
-  userId: number;
+  avatar?: string;
 }
 
 interface UserContextType {
-  user: UserType | null;
-  setUser: (user: UserType | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
+  logout: () => void; // Add logout function
 }
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType>({
+  user: null,
+  setUser: () => {},
+  logout: () => {}, // Default empty function
+});
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
+  // Sync user state with localStorage on initial load
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-    setLoading(false);
   }, []);
 
-  if (loading) {
-    return null; // or a loading spinner
-  }
+  // Logout function to clear user state and localStorage
+  const logout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token"); // If applicable
+    setUser(null); // Update state to trigger re-render
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, logout }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error("useUser must be used within a UserProvider");
-  }
-  return context;
-};
+export const useUser = () => useContext(UserContext);

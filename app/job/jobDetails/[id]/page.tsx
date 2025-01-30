@@ -19,14 +19,14 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
         </div>
         {session && <ApplyButton />}
         {!session && (
-          <Link href={"/signup"}>
+          // <Link href={"/signup"}>
             <button
               type="button"
               className="px-8 py-3 bg-emerald-600 rounded-lg text-white"
             >
-              Signup
+              Apply Now
             </button>
-          </Link>
+          // </Link>
         )}
       </div>
       <div className="mt-16 w-[80%] mx-auto">

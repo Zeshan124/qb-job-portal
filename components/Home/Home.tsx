@@ -1,5 +1,5 @@
 import React from "react";
-import { Hero, JobCategory } from "../../paths";
+import { Footer, Hero, JobCategory } from "../../paths";
 import FeatureJobs from "./FeatureJobs";
 import OurPartner from "./OurPartner";
 
@@ -10,6 +10,7 @@ const Home = () => {
       {/* <JobCategory /> */}
       <FeatureJobs />
       {/* <OurPartner /> */}
+      <Footer />
     </div>
   );
 };

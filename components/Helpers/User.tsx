@@ -1,24 +1,39 @@
-// components/Helpers/User.tsx
 "use client";
 
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { message } from "antd";
+import { useUser } from "@/contexts/UserContext"; // Import UserContext to update user state
 
 interface UserProps {
   user: {
-    userName: string;
+    userName?: string;
     role: string;
   };
 }
 
 const User: React.FC<UserProps> = ({ user }) => {
+  const router = useRouter();
+  const { setUser } = useUser(); // Get setUser function to update user state
   const [showMenu, setShowMenu] = useState(false);
 
   const handleLogout = () => {
+    // Remove user data from local storage
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = `${process.env.NEXT_PUBLIC_URL_API}/`;
+
+    // Update user state in context (Navbar will hide Avatar)
+    setUser(null);
+
+    // Show success message using Ant Design
+    message.success("You have successfully logged out.");
+
+    // Redirect to /admin after a slight delay for better UX
+    setTimeout(() => {
+      router.push("/admin");
+    }, 1500);
   };
 
   return (
@@ -50,20 +65,13 @@ const User: React.FC<UserProps> = ({ user }) => {
                 Logout
               </button>
             </li>
-            <li>
-              <Link href="/candidates">
+            {/* <li>
+              <Link href="/portal">
                 <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Candidates
+                  Portal
                 </button>
               </Link>
-            </li>
-            <li>
-              <Link href="/postedjobs">
-                <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                  Posted Jobs
-                </button>
-              </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       )}
