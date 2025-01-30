@@ -1,8 +1,20 @@
 // components/Dashboard/Candidates.tsx
-import { Table } from "antd";
+import React, { useState } from "react";
+import { Table, Dropdown, Menu, Button } from "antd";
 import "antd/dist/reset.css"; // For newer versions
 
 const Candidates = () => {
+  // State to manage the status of each candidate
+  const [status, setStatus] = useState<Record<string, string>>({});
+
+  // Handle status change
+  const handleStatusChange = (key: string, newStatus: string) => {
+    setStatus((prev) => ({
+      ...prev,
+      [key]: newStatus,
+    }));
+  };
+
   const columns = [
     {
       title: "Name",
@@ -34,6 +46,31 @@ const Candidates = () => {
       dataIndex: "availability",
       key: "availability",
     },
+    {
+      title: "Status",
+      key: "status",
+      render: (_: unknown, record: { key: string }) => {
+        const menu = (
+          <Menu
+            onClick={({ key }) => handleStatusChange(record.key, key)}
+            items={[
+              { key: "Approved", label: "Approved" },
+              { key: "Rejected", label: "Rejected" },
+              { key: "On Hold", label: "On Hold" },
+            ]}
+          />
+        );
+
+        return (
+          <Dropdown overlay={menu} trigger={["click"]}>
+            <Button>
+              {status[record.key] || "Select Status"}{" "}
+              {/* Show selected status or default text */}
+            </Button>
+          </Dropdown>
+        );
+      },
+    },
   ];
 
   const data = [
@@ -45,6 +82,15 @@ const Candidates = () => {
       resume: "Resume.pdf",
       coverLetter: "CoverLetter.docx",
       availability: "2025-02-01 10:00 AM",
+    },
+    {
+      key: "2",
+      name: "Jane Smith",
+      email: "jane.smith@example.com",
+      phoneNumber: "987-654-3210",
+      resume: "Resume.pdf",
+      coverLetter: "CoverLetter.docx",
+      availability: "2025-03-01 02:00 PM",
     },
     // Add more data here
   ];
