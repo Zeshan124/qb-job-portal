@@ -16,25 +16,22 @@ import Jobs from "@/components/Dashboard/Jobs";
 const PortalPage = () => {
   const router = useRouter();
 
-  // Check if the user is logged in
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (!user) {
-      // Show a popup message if the user is not logged in
       Modal.error({
         title: "Unauthorized Access",
         content:
           "You are not authorized to access this page. Redirecting to login...",
-        onOk: () => router.push("/admin"), // Redirect to the login page
+        onOk: () => router.push("/admin"),
       });
     }
   }, [router]);
 
-  // Render the portal page only if the user is logged in
   const renderComponent = (activeComponent: string) => {
     const user = localStorage.getItem("user");
     if (!user) {
-      return null; // Don't render anything if the user is not logged in
+      return null;
     }
 
     switch (activeComponent) {
@@ -57,10 +54,9 @@ const PortalPage = () => {
     }
   };
 
-  // Check if the user is logged in before rendering the layout
   const user = localStorage.getItem("user");
   if (!user) {
-    return null; // Don't render anything if the user is not logged in
+    return null;
   }
 
   return <DashboardLayout>{renderComponent}</DashboardLayout>;
