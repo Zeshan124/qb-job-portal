@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import animationData from "@/public/animations/Animation.json";
+import JobData from "@/data";
+import { JobCard } from "@/paths";
+
 
 // Dynamically import Player with SSR disabled
 const Player = dynamic(
@@ -12,10 +15,26 @@ const Player = dynamic(
 
 const Hero = () => {
   const [isClient, setIsClient] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredJobs, setFilteredJobs] = useState(JobData);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Handle the search query change
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Filter the jobs based on search query
+  const handleSearch = () => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = JobData.filter((job) =>
+      job.title.toLowerCase().includes(lowerCaseQuery)
+    );
+    setFilteredJobs(filtered);
+  };
 
   return (
     <div className="pt-16 md:pt-20 pb-8 md:pb-12">
@@ -36,21 +55,37 @@ const Hero = () => {
               dream job has never been easier.
             </p>
             {/* Search box */}
-            <div className="mt-[1.5rem]">
+            <div className="mt-[1.5rem] flex">
               <input
                 className="w-[60%] md:w-[70%] lg:w-[75%] px-5 py-4 outline-none rounded-l-md bg-gray-200"
                 placeholder="eg:Frontend developer"
                 title="search box"
                 type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
               <button
                 title="Press to Search"
                 type="button"
+                onClick={handleSearch}
                 className="px-5 py-4 outline-none rounded-r-md bg-[#8570C5] text-white"
               >
                 Search
               </button>
             </div>
+            {/* Search Results */}
+            {filteredJobs.length > 0 && (
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {filteredJobs.map((job) => (
+                  <JobCard key={job.id} job={job} />
+                ))}
+              </div>
+            )}
+            {filteredJobs.length === 0 && (
+              <p className="mt-4 text-center text-xl text-gray-600">
+                No jobs found for 
+              </p>
+            )}
           </div>
           <div className="hidden lg:block">
             {isClient && (

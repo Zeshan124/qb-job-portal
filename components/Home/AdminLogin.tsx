@@ -44,10 +44,20 @@ const AdminLogin = () => {
     <div className="h-screen flex items-center justify-center bg-gray-100 p-4">
       <Card className="shadow-lg rounded-lg p-2 w-full max-w-sm bg-white">
         <div className="flex justify-center mb-4">
-          <Image src="/images/chair.jpg" alt="Login" width={170} height={120} className="rounded" />
+          <Image
+            src="/images/chair.jpg"
+            alt="Login"
+            width={170}
+            height={120}
+            className="rounded"
+          />
         </div>
-        <Title level={3} className="text-center text-gray-800">Admin Login</Title>
-        <Text type="secondary" className="block text-center mb-4">Sign in to access your dashboard</Text>
+        <Title level={3} className="text-center text-gray-800">
+          Admin Login
+        </Title>
+        <Text type="secondary" className="block text-center mb-4">
+          Sign in to access your dashboard
+        </Text>
 
         <Input
           prefix={<UserOutlined />}

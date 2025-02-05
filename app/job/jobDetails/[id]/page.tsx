@@ -1,14 +1,10 @@
 import JobData, { Job } from "@/data";
-import { authOptions } from "@/Auth";
 import { ApplyButton, JobCard } from "@/paths";
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 import React from "react";
 
-const JobDeatils = async ({ params }: { params: { id: string } }) => {
+const JobDetails = ({ params }: { params: { id: string } }) => {
   const getJobDetail = JobData?.find((job) => job.id.toString() === params.id);
-  console.log(getJobDetail);
-  const session = await getServerSession(authOptions);
   const relatedJobs = JobData?.slice(0, 4);
 
   return (
@@ -17,17 +13,8 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
         <div className="flex-[0.7]">
           {getJobDetail && <JobCard job={getJobDetail} />}
         </div>
-        {session && <ApplyButton />}
-        {!session && (
-          // <Link href={"/signup"}>
-            <button
-              type="button"
-              className="px-8 py-3 bg-emerald-600 rounded-lg text-white"
-            >
-              Apply Now
-            </button>
-          // </Link>
-        )}
+        {/* Always show the ApplyButton */}
+        <ApplyButton />
       </div>
       <div className="mt-16 w-[80%] mx-auto">
         <h1 className="text-xl font-semibold">Job Description</h1>
@@ -38,7 +25,7 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
           laboriosam corporis dolorum animi nihil!
         </p>
         <div className="mt-10 ">
-          <h1 className="text-xl font-semibold">Key Resposibilities</h1>
+          <h1 className="text-xl font-semibold">Key Responsibilities</h1>
           <p className="mt-4 text-black text-opacity-70">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit.
             Perferendis deleniti blanditiis aliquid voluptatem, saepe autem
@@ -47,7 +34,7 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
           </p>
         </div>
         <div className="mt-10 ">
-          <h1 className="text-xl font-semibold">Key Resposibilities</h1>
+          <h1 className="text-xl font-semibold">Key Responsibilities</h1>
           <ul className="mt-4">
             <li className="text-black text-opacity-70">React JS</li>
             <li className="text-black text-opacity-70">HTML5</li>
@@ -74,4 +61,4 @@ const JobDeatils = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default JobDeatils;
+export default JobDetails;
