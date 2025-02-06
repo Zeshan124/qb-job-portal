@@ -3,7 +3,11 @@
 import { usePathname } from "next/navigation";
 import { Nav, ScrollToTop } from "@/paths";
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+export default function ClientLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
 
   return (

@@ -28,7 +28,20 @@ const AdminLogin = () => {
     try {
       const result = await authenticate({ username, password });
       if (result) {
-        localStorage.setItem("user", JSON.stringify(result));
+        if (typeof window !== "undefined") {
+          console.log("Received Token from API:", result.token);
+          
+          if (!result.token) {
+            message.error("Login failed: No token received!");
+            return;
+          }
+        
+          localStorage.setItem("token", result.token); // Store token in localStorage
+          localStorage.setItem("user", JSON.stringify(result));
+        
+          console.log("Stored Token in localStorage:", localStorage.getItem("token"));
+        }
+        
         setUser(result);
         message.success("Login successful! Redirecting...");
         setTimeout(() => router.push("/portal"), 100);

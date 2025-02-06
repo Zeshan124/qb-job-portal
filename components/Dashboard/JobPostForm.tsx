@@ -1,116 +1,111 @@
-// components/Dashboard/JobPostForm.tsx
+"use client";
+
 import React, { useState } from "react";
+import { Form, Input, InputNumber, Button, Select, message } from "antd";
+import { postJob } from "@/app/utils/api";
 
-const JobPostForm = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    location: "",
-    salary: "",
-    company: "",
-  });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+const { TextArea } = Input;
+const { Option } = Select;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Job Post Data:", formData);
-    alert("Job posted successfully!");
-    // You can add an API call here to submit the form data
+const JobPostForm: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = async (values: {
+    jobTitle: string;
+    jobDescription: string;
+    location: string;
+    minSalary: number;
+    maxSalary: number;
+    categoryID: number;
+  }) => {
+    setLoading(true);
+
+    try {
+      await postJob(values); // Call API
+      message.success("Job posted successfully!");
+    } catch (error) {
+      message.error(`Failed to post job: ${(error as Error).message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-lg">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Post a New Job Opportunity
-      </h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Job Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            placeholder="Enter job title"
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Job Description
-          </label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Provide a detailed job description"
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            rows={6}
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Location
-          </label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            placeholder="Enter job location"
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Salary
-          </label>
-          <input
-            type="text"
-            name="salary"
-            value={formData.salary}
-            onChange={handleChange}
-            placeholder="Enter salary range or amount"
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Company
-          </label>
-          <input
-            type="text"
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            placeholder="Enter company name"
-            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
-        >
+    <Form layout="vertical" onFinish={onFinish}>
+      <Form.Item
+        label="Job Title"
+        name="jobTitle"
+        rules={[{ required: true, message: "Please enter the job title" }]}
+      >
+        <Input placeholder="Enter job title" />
+      </Form.Item>
+
+      <Form.Item
+        label="Job Description"
+        name="jobDescription"
+        rules={[{ required: true, message: "Please enter the job description" }]}
+      >
+        <TextArea rows={4} placeholder="Enter job description" />
+      </Form.Item>
+
+      <Form.Item
+        label="Location"
+        name="location"
+        rules={[{ required: true, message: "Please enter the job location" }]}
+      >
+        <Input placeholder="Enter location" />
+      </Form.Item>
+
+      <Form.Item
+        label="Minimum Salary"
+        name="minSalary"
+        rules={[
+          { required: true, message: "Please enter the minimum salary" },
+          { type: "number", min: 0, message: "Salary must be a positive number" },
+        ]}
+      >
+        <InputNumber
+          placeholder="Enter minimum salary"
+          style={{ width: "100%" }}
+          min={0}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label="Maximum Salary"
+        name="maxSalary"
+        rules={[
+          { required: true, message: "Please enter the maximum salary" },
+          { type: "number", min: 0, message: "Salary must be a positive number" },
+        ]}
+      >
+        <InputNumber
+          placeholder="Enter maximum salary"
+          style={{ width: "100%" }}
+          min={0}
+        />
+      </Form.Item>
+
+      <Form.Item
+        label="Category"
+        name="categoryID"
+        rules={[{ required: true, message: "Please select a category" }]}
+      >
+        <Select placeholder="Select category">
+          <Option value={1}>Software Engineer</Option>
+          <Option value={2}>Product Manager</Option>
+          <Option value={3}>Sales</Option>
+          {/* Add more categories here */}
+        </Select>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading} block>
           Post Job
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 

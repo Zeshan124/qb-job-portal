@@ -13,7 +13,7 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/contexts/UserContext"; // Import UserContext
+import { useUser } from "@/contexts/UserContext";
 
 interface DashboardLayoutProps {
   children: (activeComponent: string) => ReactNode;
@@ -23,7 +23,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [activeComponent, setActiveComponent] = useState("dashboard");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
-  const { logout } = useUser(); // Use the logout function from UserContext
+  const { logout } = useUser();
 
   const handleLogout = () => {
     Modal.confirm({
@@ -32,7 +32,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       okText: "Yes, Logout",
       cancelText: "Cancel",
       onOk: () => {
-        logout(); // Use the logout function from UserContext
+        logout();
         message.success("You have successfully logged out.");
         router.push("/admin");
       },

@@ -1,63 +1,123 @@
-// components/Dashboard/JobsTable.tsx
 "use client";
 
-import React, { useState } from "react";
-import { Table, Button, Modal, message, Input } from "antd";
-import { EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Modal, message, Input, Spin, Alert, Form } from "antd";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { getJobs, deleteJob, updateJob } from "@/app/utils/api";
 
 interface Job {
-  id: number;
-  title: string;
-  description: string;
-  postedDate: string;
+  jobID: number;
+  jobTitle: string;
+  jobDescription: string;
+  location: string;
+  minSalary: number | null;
+  maxSalary: number | null;
+  categoryName: string;
+}
+
+interface Job {
+  jobID: number;
+  jobTitle: string;
+  jobDescription: string;
+  location: string;
+  minSalary: number | null;
+  maxSalary: number | null;
+  categoryName: string;
 }
 
 const JobsTable: React.FC = () => {
-  const [jobs, setJobs] = useState<Job[]>([
-    {
-      id: 1,
-      title: "Software Engineer",
-      description: "Develop and maintain web applications.",
-      postedDate: "2025-01-01",
-    },
-    {
-      id: 2,
-      title: "Product Manager",
-      description: "Oversee product development lifecycle.",
-      postedDate: "2025-01-15",
-    },
-    {
-      id: 3,
-      title: "Data Scientist",
-      description: "Analyze and interpret complex data.",
-      postedDate: "2025-02-01",
-    },
-    // Add more mock data here...
-  ]);
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [deleteJobId, setDeleteJobId] = useState<number | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
 
-  // Handle Delete
-  const handleDelete = (id: number) => {
-    setIsDeleting(true);
-    setTimeout(() => {
-      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+  const [deleteJobId, setDeleteJobId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingJob, setEditingJob] = useState<Job | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const [form] = Form.useForm();
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const jobsData = await getJobs();
+        setJobs(jobsData);
+      } catch (error) {
+        setError("Failed to fetch job data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  // Handle Delete Job
+  // ✅ Handle Delete Job
+  const handleDelete = async () => {
+    if (!deleteJobId) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteJob(deleteJobId);
+      setJobs((prevJobs) => prevJobs.filter((job) => job.jobID !== deleteJobId));
+      message.success("Job deleted successfully!");
+    } catch (error) {
+      message.error("Failed to delete job. Please try again.");
+    } finally {
       setIsDeleting(false);
       setDeleteJobId(null);
-      message.success("Job deleted successfully!");
-    }, 1000);
+    }
   };
 
-  // Open Delete Confirmation Modal
-  const confirmDelete = (id: number) => {
+   // ✅ Open Delete Confirmation Modal
+   const confirmDelete = (id: number) => {
     setDeleteJobId(id);
   };
 
-  // Close Delete Modal
+  // ✅ Close Delete Modal
   const closeModal = () => {
     setDeleteJobId(null);
+  };
+
+  // Handle Edit Job Click
+  const handleEditClick = (job: Job) => {
+    setEditingJob(job);
+    setEditModalVisible(true);
+    form.setFieldsValue(job);
+  };
+
+  // Handle Job Update
+  const handleUpdateJob = async () => {
+    if (!editingJob) return;
+
+    try {
+      setEditLoading(true);
+      const values = form.getFieldsValue();
+      await updateJob(editingJob.jobID, values);
+
+      // Update job list
+      setJobs((prevJobs) =>
+        prevJobs.map((job) =>
+          job.jobID === editingJob.jobID ? { ...job, ...values } : job
+        )
+      );
+
+      message.success("Job updated successfully!");
+      setEditModalVisible(false);
+      setEditingJob(null);
+    } catch (error) {
+      message.error("Failed to update job. Please try again.");
+    } finally {
+      setEditLoading(false);
+    }
   };
 
   // Handle Search
@@ -68,64 +128,53 @@ const JobsTable: React.FC = () => {
   // Filter jobs based on search text
   const filteredJobs = jobs.filter(
     (job) =>
-      job.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchText.toLowerCase())
+      job.jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
+      job.jobDescription.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const columns = [
     {
       title: "Job Title",
-      dataIndex: "title",
-      key: "title",
-      sorter: (a: Job, b: Job) => a.title.localeCompare(b.title),
+      dataIndex: "jobTitle",
+      key: "jobTitle",
+      sorter: (a: Job, b: Job) => a.jobTitle.localeCompare(b.jobTitle),
     },
     {
       title: "Description",
-      dataIndex: "description",
-      key: "description",
-      ellipsis: true, // Truncate long descriptions
+      dataIndex: "jobDescription",
+      key: "jobDescription",
+      ellipsis: true,
     },
     {
-      title: "Posted Date",
-      dataIndex: "postedDate",
-      key: "postedDate",
-      sorter: (a: Job, b: Job) =>
-        new Date(a.postedDate).getTime() - new Date(b.postedDate).getTime(),
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
     },
     {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: Job) => (
-        <div className="flex space-x-2">
-          <Button
-            type="primary"
-            icon={<EditOutlined />}
-            onClick={() => message.info(`Editing job: ${record.title}`)}
-          >
-            Edit
-          </Button>
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => confirmDelete(record.id)}
-          >
-            Delete
-          </Button>
-        </div>
-      ),
+      title: "Category",
+      dataIndex: "categoryName",
+      key: "categoryName",
     },
+    {
+        title: "Actions",
+        key: "actions",
+        render: (_: any, record: Job) => (
+          <div className="flex space-x-2">
+            <Button type="primary" icon={<EditOutlined />} onClick={() => handleEditClick(record)}>
+              Edit
+            </Button>
+            <Button danger icon={<DeleteOutlined />} onClick={() => confirmDelete(record.jobID)}>
+              Delete
+            </Button>
+          </div>
+        ),
+      },
   ];
 
   return (
     <div>
       <div className="flex justify-between mb-4">
         <h2 className="text-xl font-bold">Job Postings</h2>
-        {/* <Button
-          type="primary"
-          onClick={() => message.info("Add Job functionality coming soon!")}
-        >
-          Add Job
-        </Button> */}
       </div>
 
       {/* Search Bar */}
@@ -144,20 +193,42 @@ const JobsTable: React.FC = () => {
       <Table
         columns={columns}
         dataSource={filteredJobs}
-        rowKey="id"
+        rowKey="jobID"
         pagination={{ pageSize: 5 }}
         bordered
       />
 
-      {/* Delete Confirmation Modal */}
-      <Modal
+       {/* ✅ Delete Confirmation Modal */}
+       <Modal
         title="Confirm Deletion"
-        visible={deleteJobId !== null}
-        onOk={() => deleteJobId && handleDelete(deleteJobId)}
+        open={deleteJobId !== null}
+        onOk={handleDelete}  // ✅ Call handleDelete when user clicks "OK"
         onCancel={closeModal}
         confirmLoading={isDeleting}
       >
         <p>Are you sure you want to delete this job?</p>
+      </Modal>
+
+      {/* Edit Job Modal */}
+      <Modal
+        title="Edit Job"
+        open={editModalVisible}
+        onOk={handleUpdateJob}
+        onCancel={() => setEditModalVisible(false)}
+        confirmLoading={editLoading}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="Job Title"
+            name="jobTitle"
+            rules={[{ required: true, message: "Job title is required" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item label="Job Description" name="jobDescription">
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );

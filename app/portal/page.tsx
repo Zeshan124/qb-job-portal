@@ -1,9 +1,8 @@
-// app/portal/page.tsx
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Modal } from "antd";
+import { Modal, Spin } from "antd";
 import Dashboard from "@/components/Dashboard/Dashboard";
 import Users from "@/components/Dashboard/Users";
 import Settings from "@/components/Dashboard/Settings";
@@ -11,32 +10,49 @@ import Reports from "@/components/Dashboard/Reports";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import Candidates from "@/components/Dashboard/Candidates";
 import JobPostForm from "@/components/Dashboard/JobPostForm";
-import Jobs from "@/components/Dashboard/Jobs";
+import JobsTable from "@/components/Dashboard/Jobs";
 
 const PortalPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [token, setToken] = useState<string | null>(null);
 
-  // Check if the user is logged in
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      // Show a popup message if the user is not logged in
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+
+    if (!storedUser || !storedToken) {
       Modal.error({
         title: "Unauthorized Access",
         content:
           "You are not authorized to access this page. Redirecting to login...",
-        onOk: () => router.push("/admin"), // Redirect to the login page
+        onOk: () => router.push("/admin"), // Redirect to login
       });
+    } else {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
     }
+
+    setLoading(false);
   }, [router]);
 
-  // Render the portal page only if the user is logged in
-  const renderComponent = (activeComponent: string) => {
-    const user = localStorage.getItem("user");
-    if (!user) {
-      return null; // Don't render anything if the user is not logged in
-    }
+  // Render a loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
+  // If user or token is missing, do not render the dashboard
+  if (!user || !token) {
+    return null;
+  }
+
+  // Function to render components
+  const renderComponent = (activeComponent: string) => {
     switch (activeComponent) {
       case "dashboard":
         return <Dashboard />;
@@ -51,17 +67,11 @@ const PortalPage = () => {
       case "jobPost":
         return <JobPostForm />;
       case "jobs":
-        return <Jobs />;
+        return <JobsTable />;
       default:
         return <Dashboard />;
     }
   };
-
-  // Check if the user is logged in before rendering the layout
-  const user = localStorage.getItem("user");
-  if (!user) {
-    return null; // Don't render anything if the user is not logged in
-  }
 
   return <DashboardLayout>{renderComponent}</DashboardLayout>;
 };
