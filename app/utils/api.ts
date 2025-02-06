@@ -22,7 +22,8 @@ export const postJob = async (jobData: {
   categoryID: number;
 }) => {
   try {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     console.log("Using Token for POST API:", token);
 
@@ -40,7 +41,11 @@ export const postJob = async (jobData: {
     console.log("Job posted successfully:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Error posting job:", (error as { response?: { data?: string } })?.response?.data || (error as Error).message);
+    console.error(
+      "Error posting job:",
+      (error as { response?: { data?: string } })?.response?.data ||
+        (error as Error).message
+    );
     throw error;
   }
 };
@@ -68,7 +73,7 @@ export const deleteJob = async (jobID: number) => {
       throw new Error("Authentication failed: No token found.");
     }
 
-    const response = await axios.delete(`${API_URL}/apis/categories/delete`, {
+    const response = await axios.delete(`${API_URL}/apis/job/delete`, {
       headers: {
         "x-access-token": token, // Send token here
         "Content-Type": "application/json",
@@ -129,7 +134,8 @@ export const updateJob = async (
 
 export const getCategoryById = async (jobID: number) => {
   try {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     console.log("Using Token for GET BY ID API:", token);
     console.log("Fetching category for Job ID:", jobID);
@@ -152,13 +158,36 @@ export const getCategoryById = async (jobID: number) => {
     console.log("Category fetched successfully:", response.data);
     return response.data.data; // Return the category data
   } catch (error) {
-    console.error("Error fetching category:", (error as { response?: { data?: string } })?.response?.data || (error as Error).message);
+    console.error(
+      "Error fetching category:",
+      (error as { response?: { data?: string } })?.response?.data ||
+        (error as Error).message
+    );
     throw error;
   }
 };
 
+export const fetchJobById = async (jobID: number) => {
+  try {
+    const response = await axios.post(`${API_URL}/apis/categories/getById`, {
+      jobID,
+    });
+    return response.data.data; // Return job details
+  } catch (error) {
+    console.error("Error fetching job by ID:", error);
+    throw error;
+  }
+};
 
-
+export const fetchJobs = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/apis/job/get`);
+    return response.data.data; // Return array of jobs
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    throw error;
+  }
+};
 
 // Post Job API Call
 // export const postJob = async (jobData: any) => {
