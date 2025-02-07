@@ -35,11 +35,35 @@ export const postJob = async (jobData: {
   maxSalary: number;
   categoryID: number;
 }) => {
-  if (!token) throw new Error("Authentication failed: No token found.");
-  return axios
-    .post(`${API_URL}/apis/job/add`, jobData, { headers })
-    .then((res) => res.data);
+  try {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+    console.log("Using Token for POST API:", token);
+
+    if (!token) {
+      throw new Error("Authentication failed: No token found.");
+    }
+
+    const response = await axios.post(`${API_URL}/apis/job/add`, jobData, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Job posted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error posting job:",
+      (error as { response?: { data?: string } })?.response?.data ||
+        (error as Error).message
+    );
+    throw error;
+  }
 };
+
 
 // ✅ Get Jobs with Pagination
 export const getJobs = async (page = 1, limit = 10) => {
