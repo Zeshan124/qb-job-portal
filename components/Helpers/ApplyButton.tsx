@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PopupForm from "./PopupForm";
 
-export const ApplyButton = () => {
+export const ApplyButton = ({ jobID }: { jobID: number }) => {
   const [isApplied, setIsApplied] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,14 +37,16 @@ export const ApplyButton = () => {
         disabled={isApplied}
       >
         {" "}
-        {isApplied ? "Applied" : "Apply Now"}{" "}
-      </button>{" "}
+        {isApplied ? "Applied" : "Apply Now"}
+      </button>
+      {/* Pass the jobID dynamically to the PopupForm */}
       <PopupForm
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         onSubmit={handleSubmit}
-      />{" "}
-      <ToastContainer position="top-center" />{" "}
+        jobID={jobID} // Dynamically passed
+      />
+      <ToastContainer position="top-center" />
     </div>
   );
 };

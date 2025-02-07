@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { JobCard } from "@/paths";
+import { getAllJobs } from "@/app/utils/api";
 
 interface Job {
   jobID: number;
@@ -16,19 +17,21 @@ interface Job {
 
 const AllJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch("http://192.168.18.47:4000/apis/job/get");
-        const data = await response.json();
-        if (response.ok) {
-          setJobs(data.data);
-        }
+        setLoading(true);
+        const jobsData = await getAllJobs();
+        setJobs(jobsData);
       } catch (error) {
         console.error("Error fetching jobs:", error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchJobs();
   }, []);
 
@@ -44,8 +47,10 @@ const AllJobs = () => {
               job={{
                 id: job.jobID,
                 title: job.jobTitle,
-                image: "/images/default.png",
-                salary: job.minSalary ? `$${job.minSalary} - $${job.maxSalary}` : "Not specified",
+                image: "/images/icon9.png",
+                salary: job.minSalary
+                  ? `$${job.minSalary} - $${job.maxSalary}`
+                  : "Not specified",
                 location: job.location,
                 jobtype: job.categoryName,
               }}

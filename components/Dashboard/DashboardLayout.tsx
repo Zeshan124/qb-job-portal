@@ -39,6 +39,10 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     });
   };
 
+  const back = () => {
+    router.push("/");
+  };
+
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
     { id: "users", label: "Users", icon: <UserOutlined /> },
@@ -64,6 +68,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       label: "Logout",
       icon: <LogoutOutlined />,
       onClick: handleLogout,
+    },
+    {
+      key: "back",
+      label: "Back",
+      icon: <LogoutOutlined />,
+      onClick: back,
     },
   ];
 

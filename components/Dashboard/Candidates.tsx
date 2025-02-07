@@ -1,18 +1,69 @@
-// components/Dashboard/Candidates.tsx
-import React, { useState } from "react";
-import { Table, Dropdown, Menu, Button } from "antd";
-import "antd/dist/reset.css"; // For newer versions
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Table, Dropdown, Menu, Button, Spin, message } from "antd";
+import "antd/dist/reset.css";
+import axios from "axios";
+import {
+  updateCandidateStatus,
+  getCandidateByID,
+  downloadResume,
+  getCandidates,
+} from "@/app/utils/api"; // Import necessary APIs
+
+const API_URL = process.env.NEXT_PUBLIC_URL_API || "http://192.168.18.47:4000";
+
+interface Candidate {
+  candidateID: number;
+  name: string;
+  email: string;
+  phoneNo: string;
+  cvPDF: string;
+  availabilityDate: string;
+  availabilityTime: string;
+  jobID: number;
+  createdAt: string;
+  status: string;
+}
 
 const Candidates = () => {
-  // State to manage the status of each candidate
-  const [status, setStatus] = useState<Record<string, string>>({});
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // Handle status change
-  const handleStatusChange = (key: string, newStatus: string) => {
-    setStatus((prev) => ({
-      ...prev,
-      [key]: newStatus,
-    }));
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        setLoading(true);
+        const candidatesData = await getCandidates();
+        setCandidates(candidatesData);
+      } catch (error) {
+        message.error("Failed to fetch candidates. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
+
+  const handleStatusChange = async (candidateID: number, newStatus: string) => {
+    try {
+      await updateCandidateStatus(candidateID, newStatus);
+      setCandidates((prevCandidates) =>
+        prevCandidates.map((candidate) =>
+          candidate.candidateID === candidateID
+            ? { ...candidate, status: newStatus }
+            : candidate
+        )
+      );
+
+      message.success(
+        `Candidate #${candidateID}'s status updated to "${newStatus}"`
+      );
+    } catch (error) {
+      console.error("Error updating candidate status:", error);
+      message.error("Failed to update status. Please try again.");
+    }
   };
 
   const columns = [
@@ -28,77 +79,104 @@ const Candidates = () => {
     },
     {
       title: "Phone Number",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      dataIndex: "phoneNo",
+      key: "phoneNo",
     },
     {
       title: "Resume",
-      dataIndex: "resume",
       key: "resume",
-    },
-    {
-      title: "Cover Letter",
-      dataIndex: "coverLetter",
-      key: "coverLetter",
+      render: (_: unknown, record: Candidate) => (
+        <div className="flex space-x-4">
+          {/* View Resume */}
+          {/* <a
+            href={`${API_URL}${record.cvPDF}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            View
+          </a> */}
+
+          {/* Download Resume */}
+          <button
+            onClick={() => handleDownloadResume(record.candidateID)}
+            className="text-green-600 hover:underline"
+          >
+            Download
+          </button>
+        </div>
+      ),
     },
     {
       title: "Availability",
-      dataIndex: "availability",
       key: "availability",
+      render: (_: unknown, record: Candidate) => (
+        <span>
+          {new Date(record.availabilityDate).toLocaleDateString()}{" "}
+          {record.availabilityTime}
+        </span>
+      ),
     },
     {
       title: "Status",
       key: "status",
-      render: (_: unknown, record: { key: string }) => {
+      render: (_: unknown, record: Candidate) => {
         const menu = (
           <Menu
-            onClick={({ key }) => handleStatusChange(record.key, key)}
+            onClick={({ key }) => handleStatusChange(record.candidateID, key)}
             items={[
-              { key: "Approved", label: "Approved" },
-              { key: "Rejected", label: "Rejected" },
-              { key: "On Hold", label: "On Hold" },
+              { key: "shortlist", label: "Approved" },
+              { key: "reject", label: "Rejected" },
+              { key: "hold", label: "On Hold" },
             ]}
           />
         );
 
         return (
           <Dropdown overlay={menu} trigger={["click"]}>
-            <Button>
-              {status[record.key] || "Select Status"}{" "}
-              {/* Show selected status or default text */}
-            </Button>
+            <Button>{record.status} </Button>
           </Dropdown>
         );
       },
     },
   ];
 
-  const data = [
-    {
-      key: "1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phoneNumber: "123-456-7890",
-      resume: "Resume.pdf",
-      coverLetter: "CoverLetter.docx",
-      availability: "2025-02-01 10:00 AM",
-    },
-    {
-      key: "2",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      phoneNumber: "987-654-3210",
-      resume: "Resume.pdf",
-      coverLetter: "CoverLetter.docx",
-      availability: "2025-03-01 02:00 PM",
-    },
-    // Add more data here
-  ];
+  const handleDownloadResume = async (candidateID: number) => {
+    try {
+      const resumeBlob = await downloadResume(candidateID);
+
+      // Create a blob from the response
+      const blob = new Blob([resumeBlob], { type: "application/pdf" });
+
+      // Generate a download link
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute("download", `resume_${candidateID}.pdf`); // Set download filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Cleanup
+    } catch (error) {
+      console.error("Error downloading resume:", error);
+      message.error("Failed to download the resume. Please try again.");
+    }
+  };
 
   return (
     <div className="p-5">
       <h1>Applied Candidates</h1>
-      <Table columns={columns} dataSource={data} />
+      {loading ? (
+        <div className="text-center mt-20">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={candidates.map((candidate) => ({
+            ...candidate,
+            key: candidate.candidateID,
+          }))}
+        />
+      )}
     </div>
   );
 };

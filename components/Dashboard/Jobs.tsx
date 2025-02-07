@@ -59,15 +59,17 @@ const JobsTable: React.FC = () => {
     fetchJobs();
   }, []);
 
-  // Handle Delete Job
-  // ✅ Handle Delete Job
   const handleDelete = async () => {
     if (!deleteJobId) return;
 
     try {
       setIsDeleting(true);
       await deleteJob(deleteJobId);
-      setJobs((prevJobs) => prevJobs.filter((job) => job.jobID !== deleteJobId));
+
+      // ✅ Refetch the jobs after deletion to ensure consistency
+      const updatedJobs = await getJobs();
+      setJobs(updatedJobs);
+
       message.success("Job deleted successfully!");
     } catch (error) {
       message.error("Failed to delete job. Please try again.");
@@ -77,8 +79,8 @@ const JobsTable: React.FC = () => {
     }
   };
 
-   // ✅ Open Delete Confirmation Modal
-   const confirmDelete = (id: number) => {
+  // ✅ Open Delete Confirmation Modal
+  const confirmDelete = (id: number) => {
     setDeleteJobId(id);
   };
 
@@ -156,19 +158,27 @@ const JobsTable: React.FC = () => {
       key: "categoryName",
     },
     {
-        title: "Actions",
-        key: "actions",
-        render: (_: any, record: Job) => (
-          <div className="flex space-x-2">
-            <Button type="primary" icon={<EditOutlined />} onClick={() => handleEditClick(record)}>
-              Edit
-            </Button>
-            <Button danger icon={<DeleteOutlined />} onClick={() => confirmDelete(record.jobID)}>
-              Delete
-            </Button>
-          </div>
-        ),
-      },
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: Job) => (
+        <div className="flex space-x-2">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEditClick(record)}
+          >
+            Edit
+          </Button>
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => confirmDelete(record.jobID)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -198,11 +208,11 @@ const JobsTable: React.FC = () => {
         bordered
       />
 
-       {/* ✅ Delete Confirmation Modal */}
-       <Modal
+      {/* ✅ Delete Confirmation Modal */}
+      <Modal
         title="Confirm Deletion"
         open={deleteJobId !== null}
-        onOk={handleDelete}  // ✅ Call handleDelete when user clicks "OK"
+        onOk={handleDelete} // ✅ Call handleDelete when user clicks "OK"
         onCancel={closeModal}
         confirmLoading={isDeleting}
       >
