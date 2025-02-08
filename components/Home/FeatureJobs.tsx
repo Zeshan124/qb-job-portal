@@ -24,7 +24,7 @@ const FeatureJobs = () => {
       try {
         setLoading(true);
         const jobsData = await getAllJobs();
-        setJobs(jobsData.slice(0, 4)); // ✅ Show only the first 4 jobs
+        setJobs(jobsData.slice(0, 4));
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -49,9 +49,9 @@ const FeatureJobs = () => {
               job={{
                 id: job.jobID,
                 title: job.jobTitle,
-                image: "/images/c1.png", // Provide a default image
+                image: "/images/c1.png",
                 salary: job.minSalary
-                  ? `$${job.minSalary} - $${job.maxSalary}`
+                  ? `${job.minSalary.toLocaleString()} - ${job.maxSalary?.toLocaleString()}`
                   : "Not specified",
                 location: job.location,
                 jobtype: job.categoryName,

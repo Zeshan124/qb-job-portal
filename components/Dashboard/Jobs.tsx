@@ -163,13 +163,15 @@ const JobsTable: React.FC = () => {
       title: "Min Salary",
       dataIndex: "minSalary",
       key: "minSalary",
-      render: (salary: number | null) => (salary ? `$${salary}` : "N/A"),
+      render: (salary: number | null) =>
+        salary ? salary.toLocaleString() : "N/A",
     },
     {
       title: "Max Salary",
       dataIndex: "maxSalary",
       key: "maxSalary",
-      render: (salary: number | null) => (salary ? `$${salary}` : "N/A"),
+      render: (salary: number | null) =>
+        salary ? salary.toLocaleString() : "N/A",
     },
 
     {
@@ -209,7 +211,7 @@ const JobsTable: React.FC = () => {
   return (
     <div className="p-4 sm:p-6">
       <Title level={3} className="text-center sm:text-left">
-        Job Listings
+        Posted Jobs
       </Title>
       <div className="mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <Input

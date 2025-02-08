@@ -79,7 +79,7 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
             </p>
             {job.minSalary && job.maxSalary && (
               <p>
-                <strong>Salary:</strong> ${job.minSalary} - ${job.maxSalary}
+                <strong>Salary:</strong> {job.minSalary} - {job.maxSalary}
               </p>
             )}
           </div>

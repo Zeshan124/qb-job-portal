@@ -8,7 +8,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const JobPostForm: React.FC = () => {
-  const [form] = Form.useForm(); // ✅ Create Form instance
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: {
@@ -22,9 +22,9 @@ const JobPostForm: React.FC = () => {
     setLoading(true);
 
     try {
-      await postJob(values); // Call API
+      await postJob(values);
       message.success("Job posted successfully!");
-      form.resetFields(); // ✅ Clear the form fields
+      form.resetFields();
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -45,7 +45,9 @@ const JobPostForm: React.FC = () => {
       <Form.Item
         label="Job Description"
         name="jobDescription"
-        rules={[{ required: true, message: "Please enter the job description" }]}
+        rules={[
+          { required: true, message: "Please enter the job description" },
+        ]}
       >
         <TextArea rows={4} placeholder="Enter job description" />
       </Form.Item>
@@ -63,7 +65,11 @@ const JobPostForm: React.FC = () => {
         name="minSalary"
         rules={[
           { required: true, message: "Please enter the minimum salary" },
-          { type: "number", min: 0, message: "Salary must be a positive number" },
+          {
+            type: "number",
+            min: 0,
+            message: "Salary must be a positive number",
+          },
         ]}
       >
         <InputNumber
@@ -78,7 +84,11 @@ const JobPostForm: React.FC = () => {
         name="maxSalary"
         rules={[
           { required: true, message: "Please enter the maximum salary" },
-          { type: "number", min: 0, message: "Salary must be a positive number" },
+          {
+            type: "number",
+            min: 0,
+            message: "Salary must be a positive number",
+          },
         ]}
       >
         <InputNumber

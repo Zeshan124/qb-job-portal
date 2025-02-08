@@ -37,7 +37,6 @@ const PortalPage = () => {
     setLoading(false);
   }, [router]);
 
-  // Render a loading state while checking authentication
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -46,22 +45,20 @@ const PortalPage = () => {
     );
   }
 
-  // If user or token is missing, do not render the dashboard
   if (!user || !token) {
     return null;
   }
 
-  // Function to render components
   const renderComponent = (activeComponent: string) => {
     switch (activeComponent) {
-      case "dashboard":
-        return <Dashboard />;
-      case "users":
-        return <Users />;
-      case "settings":
-        return <Settings />;
-      case "reports":
-        return <Reports />;
+      // case "dashboard":
+      //   return <Dashboard />;
+      // case "users":
+      //   return <Users />;
+      // case "settings":
+      //   return <Settings />;
+      // case "reports":
+      //   return <Reports />;
       case "candidates":
         return <Candidates />;
       case "jobPost":

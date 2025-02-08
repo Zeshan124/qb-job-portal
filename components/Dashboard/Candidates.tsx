@@ -7,7 +7,7 @@ import {
   updateCandidateStatus,
   getCandidates,
   downloadResume,
-} from "@/app/utils/api"; // Import necessary APIs
+} from "@/app/utils/api";
 import { DownOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -56,7 +56,9 @@ const Candidates = () => {
         )
       );
 
-      message.success(`Candidate #${candidateID}'s status updated to "${newStatus}"`);
+      message.success(
+        `Candidate #${candidateID}'s status updated to "${newStatus}"`
+      );
     } catch (error) {
       message.error("Failed to update status. Please try again.");
     }
@@ -65,17 +67,13 @@ const Candidates = () => {
   const handleDownloadResume = async (candidateID: number) => {
     try {
       const resumeBlob = await downloadResume(candidateID);
-
-      // Create a blob from the response
       const blob = new Blob([resumeBlob], { type: "application/pdf" });
-
-      // Generate a download link
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute("download", `resume_${candidateID}.pdf`); // Set download filename
+      link.setAttribute("download", `resume_${candidateID}.pdf`);
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link); // Cleanup
+      document.body.removeChild(link);
     } catch (error) {
       message.error("Failed to download the resume. Please try again.");
     }
@@ -101,7 +99,10 @@ const Candidates = () => {
       title: "Resume",
       key: "resume",
       render: (_: unknown, record: Candidate) => (
-        <Button type="link" onClick={() => handleDownloadResume(record.candidateID)}>
+        <Button
+          type="link"
+          onClick={() => handleDownloadResume(record.candidateID)}
+        >
           Download
         </Button>
       ),
@@ -111,7 +112,8 @@ const Candidates = () => {
       key: "availability",
       render: (_: unknown, record: Candidate) => (
         <span>
-          {new Date(record.availabilityDate).toLocaleDateString()} {record.availabilityTime}
+          {new Date(record.availabilityDate).toLocaleDateString()}{" "}
+          {record.availabilityTime}
         </span>
       ),
     },
@@ -161,7 +163,7 @@ const Candidates = () => {
             }))}
             pagination={{ pageSize: 5 }}
             bordered
-            scroll={{ x: "max-content" }} // ✅ Enables horizontal scrolling on mobile
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}

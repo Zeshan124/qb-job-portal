@@ -49,7 +49,7 @@ const AllJobs = () => {
                 title: job.jobTitle,
                 image: "/images/icon9.png",
                 salary: job.minSalary
-                  ? `$${job.minSalary} - $${job.maxSalary}`
+                  ? `${job.minSalary} - ${job.maxSalary}`
                   : "Not specified",
                 location: job.location,
                 jobtype: job.categoryName,

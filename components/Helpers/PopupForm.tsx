@@ -14,7 +14,7 @@ const PopupForm = ({
   isOpen: boolean;
   onRequestClose: () => void;
   onSubmit: () => void;
-  jobID: number; // Pass the jobID as a prop
+  jobID: number;
 }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -92,7 +92,7 @@ const PopupForm = ({
           availabilityTime: "",
           resumePDF: null,
         });
-        onSubmit(); // Notify parent of successful submission
+        onSubmit();
       } else {
         if (!toast.isActive("error")) {
           toast.error(result.message || "Failed to submit application.", {
@@ -222,7 +222,7 @@ const PopupForm = ({
           </button>
         </div>
       </form>
-      <ToastContainer
+      {/* <ToastContainer
         position="top-center"
         autoClose={2000}
         hideProgressBar={false}
@@ -230,7 +230,7 @@ const PopupForm = ({
         pauseOnHover
         draggable
         theme="colored"
-      />
+      /> */}
     </Modal>
   );
 };

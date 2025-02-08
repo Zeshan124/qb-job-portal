@@ -9,6 +9,8 @@ import {
   UnorderedListOutlined,
   LogoutOutlined,
   ArrowLeftOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
@@ -18,12 +20,11 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const [activeComponent, setActiveComponent] = useState("dashboard");
+  const [activeComponent, setActiveComponent] = useState("candidates");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const { logout } = useUser();
 
-  // ✅ Collapse sidebar automatically on small screens
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -33,9 +34,8 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       }
     };
 
-    handleResize(); // Run once on mount
+    handleResize();
     window.addEventListener("resize", handleResize);
-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -75,23 +75,21 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* ✅ Sidebar: Auto-Collapses on Small Screens */}
       <div
-        className={`bg-gray-800 text-white transition-all duration-300 ${
-          isCollapsed ? "w-16" : "w-64"
-        }`}
+        className={`bg-gradient-to-b from-gray-900 to-gray-700 text-white transition-all duration-300 shadow-lg 
+        ${isCollapsed ? "w-16" : "w-64"} min-h-screen flex flex-col`}
       >
-        <div className="p-4 text-2xl font-bold flex items-center justify-between">
-          {!isCollapsed && <span>Portal</span>}
+        <div className="p-4 flex items-center justify-between border-b border-gray-600">
+          {!isCollapsed && <span className="text-xl font-bold">HR Portal</span>}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="text-white focus:outline-none hidden md:block"
+            className="text-white focus:outline-none transition-transform transform hover:scale-110"
           >
-            {isCollapsed ? ">" : "<"}
+            {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </button>
         </div>
 
-        <nav className="mt-4">
+        <nav className="mt-4 flex-1">
           {menuItems.map((item) => (
             <Tooltip
               key={item.id}
@@ -100,31 +98,27 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             >
               <button
                 onClick={() => setActiveComponent(item.id)}
-                className={`w-full p-4 text-left hover:bg-gray-700 flex items-center space-x-2 ${
-                  activeComponent === item.id ? "bg-gray-900" : ""
-                }`}
+                className={`w-full p-4 text-left hover:bg-gray-600 flex items-center space-x-2 transition-all 
+                ${activeComponent === item.id ? "bg-gray-800" : ""}`}
               >
                 <span>{item.icon}</span>
-                {!isCollapsed && <span>{item.label}</span>}
+                {!isCollapsed && <span className="ml-2">{item.label}</span>}
               </button>
             </Tooltip>
           ))}
+        </nav>
 
+        <div className="border-t border-gray-600">
           <Dropdown menu={{ items: settingsMenu }} trigger={["click"]}>
-            <button className="w-full p-4 text-left hover:bg-gray-700 flex items-center space-x-2">
+            <button className="w-full p-4 text-left hover:bg-gray-600 flex items-center space-x-2 transition-all">
               <SettingOutlined />
               {!isCollapsed && <span>Settings</span>}
             </button>
           </Dropdown>
-        </nav>
+        </div>
       </div>
 
-      {/* ✅ Main Content: Adjusts Based on Sidebar */}
-      <div
-        className={`flex-1 p-2 overflow-y-auto ${
-          isCollapsed ? "ml-0" : "ml-0"
-        }`}
-      >
+      <div className={`flex-1 p-4 overflow-y-auto`}>
         {children(activeComponent)}
       </div>
     </div>

@@ -5,10 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import LogoImage from "@/public/images/QB-logo.webp";
 import User from "../Helpers/User";
-import { useUser } from "@/contexts/UserContext"; // Import UserContext
+import { useUser } from "@/contexts/UserContext";
 
 const Nav = () => {
-  const { user } = useUser(); // Get user from UserContext
+  const { user } = useUser();
 
   return (
     <div className="h-[13vh] shadow-md">
@@ -20,16 +20,9 @@ const Nav = () => {
             </div>
           </Link>
         </div>
-
-        {/* Admin Options - Only visible if the admin is logged in */}
         {user && user.role === "superadmin" && (
           <div className="flex space-x-4 items-center">
             <User user={user} />
-            {/* <Link href="/jobposting">
-              <button className="px-4 py-1.5 text-[14px] sm:text-[16px] bg-[#8570C5] text-white font-semibold rounded-lg hover:bg-purple-500 transition-colors">
-                Post a Job
-              </button>
-            </Link> */}
           </div>
         )}
       </div>
