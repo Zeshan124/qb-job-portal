@@ -27,7 +27,7 @@ const PortalPage = () => {
         title: "Unauthorized Access",
         content:
           "You are not authorized to access this page. Redirecting to login...",
-        onOk: () => router.push("/admin"), // Redirect to login
+        onOk: () => router.push("/admin"),
       });
     } else {
       setUser(JSON.parse(storedUser));

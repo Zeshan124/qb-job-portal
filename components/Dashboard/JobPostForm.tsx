@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { Form, Input, InputNumber, Button, Select, message } from "antd";
 import { postJob } from "@/app/utils/api";
 
-
 const { TextArea } = Input;
 const { Option } = Select;
 
 const JobPostForm: React.FC = () => {
+  const [form] = Form.useForm(); // ✅ Create Form instance
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: {
@@ -24,6 +24,7 @@ const JobPostForm: React.FC = () => {
     try {
       await postJob(values); // Call API
       message.success("Job posted successfully!");
+      form.resetFields(); // ✅ Clear the form fields
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -32,7 +33,7 @@ const JobPostForm: React.FC = () => {
   };
 
   return (
-    <Form layout="vertical" onFinish={onFinish}>
+    <Form form={form} layout="vertical" onFinish={onFinish}>
       <Form.Item
         label="Job Title"
         name="jobTitle"
@@ -96,7 +97,6 @@ const JobPostForm: React.FC = () => {
           <Option value={1}>Software Engineer</Option>
           <Option value={2}>Product Manager</Option>
           <Option value={3}>Sales</Option>
-          {/* Add more categories here */}
         </Select>
       </Form.Item>
 

@@ -1,4 +1,3 @@
-// actions.js
 "use client";
 
 import axios from "axios";
@@ -13,9 +12,9 @@ class AuthError extends Error {
 
 export async function authenticate(data) {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_URL_API || "http://localhost:4000"; // Fallback if not defined
+    const apiUrl = process.env.NEXT_PUBLIC_URL_API || "http://localhost:4000";
 
-    console.log("API URL:", apiUrl); // Check what API URL is being used
+    console.log("API URL:", apiUrl);
 
     const response = await axios.post(`${apiUrl}/apis/user/login`, {
       username: data.username,
@@ -25,7 +24,6 @@ export async function authenticate(data) {
     if (response.status === 200) {
       const userData = response.data;
 
-      // Ensure localStorage is only used in the client side
       if (typeof window !== "undefined") {
         localStorage.setItem("token", userData.token);
         localStorage.setItem("user", JSON.stringify(userData));
@@ -39,7 +37,7 @@ export async function authenticate(data) {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
       throw new AuthError("CredentialsSignin");
     } else {
-      console.error("Authentication error:", error); // Log error for easier debugging
+      console.error("Authentication error:", error);
       throw error;
     }
   }

@@ -1,17 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Dropdown, Menu, Button, Spin, message } from "antd";
+import { Table, Dropdown, Menu, Button, Spin, message, Typography } from "antd";
 import "antd/dist/reset.css";
-import axios from "axios";
 import {
   updateCandidateStatus,
-  getCandidateByID,
-  downloadResume,
   getCandidates,
+  downloadResume,
 } from "@/app/utils/api"; // Import necessary APIs
+import { DownOutlined } from "@ant-design/icons";
 
-const API_URL = process.env.NEXT_PUBLIC_URL_API || "http://192.168.18.47:4000";
+const { Title } = Typography;
 
 interface Candidate {
   candidateID: number;
@@ -57,12 +56,28 @@ const Candidates = () => {
         )
       );
 
-      message.success(
-        `Candidate #${candidateID}'s status updated to "${newStatus}"`
-      );
+      message.success(`Candidate #${candidateID}'s status updated to "${newStatus}"`);
     } catch (error) {
-      console.error("Error updating candidate status:", error);
       message.error("Failed to update status. Please try again.");
+    }
+  };
+
+  const handleDownloadResume = async (candidateID: number) => {
+    try {
+      const resumeBlob = await downloadResume(candidateID);
+
+      // Create a blob from the response
+      const blob = new Blob([resumeBlob], { type: "application/pdf" });
+
+      // Generate a download link
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.setAttribute("download", `resume_${candidateID}.pdf`); // Set download filename
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Cleanup
+    } catch (error) {
+      message.error("Failed to download the resume. Please try again.");
     }
   };
 
@@ -86,25 +101,9 @@ const Candidates = () => {
       title: "Resume",
       key: "resume",
       render: (_: unknown, record: Candidate) => (
-        <div className="flex space-x-4">
-          {/* View Resume */}
-          {/* <a
-            href={`${API_URL}${record.cvPDF}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            View
-          </a> */}
-
-          {/* Download Resume */}
-          <button
-            onClick={() => handleDownloadResume(record.candidateID)}
-            className="text-green-600 hover:underline"
-          >
-            Download
-          </button>
-        </div>
+        <Button type="link" onClick={() => handleDownloadResume(record.candidateID)}>
+          Download
+        </Button>
       ),
     },
     {
@@ -112,8 +111,7 @@ const Candidates = () => {
       key: "availability",
       render: (_: unknown, record: Candidate) => (
         <span>
-          {new Date(record.availabilityDate).toLocaleDateString()}{" "}
-          {record.availabilityTime}
+          {new Date(record.availabilityDate).toLocaleDateString()} {record.availabilityTime}
         </span>
       ),
     },
@@ -134,48 +132,38 @@ const Candidates = () => {
 
         return (
           <Dropdown overlay={menu} trigger={["click"]}>
-            <Button>{record.status} </Button>
+            <Button className="flex items-center space-x-2">
+              {record.status} <DownOutlined />
+            </Button>
           </Dropdown>
         );
       },
     },
   ];
 
-  const handleDownloadResume = async (candidateID: number) => {
-    try {
-      const resumeBlob = await downloadResume(candidateID);
-
-      // Create a blob from the response
-      const blob = new Blob([resumeBlob], { type: "application/pdf" });
-
-      // Generate a download link
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.setAttribute("download", `resume_${candidateID}.pdf`); // Set download filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link); // Cleanup
-    } catch (error) {
-      console.error("Error downloading resume:", error);
-      message.error("Failed to download the resume. Please try again.");
-    }
-  };
-
   return (
-    <div className="p-5">
-      <h1>Applied Candidates</h1>
+    <div className="p-4 sm:p-6">
+      <Title level={3} className="text-center sm:text-left">
+        Applied Candidates
+      </Title>
+
       {loading ? (
-        <div className="text-center mt-20">
+        <div className="flex justify-center mt-20">
           <Spin size="large" />
         </div>
       ) : (
-        <Table
-          columns={columns}
-          dataSource={candidates.map((candidate) => ({
-            ...candidate,
-            key: candidate.candidateID,
-          }))}
-        />
+        <div className="overflow-x-auto">
+          <Table
+            columns={columns}
+            dataSource={candidates.map((candidate) => ({
+              ...candidate,
+              key: candidate.candidateID,
+            }))}
+            pagination={{ pageSize: 5 }}
+            bordered
+            scroll={{ x: "max-content" }} // ✅ Enables horizontal scrolling on mobile
+          />
+        </div>
       )}
     </div>
   );

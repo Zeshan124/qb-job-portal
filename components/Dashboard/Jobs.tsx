@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, message, Input, Spin, Alert, Form } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  message,
+  Input,
+  Spin,
+  Form,
+  Select,
+  Typography,
+} from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
@@ -9,15 +19,7 @@ import {
 } from "@ant-design/icons";
 import { getJobs, deleteJob, updateJob } from "@/app/utils/api";
 
-interface Job {
-  jobID: number;
-  jobTitle: string;
-  jobDescription: string;
-  location: string;
-  minSalary: number | null;
-  maxSalary: number | null;
-  categoryName: string;
-}
+const { Title } = Typography;
 
 interface Job {
   jobID: number;
@@ -27,12 +29,12 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
+  jobStatus: string;
 }
 
 const JobsTable: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchText, setSearchText] = useState("");
 
   const [deleteJobId, setDeleteJobId] = useState<number | null>(null);
@@ -50,7 +52,7 @@ const JobsTable: React.FC = () => {
         const jobsData = await getJobs();
         setJobs(jobsData);
       } catch (error) {
-        setError("Failed to fetch job data. Please try again later.");
+        message.error("Failed to fetch job data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -65,10 +67,9 @@ const JobsTable: React.FC = () => {
     try {
       setIsDeleting(true);
       await deleteJob(deleteJobId);
-
-      // ✅ Refetch the jobs after deletion to ensure consistency
-      const updatedJobs = await getJobs();
-      setJobs(updatedJobs);
+      setJobs((prevJobs) =>
+        prevJobs.filter((job) => job.jobID !== deleteJobId)
+      );
 
       message.success("Job deleted successfully!");
     } catch (error) {
@@ -79,36 +80,34 @@ const JobsTable: React.FC = () => {
     }
   };
 
-  // ✅ Open Delete Confirmation Modal
-  const confirmDelete = (id: number) => {
-    setDeleteJobId(id);
-  };
-
-  // ✅ Close Delete Modal
-  const closeModal = () => {
-    setDeleteJobId(null);
-  };
-
-  // Handle Edit Job Click
   const handleEditClick = (job: Job) => {
     setEditingJob(job);
     setEditModalVisible(true);
-    form.setFieldsValue(job);
+
+    form.setFieldsValue({
+      jobTitle: job.jobTitle,
+      jobDescription: job.jobDescription,
+      jobStatus: job.jobStatus || "open",
+    });
   };
 
-  // Handle Job Update
   const handleUpdateJob = async () => {
     if (!editingJob) return;
 
     try {
       setEditLoading(true);
       const values = form.getFieldsValue();
-      await updateJob(editingJob.jobID, values);
 
-      // Update job list
+      const updatedData = {
+        jobTitle: values.jobTitle,
+        jobDescription: values.jobDescription,
+        jobStatus: values.jobStatus ?? editingJob.jobStatus,
+      };
+
+      await updateJob(editingJob.jobID, updatedData);
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job.jobID === editingJob.jobID ? { ...job, ...values } : job
+          job.jobID === editingJob.jobID ? { ...job, ...updatedData } : job
         )
       );
 
@@ -122,12 +121,10 @@ const JobsTable: React.FC = () => {
     }
   };
 
-  // Handle Search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
-  // Filter jobs based on search text
   const filteredJobs = jobs.filter(
     (job) =>
       job.jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -145,8 +142,13 @@ const JobsTable: React.FC = () => {
       title: "Description",
       dataIndex: "jobDescription",
       key: "jobDescription",
-      ellipsis: true,
+      render: (text: string) => {
+        const truncatedText =
+          text.length > 70 ? text.slice(0, 70) + "..." : text;
+        return <span>{truncatedText}</span>;
+      },
     },
+
     {
       title: "Location",
       dataIndex: "location",
@@ -158,10 +160,33 @@ const JobsTable: React.FC = () => {
       key: "categoryName",
     },
     {
+      title: "Min Salary",
+      dataIndex: "minSalary",
+      key: "minSalary",
+      render: (salary: number | null) => (salary ? `$${salary}` : "N/A"),
+    },
+    {
+      title: "Max Salary",
+      dataIndex: "maxSalary",
+      key: "maxSalary",
+      render: (salary: number | null) => (salary ? `$${salary}` : "N/A"),
+    },
+
+    {
+      title: "Status",
+      dataIndex: "jobStatus",
+      key: "jobStatus",
+      filters: [
+        { text: "Open", value: "open" },
+        { text: "Closed", value: "close" },
+      ],
+      onFilter: (value: any, record: Job) => record.jobStatus === value,
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Job) => (
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -172,7 +197,7 @@ const JobsTable: React.FC = () => {
           <Button
             danger
             icon={<DeleteOutlined />}
-            onClick={() => confirmDelete(record.jobID)}
+            onClick={() => setDeleteJobId(record.jobID)}
           >
             Delete
           </Button>
@@ -182,44 +207,44 @@ const JobsTable: React.FC = () => {
   ];
 
   return (
-    <div>
-      <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-bold">Job Postings</h2>
-      </div>
-
-      {/* Search Bar */}
-      <div className="mb-4">
+    <div className="p-4 sm:p-6">
+      <Title level={3} className="text-center sm:text-left">
+        Job Listings
+      </Title>
+      <div className="mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <Input
-          placeholder="Search jobs by title or description"
+          placeholder="Search jobs"
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={handleSearch}
           allowClear
-          style={{ width: 300 }}
+          style={{ maxWidth: "300px" }}
         />
       </div>
-
-      {/* Jobs Table */}
-      <Table
-        columns={columns}
-        dataSource={filteredJobs}
-        rowKey="jobID"
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
-
-      {/* ✅ Delete Confirmation Modal */}
+      {loading ? (
+        <div className="flex justify-center mt-20">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <Table
+            columns={columns}
+            dataSource={filteredJobs.map((job) => ({ ...job, key: job.jobID }))}
+            pagination={{ pageSize: 5 }}
+            bordered
+            scroll={{ x: "max-content" }}
+          />
+        </div>
+      )}
       <Modal
         title="Confirm Deletion"
         open={deleteJobId !== null}
-        onOk={handleDelete} // ✅ Call handleDelete when user clicks "OK"
-        onCancel={closeModal}
+        onOk={handleDelete}
+        onCancel={() => setDeleteJobId(null)}
         confirmLoading={isDeleting}
       >
         <p>Are you sure you want to delete this job?</p>
       </Modal>
-
-      {/* Edit Job Modal */}
       <Modal
         title="Edit Job"
         open={editModalVisible}
@@ -237,6 +262,12 @@ const JobsTable: React.FC = () => {
           </Form.Item>
           <Form.Item label="Job Description" name="jobDescription">
             <Input.TextArea />
+          </Form.Item>
+          <Form.Item label="Job Status" name="jobStatus">
+            <Select>
+              <Select.Option value="open">Open</Select.Option>
+              <Select.Option value="close">Closed</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

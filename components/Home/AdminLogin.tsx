@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { authenticate } from "../../app/utils/action";
 import { Spin, message, Input, Button, Card, Typography } from "antd";
-import { useUser } from "../../contexts/UserContext"; // UserContext
+import { useUser } from "../../contexts/UserContext";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
@@ -36,7 +36,7 @@ const AdminLogin = () => {
             return;
           }
         
-          localStorage.setItem("token", result.token); // Store token in localStorage
+          localStorage.setItem("token", result.token);
           localStorage.setItem("user", JSON.stringify(result));
         
           console.log("Stored Token in localStorage:", localStorage.getItem("token"));

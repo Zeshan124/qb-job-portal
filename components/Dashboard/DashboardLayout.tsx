@@ -1,16 +1,14 @@
 "use client";
 
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import { Tooltip, Dropdown, MenuProps, message, Modal } from "antd";
 import {
-  DashboardOutlined,
-  UserOutlined,
   SettingOutlined,
-  FileTextOutlined,
   TeamOutlined,
   FormOutlined,
   UnorderedListOutlined,
   LogoutOutlined,
+  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
@@ -24,6 +22,22 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
   const { logout } = useUser();
+
+  // ✅ Collapse sidebar automatically on small screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsCollapsed(true);
+      } else {
+        setIsCollapsed(false);
+      }
+    };
+
+    handleResize(); // Run once on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
     Modal.confirm({
@@ -44,9 +58,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   };
 
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: <DashboardOutlined /> },
-    { id: "users", label: "Users", icon: <UserOutlined /> },
-    { id: "reports", label: "Reports", icon: <FileTextOutlined /> },
     { id: "candidates", label: "Candidates", icon: <TeamOutlined /> },
     { id: "jobPost", label: "Job Post", icon: <FormOutlined /> },
     { id: "jobs", label: "Jobs", icon: <UnorderedListOutlined /> },
@@ -54,36 +65,17 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   const settingsMenu: MenuProps["items"] = [
     {
-      key: "profile",
-      label: "Profile",
-      onClick: () => setActiveComponent("settings"),
-    },
-    {
-      key: "account",
-      label: "Account Settings",
-      onClick: () => setActiveComponent("settings"),
-    },
-    {
       key: "logout",
       label: "Logout",
       icon: <LogoutOutlined />,
       onClick: handleLogout,
     },
-    {
-      key: "back",
-      label: "Back",
-      icon: <LogoutOutlined />,
-      onClick: back,
-    },
+    { key: "back", label: "Back", icon: <ArrowLeftOutlined />, onClick: back },
   ];
-
-  const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
-  };
 
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Side Panel */}
+      {/* ✅ Sidebar: Auto-Collapses on Small Screens */}
       <div
         className={`bg-gray-800 text-white transition-all duration-300 ${
           isCollapsed ? "w-16" : "w-64"
@@ -92,13 +84,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="p-4 text-2xl font-bold flex items-center justify-between">
           {!isCollapsed && <span>Portal</span>}
           <button
-            onClick={toggleCollapse}
-            className="text-white focus:outline-none"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="text-white focus:outline-none hidden md:block"
           >
             {isCollapsed ? ">" : "<"}
           </button>
         </div>
-        <nav>
+
+        <nav className="mt-4">
           {menuItems.map((item) => (
             <Tooltip
               key={item.id}
@@ -117,7 +110,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </Tooltip>
           ))}
 
-          {/* Settings Dropdown */}
           <Dropdown menu={{ items: settingsMenu }} trigger={["click"]}>
             <button className="w-full p-4 text-left hover:bg-gray-700 flex items-center space-x-2">
               <SettingOutlined />
@@ -127,8 +119,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </nav>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 p-8 overflow-y-auto">
+      {/* ✅ Main Content: Adjusts Based on Sidebar */}
+      <div
+        className={`flex-1 p-2 overflow-y-auto ${
+          isCollapsed ? "ml-0" : "ml-0"
+        }`}
+      >
         {children(activeComponent)}
       </div>
     </div>
