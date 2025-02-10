@@ -18,6 +18,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { getJobs, deleteJob, updateJob } from "@/app/utils/api";
+import axios from "axios";
 
 const { Title } = Typography;
 
@@ -36,6 +37,11 @@ const JobsTable: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState("");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   const [deleteJobId, setDeleteJobId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -46,20 +52,29 @@ const JobsTable: React.FC = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        setLoading(true);
-        const jobsData = await getJobs();
-        setJobs(jobsData);
-      } catch (error) {
-        message.error("Failed to fetch job data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchData(pagination.current, pagination.pageSize, searchText); // Trigger fetch with new search text
+  }, [pagination.current, pagination.pageSize, searchText]);
+  
+  
 
-    fetchJobs();
-  }, []);
+  const fetchData = async (page: number, pageSize: number, jobTitle: string) => {
+    setLoading(true);
+    try {
+      // Include jobTitle as part of the query params
+      const response = await axios.get(
+        `http://192.168.18.47:4000/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(jobTitle)}`
+      );
+      setJobs(response.data.data);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.data.pagination.totalJobs,
+      }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setLoading(false);
+  };
+  
 
   const handleDelete = async () => {
     if (!deleteJobId) return;
@@ -122,8 +137,14 @@ const JobsTable: React.FC = () => {
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
+    const newSearchText = e.target.value;
+    setSearchText(newSearchText); // Update the search text
+    setPagination((prev) => ({
+      ...prev,
+      current: 1, // Reset to the first page whenever search text changes
+    }));
   };
+  
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -231,10 +252,16 @@ const JobsTable: React.FC = () => {
         <div className="overflow-x-auto">
           <Table
             columns={columns}
-            dataSource={filteredJobs.map((job) => ({ ...job, key: job.jobID }))}
-            pagination={{ pageSize: 5 }}
-            bordered
-            scroll={{ x: "max-content" }}
+            dataSource={jobs}
+            rowKey={(record) => record.jobID.toString()}
+            loading={loading}
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              onChange: (page, pageSize) =>
+                setPagination({ ...pagination, current: page, pageSize }),
+            }}
           />
         </div>
       )}

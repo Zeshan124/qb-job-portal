@@ -2,18 +2,20 @@
 
 import React, { useState } from "react";
 import { Form, Input, InputNumber, Button, Select, message } from "antd";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import { postJob } from "@/app/utils/api";
 
-const { TextArea } = Input;
 const { Option } = Select;
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const JobPostForm: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [jobDescription, setJobDescription] = useState("");
 
   const onFinish = async (values: {
     jobTitle: string;
-    jobDescription: string;
     location: string;
     minSalary: number;
     maxSalary: number;
@@ -22,9 +24,10 @@ const JobPostForm: React.FC = () => {
     setLoading(true);
 
     try {
-      await postJob(values);
-      // message.success("Job posted successfully!");
+      await postJob({ ...values, jobDescription }); // Send jobDescription separately
+      message.success("Job posted successfully!");
       form.resetFields();
+      setJobDescription(""); // Clear editor after submission
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -42,14 +45,26 @@ const JobPostForm: React.FC = () => {
         <Input placeholder="Enter job title" />
       </Form.Item>
 
+      {/* HTML Editor for Job Description */}
       <Form.Item
         label="Job Description"
-        name="jobDescription"
+        layout="vertical"
+        required
         rules={[
-          { required: true, message: "Please enter the job description" },
+          {
+            validator: (_, value) =>
+              jobDescription.trim()
+                ? Promise.resolve()
+                : Promise.reject(new Error("Please enter the job description")),
+          },
         ]}
       >
-        <TextArea rows={4} placeholder="Enter job description" />
+        <ReactQuill
+          value={jobDescription}
+          onChange={setJobDescription}
+          theme="snow"
+          placeholder="Enter job description..."
+        />
       </Form.Item>
 
       <Form.Item

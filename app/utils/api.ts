@@ -59,11 +59,24 @@ export const postJob = async (jobData: {
   }
 };
 
-export const getJobs = async (page = 1, limit = 10) => {
-  return axios
-    .get(`${API_URL}/apis/job/get?page=${page}&limit=${limit}`)
-    .then((res) => res.data.data);
+export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
+  try {
+    console.log(`Fetching page ${page} with search text "${jobTitle}"`);
+    const response = await axios.get(
+      `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(jobTitle)}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API Fetch Error:", error);
+    throw error;
+  }
 };
+
+
+
+
+
+
 
 export const deleteJob = async (jobID: number) => {
   if (!token) throw new Error("Authentication failed: No token found.");
@@ -110,15 +123,18 @@ export const getAllJobs = async () => {
     });
 };
 
-export const getCandidates = async () => {
+export const getCandidates = async (page = 1, pageSize = 10) => {
   return axios
-    .get(`${API_URL}/apis/application/get`)
+    .get(`${API_URL}/apis/application/get`, {
+      params: { page, pageSize },
+    })
     .then((res) => res.data.data)
     .catch((error) => {
       console.error("Error fetching candidates:", error);
       throw error;
     });
 };
+
 
 export const getCandidateByID = async (candidateID: number) => {
   return axios

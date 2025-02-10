@@ -17,6 +17,7 @@ import {
   downloadResume,
 } from "@/app/utils/api";
 import { DownOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -36,24 +37,35 @@ interface Candidate {
 
 const Candidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>("all"); // ✅ Status filter
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   useEffect(() => {
-    const fetchCandidates = async () => {
-      try {
-        setLoading(true);
-        const candidatesData = await getCandidates();
-        setCandidates(candidatesData);
-      } catch (error) {
-        message.error("Failed to fetch candidates. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+    fetchData(pagination.current, pagination.pageSize);
+  }, [pagination.current, pagination.pageSize]);
 
-    fetchCandidates();
-  }, []);
+  const fetchData = async (page: number, pageSize: number) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `http://192.168.18.47:4000/apis/application/get?page=${page}&pageSize=${pageSize}`
+      );
+      setData(response.data.data);
+      setPagination((prev) => ({
+        ...prev,
+        total: response.data.pagination.totalApplications,
+      }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    setLoading(false);
+  };
 
   const handleStatusChange = async (candidateID: number, newStatus: string) => {
     try {
@@ -96,9 +108,9 @@ const Candidates = () => {
     }
   };
 
-  const filteredCandidates = candidates.filter((candidate) => {
+  const filteredCandidates = data.filter((candidate) => {
     if (filter === "all") return true;
-    return candidate.status.toLowerCase() === filter.toLowerCase();
+    return candidate.status?.toLowerCase() === filter.toLowerCase();
   });
 
   const columns = [
@@ -224,13 +236,16 @@ const Candidates = () => {
         <div className="overflow-x-auto">
           <Table
             columns={columns}
-            dataSource={filteredCandidates.map((candidate) => ({
-              ...candidate,
-              key: candidate.candidateID,
-            }))}
-            pagination={{ pageSize: 5 }}
-            bordered
-            scroll={{ x: "max-content" }}
+            dataSource={filteredCandidates}
+            rowKey={(record) => record.candidateID.toString()}
+            loading={loading}
+            pagination={{
+              current: pagination.current,
+              pageSize: pagination.pageSize,
+              total: pagination.total,
+              onChange: (page, pageSize) =>
+                setPagination({ ...pagination, current: page, pageSize }),
+            }}
           />
         </div>
       )}
