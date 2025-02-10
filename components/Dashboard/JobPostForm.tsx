@@ -23,7 +23,7 @@ const JobPostForm: React.FC = () => {
 
     try {
       await postJob(values);
-      message.success("Job posted successfully!");
+      // message.success("Job posted successfully!");
       form.resetFields();
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
@@ -111,7 +111,14 @@ const JobPostForm: React.FC = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading} block>
+        <Button
+          type="primary"
+          size="large"
+          htmlType="submit"
+          loading={loading}
+          block
+          className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
+        >
           Post Job
         </Button>
       </Form.Item>

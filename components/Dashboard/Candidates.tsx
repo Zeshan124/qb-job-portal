@@ -1,8 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Table, Dropdown, Menu, Button, Spin, message, Typography } from "antd";
-import "antd/dist/reset.css";
+import {
+  Table,
+  Dropdown,
+  Menu,
+  Button,
+  Spin,
+  message,
+  Typography,
+  Select,
+} from "antd";
 import {
   updateCandidateStatus,
   getCandidates,
@@ -11,6 +19,7 @@ import {
 import { DownOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 interface Candidate {
   candidateID: number;
@@ -28,6 +37,7 @@ interface Candidate {
 const Candidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [filter, setFilter] = useState<string>("all"); // ✅ Status filter
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -48,6 +58,14 @@ const Candidates = () => {
   const handleStatusChange = async (candidateID: number, newStatus: string) => {
     try {
       await updateCandidateStatus(candidateID, newStatus);
+
+      // ✅ Find the candidate's name from the state
+      const candidate = candidates.find((c) => c.candidateID === candidateID);
+      const candidateName = candidate
+        ? candidate.name
+        : `Candidate #${candidateID}`;
+
+      // ✅ Update state with new status
       setCandidates((prevCandidates) =>
         prevCandidates.map((candidate) =>
           candidate.candidateID === candidateID
@@ -56,9 +74,8 @@ const Candidates = () => {
         )
       );
 
-      message.success(
-        `Candidate #${candidateID}'s status updated to "${newStatus}"`
-      );
+      // ✅ Display candidate name instead of ID in success message
+      message.success(`${candidateName}'s status updated to "${newStatus}"`);
     } catch (error) {
       message.error("Failed to update status. Please try again.");
     }
@@ -79,6 +96,11 @@ const Candidates = () => {
     }
   };
 
+  const filteredCandidates = candidates.filter((candidate) => {
+    if (filter === "all") return true;
+    return candidate.status.toLowerCase() === filter.toLowerCase();
+  });
+
   const columns = [
     {
       title: "Name",
@@ -91,7 +113,7 @@ const Candidates = () => {
       key: "email",
     },
     {
-      title: "Phone Number",
+      title: "Phone",
       dataIndex: "phoneNo",
       key: "phoneNo",
     },
@@ -132,10 +154,40 @@ const Candidates = () => {
           />
         );
 
+        const getStatusLabel = (status: string) => {
+          switch (status.toLowerCase()) {
+            case "shortlist":
+              return "Approved";
+            case "reject":
+              return "Rejected";
+            case "hold":
+              return "On Hold";
+            default:
+              return status;
+          }
+        };
+
+        const getStatusClass = (status: string) => {
+          switch (status.toLowerCase()) {
+            case "shortlist":
+              return "bg-green-500 hover:bg-green-600 text-white";
+            case "reject":
+              return "bg-red-500 hover:bg-red-600 text-white";
+            case "hold":
+              return "bg-yellow-400 hover:bg-yellow-500 text-black";
+            default:
+              return "bg-gray-300 hover:bg-gray-400 text-black";
+          }
+        };
+
         return (
           <Dropdown overlay={menu} trigger={["click"]}>
-            <Button className="flex items-center space-x-2">
-              {record.status} <DownOutlined />
+            <Button
+              className={`flex items-center space-x-2 ${getStatusClass(
+                record.status
+              )}`}
+            >
+              {getStatusLabel(record.status)} <DownOutlined />
             </Button>
           </Dropdown>
         );
@@ -144,10 +196,25 @@ const Candidates = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-6">
-      <Title level={3} className="text-center sm:text-left">
-        Applied Candidates
-      </Title>
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <Title level={3} className="text-center sm:text-left">
+          Applied Candidates
+        </Title>
+
+        {/* ✅ Filter Dropdown */}
+        <Select
+          value={filter}
+          onChange={(value) => setFilter(value)}
+          className="w-52"
+          size="large"
+        >
+          <Option value="all">All Candidates</Option>
+          <Option value="shortlist">Shortlisted</Option>
+          <Option value="reject">Rejected</Option>
+          <Option value="hold">On Hold</Option>
+        </Select>
+      </div>
 
       {loading ? (
         <div className="flex justify-center mt-20">
@@ -157,7 +224,7 @@ const Candidates = () => {
         <div className="overflow-x-auto">
           <Table
             columns={columns}
-            dataSource={candidates.map((candidate) => ({
+            dataSource={filteredCandidates.map((candidate) => ({
               ...candidate,
               key: candidate.candidateID,
             }))}

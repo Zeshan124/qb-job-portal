@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { Spin } from "antd"; // Import Spin component from Ant Design
 
 interface User {
   id: string;
@@ -13,32 +14,40 @@ interface User {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  logout: () => void; // Add logout function
+  logout: () => void;
 }
 
 const UserContext = createContext<UserContextType>({
   user: null,
   setUser: () => {},
-  logout: () => {}, // Default empty function
+  logout: () => {}, 
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
-  // Sync user state with localStorage on initial load
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setLoading(false); // Set loading to false once the data is retrieved
   }, []);
 
-  // Logout function to clear user state and localStorage
   const logout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token"); // If applicable
-    setUser(null); // Update state to trigger re-render
+    localStorage.removeItem("token")
+    setUser(null);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Spin size="large" /> {/* Show Ant Design spinner */}
+      </div>
+    );
+  }
 
   return (
     <UserContext.Provider value={{ user, setUser, logout }}>

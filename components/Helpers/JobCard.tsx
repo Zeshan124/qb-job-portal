@@ -45,19 +45,19 @@ export const JobCard = ({ job }: Props) => {
             <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-green-600">
               {job?.jobtype}
             </div>
-            <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-red-600">
+            {/* <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-red-600">
               Private
             </div>
             <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-blue-600">
               Urgent
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
 
-      <div className="absolute z-40 top-4 right-4">
+      {/* <div className="absolute z-40 top-4 right-4">
         <FaRegBookmark className="hover:text-orange-600" />
-      </div>
+      </div> */}
     </div>
   );
 };

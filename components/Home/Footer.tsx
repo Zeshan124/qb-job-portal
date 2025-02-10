@@ -1,46 +1,50 @@
 import React from "react";
-import { IconType } from "react-icons";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa6";
 
-interface Props {
-  bgColor: string;
-  Icon: IconType;
+interface SocialIconProps {
+  src: string;
+  alt: string;
 }
 
 const Footer = () => {
-  const aboutItems = ["Home", "Contact"];
+  const aboutItems = ["About us", "Faqs", "Contact", "Visit Us"];
   const quickLinkItems = [
-    "Privacy Policy",
+    "Account",
+    "Verification Process",
+    "Delivery Policy",
+    "Musawamah Agreement",
   ];
 
   return (
     <div className="pt-20 pb-12 bg-black">
       <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-8 border-b-2 border-white border-opacity-10">
         <div>
-        <img
-    src="/images/footer-logo.png"  // Replace with the path to your logo
-    alt="QB Logo"
-    className="w-40 h-35 mb-2"  // Adjust size and margin as needed
-  />
+          <img
+            src="/images/footer-logo.png"
+            alt="QB Logo"
+            className="w-40 h-35 mb-2"
+          />
           <p className="text-sm text-white text-opacity-70">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed velit
             tempore obcaecati excepturi, voluptatem, odio deserunt.
           </p>
           <div className="mt-6 flex items-center space-x-3">
-            <SocialIcon bgColor={"blue"} Icon={FaFacebook} />
-            <SocialIcon bgColor={"sky"} Icon={FaTwitter} />
-            <SocialIcon bgColor={"red"} Icon={FaYoutube} />
-            <SocialIcon bgColor={"pink"} Icon={FaInstagram} />
+            <SocialIcon src="/images/facebook.svg" alt="Facebook" />
+            <SocialIcon src="/images/twitter.svg" alt="Twitter" />
+            <SocialIcon src="/images/youtube.svg" alt="YouTube" />
+            <SocialIcon src="/images/instagram.svg" alt="Instagram" />
+            <SocialIcon src="/images/linkedin.svg" alt="linkedin" />
+            <SocialIcon src="/images/whatsapp.svg" alt="whatsapp" />
+            <SocialIcon src="/images/tiktok.svg" alt="tiktok" />
           </div>
         </div>
-        <FooterSection title={"QuickLinks"} data={aboutItems} />
-        <FooterSection title={"Terms & Updates"} data={quickLinkItems} />
+        <FooterSection title={"About"} data={aboutItems} />
+        <FooterSection title={"Information"} data={quickLinkItems} />
         <FooterSection
-          title={"Get in Touch"}
+          title={"Contact us"}
           data={[
             "021-111-11-55-66",
             "support@qistbazaar.pk",
-            "Head Office Jami Commercial, DHA Phase 7",
+            "Karachi,Pakistan",
           ]}
         />
       </div>
@@ -62,11 +66,9 @@ const Footer = () => {
   );
 };
 
-const SocialIcon = ({ bgColor, Icon }: Props) => (
-  <div
-    className={`w-10 h-10 bg-${bgColor}-600 rounded-full flex items-center justify-center flex-col`}
-  >
-    <Icon className="text-white" />
+const SocialIcon = ({ src, alt }: SocialIconProps) => (
+  <div className={`w-10 h-10 rounded-full flex items-center justify-center`}>
+    <img src={src} alt={alt} className="w-7 h-7" />{" "}
   </div>
 );
 
@@ -103,6 +105,5 @@ const FooterSection = ({ data, title }: SectionProps) => (
     })}
   </div>
 );
-
 
 export default Footer;

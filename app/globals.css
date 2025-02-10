@@ -46,3 +46,11 @@
     transform: rotate(360deg);
   }
 }
+
+.main-heading {
+  line-height: 1;
+}
+
+/* :where(.css-dev-only-do-not-override-1htoz2s).ant-btn.ant-btn-block {
+  width: 200px;
+} */

@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Heading, JobCard } from "../../paths";
 import Link from "next/link";
 import { getAllJobs } from "@/app/utils/api";
+import { useRouter } from "next/navigation";
+import { Button, Spin } from "antd";
 
 interface Job {
   jobID: number;
@@ -18,6 +20,8 @@ interface Job {
 const FeatureJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // ✅ Added state for button loading
+  const router = useRouter(); // ✅ Router for navigation
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -34,6 +38,13 @@ const FeatureJobs = () => {
 
     fetchJobs();
   }, []);
+
+  const handleAllJobs = () => {
+    setIsLoading(true); // ✅ Set loading state to true
+    setTimeout(() => {
+      router.push("/job/alljobs"); // ✅ Navigate after delay
+    }, 1000); // Simulating loading effect
+  };
 
   return (
     <div className="pt-8 md:pt-20 pb-8 md:pb-12">
@@ -63,12 +74,15 @@ const FeatureJobs = () => {
 
       <Link href={"/job/alljobs"}>
         <div className="text-center mt-12">
-          <button
-            type="button"
-            className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-8 py-2 font-semibold text-white rounded-lg"
+          <Button
+            type="primary"
+            size="large"
+            onClick={handleAllJobs}
+            disabled={isLoading}
+            className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] mx-auto"
           >
-            View All Jobs
-          </button>
+            {isLoading ? <Spin /> : "View all jobs"}
+          </Button>
         </div>
       </Link>
     </div>
