@@ -70,7 +70,11 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
         <div className="flex justify-between">
           <div>
             <h1 className="text-3xl font-semibold">{job.jobTitle}</h1>
-            <p className="mt-4 text-gray-600">{job.jobDescription}</p>
+            {/* <div
+              className="mt-4 text-gray-600"
+              dangerouslySetInnerHTML={{ __html: job.jobDescription }}
+            /> */}
+
             <p className="mt-4">
               <strong>Location:</strong> {job.location}
             </p>
@@ -90,14 +94,10 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="mt-10 w-[80%] mx-auto">
-        <h2 className="text-xl font-semibold">Key Responsibilities</h2>
-        <ul className="mt-4">
-          <li className="text-gray-700">React JS</li>
-          <li className="text-gray-700">HTML5</li>
-          <li className="text-gray-700">CSS3</li>
-          <li className="text-gray-700">Javascript</li>
-          <li className="text-gray-700">Tailwindcss</li>
-        </ul>
+        <div
+          className="mt-4 text-gray-600"
+          dangerouslySetInnerHTML={{ __html: job.jobDescription }}
+        />
       </div>
     </div>
   );

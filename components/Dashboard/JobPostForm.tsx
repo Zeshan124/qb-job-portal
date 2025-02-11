@@ -120,7 +120,7 @@ const JobPostForm: React.FC = () => {
       >
         <Select placeholder="Select category">
           <Option value={1}>Software Engineer</Option>
-          <Option value={2}>Product Manager</Option>
+          <Option value={2}>Marketing</Option>
           <Option value={3}>Sales</Option>
         </Select>
       </Form.Item>

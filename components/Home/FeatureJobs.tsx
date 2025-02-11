@@ -1,11 +1,12 @@
 "use client"; // 👈 Required to make this a Client Component
 
 import React, { useEffect, useState } from "react";
-import { Heading, JobCard } from "../../paths";
+import { Heading } from "../../paths";
 import Link from "next/link";
 import { getAllJobs } from "@/app/utils/api";
 import { useRouter } from "next/navigation";
 import { Button, Spin } from "antd";
+import JobCard from "../Helpers/JobCard";
 
 interface Job {
   jobID: number;
@@ -66,6 +67,7 @@ const FeatureJobs = () => {
                   : "Not specified",
                 location: job.location,
                 jobtype: job.categoryName,
+                description: job.jobDescription || "", // ✅ Ensure description is passed
               }}
             />
           </Link>

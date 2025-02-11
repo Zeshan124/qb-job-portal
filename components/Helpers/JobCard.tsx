@@ -1,14 +1,32 @@
-import { Job } from "@/data";
-import Image from "next/image";
-import React from "react";
-import { BiMoney } from "react-icons/bi";
-import { FaMapLocation, FaRegBookmark } from "react-icons/fa6";
+"use client";
 
-interface Props {
-  job: Job;
+import Image from "next/image";
+import React, { useState } from "react";
+import { BiMoney } from "react-icons/bi";
+import { FaMapLocation } from "react-icons/fa6";
+
+interface JobCardProps {
+  job: {
+    id: number;
+    title: string;
+    image: string;
+    salary: string;
+    location: string;
+    jobtype: string;
+    description: string; // ✅ Ensure description is included
+  };
 }
 
-export const JobCard = ({ job }: Props) => {
+const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  // ✅ Remove HTML tags and truncate description
+  const plainTextDescription = job.description.replace(/<\/?[^>]+(>|$)/g, "");
+  const truncatedText =
+    plainTextDescription.length > 100
+      ? plainTextDescription.slice(0, 100) + "..."
+      : plainTextDescription;
+
   return (
     <div className="relative transition-transform duration-300 hover:scale-105 border-gray-600 rounded-lg border-2 border-opacity-20 p-1 md:p-2 md:mb-2">
       <div className="flex items-center space-x-6">
@@ -22,18 +40,19 @@ export const JobCard = ({ job }: Props) => {
             className="object-cover"
           />
         </div>
-        {/* content */}
+
+        {/* Content */}
         <div>
           <h1 className="text-base font-semibold mb-2">{job.title}</h1>
           <div className="flex items-center md:space-x-10 space-x-4">
-            {/* location */}
+            {/* Location */}
             <div className="flex items-center space-x-2">
               <FaMapLocation className="w-4 h-4 text-pink-600" />
               <p className="text-sm text-black font-semibold opacity-60">
                 {job?.location}
               </p>
             </div>
-            {/* salary */}
+            {/* Salary */}
             <div className="flex items-center space-x-2">
               <BiMoney className="w-4 h-4 text-pink-600" />
               <p className="text-sm text-black font-semibold text-opacity-60">
@@ -41,23 +60,34 @@ export const JobCard = ({ job }: Props) => {
               </p>
             </div>
           </div>
+
+          {/* Job Type */}
           <div className="flex item-center space-x-2 sm:space-x-4 mt-[1rem]">
             <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-green-600">
               {job?.jobtype}
             </div>
-            {/* <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-red-600">
-              Private
-            </div>
-            <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-blue-600">
-              Urgent
-            </div> */}
           </div>
         </div>
       </div>
 
-      {/* <div className="absolute z-40 top-4 right-4">
-        <FaRegBookmark className="hover:text-orange-600" />
-      </div> */}
+      {/* ✅ Truncated Job Description
+      <p className="mt-2 text-gray-600">
+        {showFullDescription ? (
+          <span dangerouslySetInnerHTML={{ __html: job.description }} />
+        ) : (
+          truncatedText
+        )}
+      </p> */}
+
+      {/* ✅ Toggle Full Description Button */}
+      {/* <button
+        className="text-blue-500 mt-2"
+        onClick={() => setShowFullDescription(!showFullDescription)}
+      >
+        {showFullDescription ? "Show Less" : "Read More"}
+      </button> */}
     </div>
   );
 };
+
+export default JobCard;

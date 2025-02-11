@@ -38,7 +38,7 @@ const Candidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string>("all"); 
+  const [filter, setFilter] = useState<string>("all");
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -70,7 +70,7 @@ const Candidates = () => {
   const handleStatusChange = async (candidateID: number, newStatus: string) => {
     try {
       await updateCandidateStatus(candidateID, newStatus);
-  
+
       // ✅ Update `data` instead of `candidates`
       setData((prevData) =>
         prevData.map((candidate) =>
@@ -79,18 +79,18 @@ const Candidates = () => {
             : candidate
         )
       );
-  
+
       // ✅ Find candidate's name for success message
       const candidate = data.find((c) => c.candidateID === candidateID);
-      const candidateName = candidate ? candidate.name : `Candidate #${candidateID}`;
-  
+      const candidateName = candidate
+        ? candidate.name
+        : `Candidate #${candidateID}`;
+
       message.success(`${candidateName}'s status updated to "${newStatus}"`);
     } catch (error) {
       message.error("Failed to update status. Please try again.");
     }
   };
-  
-  
 
   const handleDownloadResume = async (candidateID: number) => {
     try {

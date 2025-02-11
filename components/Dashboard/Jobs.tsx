@@ -18,7 +18,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { fetchJobs, deleteJob, updateJob } from "@/app/utils/api";
-import axios from "axios";
 
 const { Title } = Typography;
 
@@ -46,17 +45,20 @@ const JobsTable: React.FC = () => {
 
   const [deleteJobId, setDeleteJobId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [editLoading, setEditLoading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchData(pagination.current, pagination.pageSize, searchText); // Trigger fetch with new search text
+    fetchData(pagination.current, pagination.pageSize, searchText);
   }, [pagination.current, pagination.pageSize, searchText]);
 
-  const fetchData = async (page: number, pageSize: number, jobTitle: string) => {
+  const fetchData = async (
+    page: number,
+    pageSize: number,
+    jobTitle: string
+  ) => {
     setLoading(true);
     try {
       const { jobs, totalJobs } = await fetchJobs(page, pageSize, jobTitle);
@@ -70,7 +72,6 @@ const JobsTable: React.FC = () => {
     }
     setLoading(false);
   };
-  
 
   const handleDelete = async () => {
     if (!deleteJobId) return;
@@ -99,7 +100,7 @@ const JobsTable: React.FC = () => {
       jobTitle: job.jobTitle,
       jobDescription: job.jobDescription,
       jobStatus: job.jobStatus || "open",
-      categoryID: job.categoryID, // Prefill categoryID
+      categoryID: job.categoryID,
     });
   };
 
@@ -175,11 +176,16 @@ const JobsTable: React.FC = () => {
       dataIndex: "jobDescription",
       key: "jobDescription",
       render: (text: string) => {
-        const truncatedText =
-          text.length > 70 ? text.slice(0, 70) + "..." : text;
-        return <span>{truncatedText}</span>;
+        // ✅ Strip HTML tags for truncation logic
+        const plainText = text.replace(/<\/?[^>]+(>|$)/g, "");
+        const truncatedText = plainText.length > 70 ? plainText.slice(0, 70) + "..." : plainText;
+    
+        return (
+          <span dangerouslySetInnerHTML={{ __html: truncatedText }} />
+        );
       },
     },
+    
 
     {
       title: "Location",
