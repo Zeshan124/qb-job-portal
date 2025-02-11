@@ -13,14 +13,13 @@ interface JobCardProps {
     salary: string;
     location: string;
     jobtype: string;
-    description: string; // ✅ Ensure description is included
+    description: string;
   };
 }
 
 const JobCard: React.FC<JobCardProps> = ({ job }) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  // ✅ Remove HTML tags and truncate description
   const plainTextDescription = job.description.replace(/<\/?[^>]+(>|$)/g, "");
   const truncatedText =
     plainTextDescription.length > 100

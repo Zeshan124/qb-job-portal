@@ -203,3 +203,29 @@ export const downloadResume = async (candidateID: number) => {
     })
     .then((res) => res.data);
 };
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
+// Function to fetch categories
+export const getCategories = async (): Promise<Category[]> => {
+  try {
+    const response = await fetch("http://192.168.18.47:4000/apis/categories/getAll");
+
+    if (!response.ok) throw new Error("Failed to fetch categories");
+
+    const result: { message: string; data: { categoryID: number; categoryName: string }[] } =
+      await response.json();
+
+    return result.data.map((category) => ({
+      id: category.categoryID,
+      name: category.categoryName,
+    }));
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error; // Rethrow error so it can be handled in the component
+  }
+};
+

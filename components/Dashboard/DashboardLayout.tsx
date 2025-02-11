@@ -61,6 +61,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { id: "candidates", label: "Candidates", icon: <TeamOutlined /> },
     { id: "jobPost", label: "Job Post", icon: <FormOutlined /> },
     { id: "jobs", label: "Jobs", icon: <UnorderedListOutlined /> },
+    { id: "category", label: "Categories", icon: <UnorderedListOutlined /> },
   ];
 
   const settingsMenu: MenuProps["items"] = [

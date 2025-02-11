@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, InputNumber, Button, Select, message } from "antd";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import { postJob } from "@/app/utils/api";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -13,6 +18,41 @@ const JobPostForm: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [jobDescription, setJobDescription] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [fetching, setFetching] = useState(true);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          "http://192.168.18.47:4000/apis/categories/getAll"
+        );
+        if (!response.ok) throw new Error("Failed to fetch categories");
+
+        const result: {
+          message: string;
+          data: { categoryID: number; categoryName: string }[];
+        } = await response.json();
+
+        console.log("Fetched Categories:", result); // Debugging log 🚀
+
+        // Ensure correct type assignment
+        const formattedCategories: Category[] = result.data.map((category) => ({
+          id: category.categoryID, // Use correct key from API
+          name: category.categoryName, // Use correct key from API
+        }));
+
+        setCategories(formattedCategories); // Update state correctly
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        message.error("Failed to load categories");
+        setCategories([]);
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const onFinish = async (values: {
     jobTitle: string;
@@ -113,15 +153,24 @@ const JobPostForm: React.FC = () => {
         />
       </Form.Item>
 
+      {/* Dynamic Category Select */}
       <Form.Item
         label="Category"
         name="categoryID"
         rules={[{ required: true, message: "Please select a category" }]}
       >
-        <Select placeholder="Select category">
-          <Option value={1}>Software Engineer</Option>
-          <Option value={2}>Marketing</Option>
-          <Option value={3}>Sales</Option>
+        <Select placeholder="Select category" loading={fetching}>
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <Option key={category.id} value={category.id}>
+                {category.name}
+              </Option>
+            ))
+          ) : (
+            <Option disabled value="">
+              No categories available
+            </Option>
+          )}
         </Select>
       </Form.Item>
 
@@ -133,7 +182,7 @@ const JobPostForm: React.FC = () => {
           loading={loading}
           block
           className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
-          style={{width: "200px"}}
+          style={{ width: "200px" }}
         >
           Post Job
         </Button>

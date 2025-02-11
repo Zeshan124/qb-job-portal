@@ -48,11 +48,30 @@ const JobsTable: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [editLoading, setEditLoading] = useState(false);
+  const [categories, setCategories] = useState<
+    { categoryID: number; categoryName: string }[]
+  >([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchData(pagination.current, pagination.pageSize, searchText);
   }, [pagination.current, pagination.pageSize, searchText]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.18.47:4000/apis/categories/getAll"
+      );
+      const data = await response.json();
+      setCategories(data.data); // Assuming the response structure contains `data.data`
+    } catch (error) {
+      message.error("Failed to fetch categories");
+    }
+  };
 
   const fetchData = async (
     page: number,
@@ -176,16 +195,13 @@ const JobsTable: React.FC = () => {
       dataIndex: "jobDescription",
       key: "jobDescription",
       render: (text: string) => {
-        // ✅ Strip HTML tags for truncation logic
         const plainText = text.replace(/<\/?[^>]+(>|$)/g, "");
-        const truncatedText = plainText.length > 70 ? plainText.slice(0, 70) + "..." : plainText;
-    
-        return (
-          <span dangerouslySetInnerHTML={{ __html: truncatedText }} />
-        );
+        const truncatedText =
+          plainText.length > 70 ? plainText.slice(0, 70) + "..." : plainText;
+
+        return <span dangerouslySetInnerHTML={{ __html: truncatedText }} />;
       },
     },
-    
 
     {
       title: "Location",
@@ -235,6 +251,7 @@ const JobsTable: React.FC = () => {
         <div className="flex gap-2">
           <Button
             type="primary"
+            className="bg-[#8570C5]"
             icon={<EditOutlined />}
             onClick={() => handleEditClick(record)}
           >
@@ -323,9 +340,14 @@ const JobsTable: React.FC = () => {
           </Form.Item>
           <Form.Item label="Category" name="categoryID">
             <Select>
-              <Select.Option value={1}>Software Engineer</Select.Option>
-              <Select.Option value={2}>Marketing</Select.Option>
-              <Select.Option value={3}>HRM</Select.Option>
+              {categories.map((category) => (
+                <Select.Option
+                  key={category.categoryID}
+                  value={category.categoryID}
+                >
+                  {category.categoryName}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
         </Form>

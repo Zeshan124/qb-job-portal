@@ -4,13 +4,11 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Spin } from "antd";
 import Dashboard from "@/components/Dashboard/Dashboard";
-import Users from "@/components/Dashboard/Users";
-import Settings from "@/components/Dashboard/Settings";
-import Reports from "@/components/Dashboard/Reports";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import Candidates from "@/components/Dashboard/Candidates";
 import JobPostForm from "@/components/Dashboard/JobPostForm";
 import JobsTable from "@/components/Dashboard/Jobs";
+import Category from "@/components/Dashboard/Category";
 
 const PortalPage = () => {
   const router = useRouter();
@@ -65,6 +63,8 @@ const PortalPage = () => {
         return <JobPostForm />;
       case "jobs":
         return <JobsTable />;
+        case "category":
+          return <Category />;
       default:
         return <Dashboard />;
     }
