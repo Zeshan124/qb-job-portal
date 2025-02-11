@@ -17,7 +17,7 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { getJobs, deleteJob, updateJob } from "@/app/utils/api";
+import { fetchJobs, deleteJob, updateJob } from "@/app/utils/api";
 import axios from "axios";
 
 const { Title } = Typography;
@@ -30,6 +30,7 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
+  categoryID: number; // Added categoryID
   jobStatus: string;
 }
 
@@ -54,23 +55,18 @@ const JobsTable: React.FC = () => {
   useEffect(() => {
     fetchData(pagination.current, pagination.pageSize, searchText); // Trigger fetch with new search text
   }, [pagination.current, pagination.pageSize, searchText]);
-  
-  
 
   const fetchData = async (page: number, pageSize: number, jobTitle: string) => {
     setLoading(true);
     try {
-      // Include jobTitle as part of the query params
-      const response = await axios.get(
-        `http://192.168.18.47:4000/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(jobTitle)}`
-      );
-      setJobs(response.data.data);
+      const { jobs, totalJobs } = await fetchJobs(page, pageSize, jobTitle);
+      setJobs(jobs);
       setPagination((prev) => ({
         ...prev,
-        total: response.data.pagination.totalJobs,
+        total: totalJobs,
       }));
     } catch (error) {
-      console.error("Error fetching data:", error);
+      message.error("Failed to load jobs. Please try again.");
     }
     setLoading(false);
   };
@@ -103,6 +99,7 @@ const JobsTable: React.FC = () => {
       jobTitle: job.jobTitle,
       jobDescription: job.jobDescription,
       jobStatus: job.jobStatus || "open",
+      categoryID: job.categoryID, // Prefill categoryID
     });
   };
 
@@ -117,12 +114,20 @@ const JobsTable: React.FC = () => {
         jobTitle: values.jobTitle,
         jobDescription: values.jobDescription,
         jobStatus: values.jobStatus ?? editingJob.jobStatus,
+        categoryID: values.categoryID, // Ensure categoryID is updated
       };
 
       await updateJob(editingJob.jobID, updatedData);
+
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
-          job.jobID === editingJob.jobID ? { ...job, ...updatedData } : job
+          job.jobID === editingJob.jobID
+            ? {
+                ...job,
+                ...updatedData,
+                categoryName: categoryMap[updatedData.categoryID], // Update category name dynamically
+              }
+            : job
         )
       );
 
@@ -136,6 +141,7 @@ const JobsTable: React.FC = () => {
     }
   };
 
+  console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = e.target.value;
     setSearchText(newSearchText); // Update the search text
@@ -144,13 +150,18 @@ const JobsTable: React.FC = () => {
       current: 1, // Reset to the first page whenever search text changes
     }));
   };
-  
 
   const filteredJobs = jobs.filter(
     (job) =>
       job.jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
       job.jobDescription.toLowerCase().includes(searchText.toLowerCase())
   );
+
+  const categoryMap: { [key: number]: string } = {
+    1: "Software Engineer",
+    2: "Marketing",
+    3: "HRM",
+  };
 
   const columns = [
     {
@@ -179,6 +190,12 @@ const JobsTable: React.FC = () => {
       title: "Category",
       dataIndex: "categoryName",
       key: "categoryName",
+      // filters: [
+      //   { text: "Software Engineer", value: 1 },
+      //   { text: "Marketing", value: 2 },
+      //   { text: "HRM", value: 3 },
+      // ],
+      // onFilter: (value: any, record: Job) => record.categoryName === value,
     },
     {
       title: "Min Salary",
@@ -209,7 +226,7 @@ const JobsTable: React.FC = () => {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Job) => (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex gap-2">
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -296,6 +313,13 @@ const JobsTable: React.FC = () => {
             <Select>
               <Select.Option value="open">Open</Select.Option>
               <Select.Option value="close">Closed</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="Category" name="categoryID">
+            <Select>
+              <Select.Option value={1}>Software Engineer</Select.Option>
+              <Select.Option value={2}>Marketing</Select.Option>
+              <Select.Option value={3}>HRM</Select.Option>
             </Select>
           </Form.Item>
         </Form>

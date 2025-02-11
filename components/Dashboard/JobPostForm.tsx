@@ -133,6 +133,7 @@ const JobPostForm: React.FC = () => {
           loading={loading}
           block
           className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
+          style={{width: "200px"}}
         >
           Post Job
         </Button>

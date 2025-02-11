@@ -13,11 +13,10 @@ import {
 } from "antd";
 import {
   updateCandidateStatus,
-  getCandidates,
+  fetchApplications,
   downloadResume,
 } from "@/app/utils/api";
 import { DownOutlined } from "@ant-design/icons";
-import axios from "axios";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -39,7 +38,7 @@ const Candidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [filter, setFilter] = useState<string>("all"); // ✅ Status filter
+  const [filter, setFilter] = useState<string>("all"); 
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -53,16 +52,17 @@ const Candidates = () => {
   const fetchData = async (page: number, pageSize: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        `http://192.168.18.47:4000/apis/application/get?page=${page}&pageSize=${pageSize}`
+      const { applications, totalApplications } = await fetchApplications(
+        page,
+        pageSize
       );
-      setData(response.data.data);
+      setData(applications);
       setPagination((prev) => ({
         ...prev,
-        total: response.data.pagination.totalApplications,
+        total: totalApplications,
       }));
     } catch (error) {
-      console.error("Error fetching data:", error);
+      message.error("Failed to load applications. Please check the API.");
     }
     setLoading(false);
   };
@@ -70,28 +70,27 @@ const Candidates = () => {
   const handleStatusChange = async (candidateID: number, newStatus: string) => {
     try {
       await updateCandidateStatus(candidateID, newStatus);
-
-      // ✅ Find the candidate's name from the state
-      const candidate = candidates.find((c) => c.candidateID === candidateID);
-      const candidateName = candidate
-        ? candidate.name
-        : `Candidate #${candidateID}`;
-
-      // ✅ Update state with new status
-      setCandidates((prevCandidates) =>
-        prevCandidates.map((candidate) =>
+  
+      // ✅ Update `data` instead of `candidates`
+      setData((prevData) =>
+        prevData.map((candidate) =>
           candidate.candidateID === candidateID
             ? { ...candidate, status: newStatus }
             : candidate
         )
       );
-
-      // ✅ Display candidate name instead of ID in success message
+  
+      // ✅ Find candidate's name for success message
+      const candidate = data.find((c) => c.candidateID === candidateID);
+      const candidateName = candidate ? candidate.name : `Candidate #${candidateID}`;
+  
       message.success(`${candidateName}'s status updated to "${newStatus}"`);
     } catch (error) {
       message.error("Failed to update status. Please try again.");
     }
   };
+  
+  
 
   const handleDownloadResume = async (candidateID: number) => {
     try {

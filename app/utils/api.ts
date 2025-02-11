@@ -59,11 +59,35 @@ export const postJob = async (jobData: {
   }
 };
 
+export const fetchJobs = async (
+  page: number,
+  pageSize: number,
+  jobTitle: string
+) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(
+        jobTitle
+      )}`
+    );
+
+    return {
+      jobs: response.data.data,
+      totalJobs: response.data.pagination.totalJobs,
+    };
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    throw error; // Re-throw to handle errors in the component
+  }
+};
+
 export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
   try {
     console.log(`Fetching page ${page} with search text "${jobTitle}"`);
     const response = await axios.get(
-      `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(jobTitle)}`
+      `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(
+        jobTitle
+      )}`
     );
     return response.data;
   } catch (error) {
@@ -71,12 +95,6 @@ export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
     throw error;
   }
 };
-
-
-
-
-
-
 
 export const deleteJob = async (jobID: number) => {
   if (!token) throw new Error("Authentication failed: No token found.");
@@ -87,7 +105,12 @@ export const deleteJob = async (jobID: number) => {
 
 export const updateJob = async (
   jobID: number,
-  updatedJob: { jobTitle?: string; jobDescription?: string; jobStatus?: string }
+  updatedJob: {
+    jobTitle?: string;
+    jobDescription?: string;
+    jobStatus?: string;
+    categoryID?: number;
+  }
 ) => {
   if (!token) throw new Error("Authentication failed: No token found.");
   console.log("API Request Data:", updatedJob);
@@ -123,18 +146,36 @@ export const getAllJobs = async () => {
     });
 };
 
-export const getCandidates = async (page = 1, pageSize = 10) => {
-  return axios
-    .get(`${API_URL}/apis/application/get`, {
-      params: { page, pageSize },
-    })
-    .then((res) => res.data.data)
-    .catch((error) => {
-      console.error("Error fetching candidates:", error);
-      throw error;
+export const fetchApplications = async (page: number, pageSize: number) => {
+  try {
+    const response = await axios.get(`${API_URL}/apis/application/get`, {
+      params: { page, pageSize }, // Using params object for cleaner syntax
     });
+
+    return {
+      applications: response.data.data,
+      totalApplications: response.data.pagination.totalApplications,
+    };
+  } catch (error: any) {
+    console.error(
+      "Error fetching applications:",
+      error.response?.data || error.message
+    );
+    throw error; // Re-throw to allow error handling in the component
+  }
 };
 
+// export const getCandidates = async (page = 1, pageSize = 10) => {
+//   return axios
+//     .get(`${API_URL}/apis/application/get`, {
+//       params: { page, pageSize },
+//     })
+//     .then((res) => res.data.data)
+//     .catch((error) => {
+//       console.error("Error fetching candidates:", error);
+//       throw error;
+//     });
+// };
 
 export const getCandidateByID = async (candidateID: number) => {
   return axios
