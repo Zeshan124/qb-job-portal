@@ -21,7 +21,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
     const success = await addCategory(values.categoryName);
     if (success) {
       form.resetFields();
-      refreshCategories(); // ✅ Ensures UI updates
+      refreshCategories();
       onClose();
     }
     setLoading(false);

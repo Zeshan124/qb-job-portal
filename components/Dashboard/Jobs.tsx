@@ -180,23 +180,11 @@ const JobsTable: React.FC = () => {
   console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = e.target.value;
-    setSearchText(newSearchText); // Update the search text
+    setSearchText(newSearchText); 
     setPagination((prev) => ({
       ...prev,
-      current: 1, // Reset to the first page whenever search text changes
+      current: 1, 
     }));
-  };
-
-  const filteredJobs = jobs.filter(
-    (job) =>
-      job.jobTitle.toLowerCase().includes(searchText.toLowerCase()) ||
-      job.jobDescription.toLowerCase().includes(searchText.toLowerCase())
-  );
-
-  const categoryMap: { [key: number]: string } = {
-    1: "Software Engineer",
-    2: "Marketing",
-    3: "HRM",
   };
 
   const columns = [
