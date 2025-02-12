@@ -180,10 +180,10 @@ const JobsTable: React.FC = () => {
   console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = e.target.value;
-    setSearchText(newSearchText); 
+    setSearchText(newSearchText);
     setPagination((prev) => ({
       ...prev,
-      current: 1, 
+      current: 1,
     }));
   };
 
@@ -216,12 +216,6 @@ const JobsTable: React.FC = () => {
       title: "Category",
       dataIndex: "categoryName",
       key: "categoryName",
-      // filters: [
-      //   { text: "Software Engineer", value: 1 },
-      //   { text: "Marketing", value: 2 },
-      //   { text: "HRM", value: 3 },
-      // ],
-      // onFilter: (value: any, record: Job) => record.categoryName === value,
     },
     {
       title: "Min Salary",
