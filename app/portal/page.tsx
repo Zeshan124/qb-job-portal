@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Modal, Spin } from "antd";
-import Dashboard from "@/components/Dashboard/Dashboard";
 import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 import Candidates from "@/components/Dashboard/Candidates";
 import JobPostForm from "@/components/Dashboard/JobPostForm";
@@ -49,24 +48,16 @@ const PortalPage = () => {
 
   const renderComponent = (activeComponent: string) => {
     switch (activeComponent) {
-      // case "dashboard":
-      //   return <Dashboard />;
-      // case "users":
-      //   return <Users />;
-      // case "settings":
-      //   return <Settings />;
-      // case "reports":
-      //   return <Reports />;
       case "candidates":
         return <Candidates />;
       case "jobPost":
         return <JobPostForm />;
       case "jobs":
         return <JobsTable />;
-        case "category":
-          return <Category />;
+      case "category":
+        return <Category />;
       default:
-        return <Dashboard />;
+        return <Candidates />;
     }
   };
 

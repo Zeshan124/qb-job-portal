@@ -12,7 +12,7 @@ class AuthError extends Error {
 
 export async function authenticate(data) {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_URL_API || "http://localhost:4000";
+    const apiUrl = process.env.NEXT_PUBLIC_URL_API;
 
     console.log("API URL:", apiUrl);
 

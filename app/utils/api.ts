@@ -4,7 +4,7 @@ import { message } from "antd";
 import axios from "axios";
 import useSWR from "swr";
 
-const API_URL = process.env.NEXT_PUBLIC_URL_API || "http://192.168.18.47:4000";
+const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
 const token =
   typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -288,4 +288,40 @@ export const updateCategory = async (
     message.error(error.response?.data?.message || "Failed to update category");
   }
   return false;
+};
+
+export const addCategory = async (categoryName: string) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  if (!token) {
+    message.error("Authentication token is missing! Please log in.");
+    return false;
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/apis/categories/add`,
+      { categoryName },
+      {
+        headers: {
+          "x-access-token": token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("API Response:", response.data); // ✅ Debugging
+    if (response.status === 200 || response.status === 201) {
+      message.success("Category added successfully");
+      return true;
+    } else {
+      message.error("Failed to add category");
+      return false;
+    }
+  } catch (error: any) {
+    console.error("POST API Error:", error.response || error.message);
+    message.error(error.response?.data?.message || "Failed to add category");
+    return false;
+  }
 };

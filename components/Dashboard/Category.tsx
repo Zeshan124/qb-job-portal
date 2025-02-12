@@ -28,16 +28,19 @@ const Category: React.FC = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [updatedCategoryName, setUpdatedCategoryName] = useState<string>("");
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const categoriesData = await getCategories();
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Error loading categories:", error);
-      }
-    };
+  const loadCategories = async () => {
+    setLoading(true);
+    try {
+      const categoriesData = await getCategories();
+      setCategories(categoriesData); // ✅ Ensure state updates UI
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadCategories();
   }, []);
 
@@ -146,7 +149,7 @@ const Category: React.FC = () => {
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        refreshCategories={getCategories}
+        refreshCategories={loadCategories}
       />
 
       <Modal

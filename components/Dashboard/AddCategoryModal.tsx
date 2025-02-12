@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, message } from "antd";
 import axios from "axios";
-
-const API_BASE_URL = "http://192.168.18.47:4000/apis/categories";
+import { addCategory } from "@/app/utils/api";
 
 interface AddCategoryModalProps {
   isOpen: boolean;
@@ -20,44 +19,13 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({
 
   const handleAddCategory = async (values: { categoryName: string }) => {
     setLoading(true);
-
-    // 🔑 Get token from localStorage
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    // 📌 Define headers properly
-    const headers = token
-      ? { "x-access-token": token, "Content-Type": "application/json" }
-      : {};
-
-    if (!token) {
-      message.error("Authentication token is missing! Please log in.");
-      setLoading(false);
-      return;
+    const success = await addCategory(values.categoryName);
+    if (success) {
+      form.resetFields();
+      refreshCategories(); // ✅ Ensures UI updates
+      onClose();
     }
-
-    try {
-      const response = await axios.post(
-        "http://192.168.18.47:4000/apis/categories/add",
-        values,
-        { headers }
-      );
-
-      console.log("API Response:", response.data); // ✅ Debugging
-      if (response.status === 200 || response.status === 201) {
-        message.success("Category added successfully");
-        form.resetFields();
-        refreshCategories();
-        onClose();
-      } else {
-        message.error("Failed to add category");
-      }
-    } catch (error: any) {
-      console.error("POST API Error:", error.response || error.message);
-      message.error(error.response?.data?.message || "Failed to add category");
-    } finally {
-      setLoading(false);
-    }
+    setLoading(false);
   };
 
   return (
