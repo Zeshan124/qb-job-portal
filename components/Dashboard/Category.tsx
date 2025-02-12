@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, message, Popconfirm, Input, Modal } from "antd";
-import axios from "axios";
 import AddCategoryModal from "./AddCategoryModal";
 import { getCategories, deleteCategory, updateCategory } from "@/app/utils/api";
 

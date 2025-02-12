@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Modal, Form, Input, Button, message } from "antd";
-import axios from "axios";
 import { addCategory } from "@/app/utils/api";
 
 interface AddCategoryModalProps {

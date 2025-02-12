@@ -39,12 +39,11 @@ export const ApplyButton = ({ jobID }: { jobID: number }) => {
         {" "}
         {isApplied ? "Applied" : "Apply Now"}
       </button>
-      {/* Pass the jobID dynamically to the PopupForm */}
       <PopupForm
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         onSubmit={handleSubmit}
-        jobID={jobID} // Dynamically passed
+        jobID={jobID}
       />
       <ToastContainer position="top-center" />
     </div>

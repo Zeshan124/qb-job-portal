@@ -162,7 +162,7 @@ export const fetchApplications = async (page: number, pageSize: number) => {
       "Error fetching applications:",
       error.response?.data || error.message
     );
-    throw error; // Re-throw to allow error handling in the component
+    throw error;
   }
 };
 

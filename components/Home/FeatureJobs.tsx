@@ -44,7 +44,7 @@ const FeatureJobs = () => {
     setIsLoading(true);
     setTimeout(() => {
       router.push("/job/alljobs");
-    }, 1000);
+    }, 100);
   };
 
   return (
@@ -81,7 +81,7 @@ const FeatureJobs = () => {
             size="large"
             onClick={handleAllJobs}
             disabled={isLoading}
-            className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] mx-auto"
+            className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 !important px-6 py-2 font-semibold text-white rounded-lg w-[200px] mx-auto"
           >
             {isLoading ? <Spin /> : "View all jobs"}
           </Button>
