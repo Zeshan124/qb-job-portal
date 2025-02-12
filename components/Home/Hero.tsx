@@ -22,8 +22,7 @@ const Hero = () => {
         <div className="w-[80%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[2rem] items-center">
           <div>
             <h1 className="text-[28px] sm:text-[35px] lg:text-[40px] xl:text-[50px] text-[#05264e] leading-normal lg:leading-relaxed font-extrabold main-heading">
-              The <span className="text-[#8570C5]">Easiest Way</span> <br /> To
-              Get Your Dream jobs
+              <span className="text-[#8570C5]">Qist Bazaar</span> Job Portal
             </h1>
             <p className="text-[#4f5e6f] text-[16px] md:text-[18px] mt-[1rem] leading-relaxed">
               Qist Bazaar is a prominent e-commerce platform based in Pakistan

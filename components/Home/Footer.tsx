@@ -11,8 +11,9 @@ const Footer = () => {
             className="w-40 h-35 mb-2"
           />
           <p className="text-sm text-white text-opacity-70">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed velit
-            tempore obcaecati excepturi, voluptatem, odio deserunt.
+            At QistBazaar, we believe in the power of dreams and the dignity
+            that comes with having what you need to improve your quality of
+            life.
           </p>
           <div className="mt-6 flex items-center space-x-3">
             <a

@@ -80,9 +80,9 @@ const PopupForm = ({
 
       if (response.ok) {
         if (!toast.isActive("success")) {
-          toast.success("Application submitted successfully!", {
-            toastId: "success",
-          });
+          // toast.success("Application submitted successfully!", {
+          //   toastId: "success",
+          // });
         }
         setFormData({
           name: "",
@@ -200,7 +200,7 @@ const PopupForm = ({
         </div>
         <div>
           <label htmlFor="resumePDF" className="block text-lg font-semibold">
-            Upload Resume (PDF)
+            Upload Resume (Only PDF file allowed)
           </label>
           <input
             type="file"
