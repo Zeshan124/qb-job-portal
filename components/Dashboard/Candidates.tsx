@@ -71,7 +71,6 @@ const Candidates = () => {
     try {
       await updateCandidateStatus(candidateID, newStatus);
 
-      // ✅ Update `data` instead of `candidates`
       setData((prevData) =>
         prevData.map((candidate) =>
           candidate.candidateID === candidateID
@@ -80,7 +79,6 @@ const Candidates = () => {
         )
       );
 
-      // ✅ Find candidate's name for success message
       const candidate = data.find((c) => c.candidateID === candidateID);
       const candidateName = candidate
         ? candidate.name
@@ -213,7 +211,6 @@ const Candidates = () => {
           Applied Candidates
         </Title>
 
-        {/* ✅ Filter Dropdown */}
         <Select
           value={filter}
           onChange={(value) => setFilter(value)}

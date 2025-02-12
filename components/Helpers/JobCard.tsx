@@ -40,18 +40,15 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           />
         </div>
 
-        {/* Content */}
         <div>
           <h1 className="text-base font-semibold mb-2">{job.title}</h1>
           <div className="flex items-center md:space-x-10 space-x-4">
-            {/* Location */}
             <div className="flex items-center space-x-2">
               <FaMapLocation className="w-4 h-4 text-pink-600" />
               <p className="text-sm text-black font-semibold opacity-60">
                 {job?.location}
               </p>
             </div>
-            {/* Salary */}
             <div className="flex items-center space-x-2">
               <BiMoney className="w-4 h-4 text-pink-600" />
               <p className="text-sm text-black font-semibold text-opacity-60">
@@ -60,7 +57,6 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
             </div>
           </div>
 
-          {/* Job Type */}
           <div className="flex item-center space-x-2 sm:space-x-4 mt-[1rem]">
             <div className="text-[10px] sm:text-sm text-opacity-80 px-2 sm:px-6 py-1 rounded-full bg-opacity-30 font-semibold capitalize bg-green-600">
               {job?.jobtype}

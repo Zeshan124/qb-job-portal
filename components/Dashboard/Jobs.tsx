@@ -17,7 +17,12 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import { fetchJobs, deleteJob, updateJob } from "@/app/utils/api";
+import {
+  fetchJobs,
+  deleteJob,
+  updateJob,
+  getCategories,
+} from "@/app/utils/api";
 
 const { Title } = Typography;
 
@@ -29,7 +34,7 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
-  categoryID: number; // Added categoryID
+  categoryID: number;
   jobStatus: string;
 }
 
@@ -58,20 +63,22 @@ const JobsTable: React.FC = () => {
   }, [pagination.current, pagination.pageSize, searchText]);
 
   useEffect(() => {
-    fetchCategories();
-  }, []);
+    const loadCategories = async () => {
+      try {
+        const categoriesData = await getCategories();
+        setCategories(
+          categoriesData.map((c) => ({
+            categoryID: c.categoryID,
+            categoryName: c.categoryName,
+          }))
+        );
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(
-        "http://192.168.18.47:4000/apis/categories/getAll"
-      );
-      const data = await response.json();
-      setCategories(data.data); // Assuming the response structure contains `data.data`
-    } catch (error) {
-      message.error("Failed to fetch categories");
-    }
-  };
+    loadCategories();
+  }, []);
 
   const fetchData = async (
     page: number,
@@ -125,37 +132,40 @@ const JobsTable: React.FC = () => {
 
   const handleUpdateJob = async () => {
     if (!editingJob) return;
-  
+
     try {
       setEditLoading(true);
       const values = form.getFieldsValue();
-  
+
       const updatedData = {
         jobTitle: values.jobTitle,
         jobDescription: values.jobDescription,
         jobStatus: values.jobStatus ?? editingJob.jobStatus,
         categoryID: values.categoryID,
       };
-  
+
       console.log("📤 Updating Job ID:", editingJob.jobID);
       console.log("📝 Updated Data:", updatedData);
-  
+
       const response = await updateJob(editingJob.jobID, updatedData);
-      
+
       console.log("✅ Update Response:", response);
-  
+      const updatedCategory = categories.find(
+        (category) => category.categoryID === updatedData.categoryID
+      )?.categoryName;
+
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job.jobID === editingJob.jobID
             ? {
                 ...job,
                 ...updatedData,
-                categoryName: categoryMap[updatedData.categoryID],
+                categoryName: updatedCategory || "Unknown Category",
               }
             : job
         )
       );
-  
+
       message.success("Job updated successfully!");
       setEditModalVisible(false);
       setEditingJob(null);
@@ -166,7 +176,6 @@ const JobsTable: React.FC = () => {
       setEditLoading(false);
     }
   };
-  
 
   console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

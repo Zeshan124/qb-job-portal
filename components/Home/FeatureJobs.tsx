@@ -1,4 +1,4 @@
-"use client"; // 👈 Required to make this a Client Component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Heading } from "../../paths";
@@ -21,8 +21,8 @@ interface Job {
 const FeatureJobs = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // ✅ Added state for button loading
-  const router = useRouter(); // ✅ Router for navigation
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -41,10 +41,10 @@ const FeatureJobs = () => {
   }, []);
 
   const handleAllJobs = () => {
-    setIsLoading(true); // ✅ Set loading state to true
+    setIsLoading(true);
     setTimeout(() => {
-      router.push("/job/alljobs"); // ✅ Navigate after delay
-    }, 1000); // Simulating loading effect
+      router.push("/job/alljobs");
+    }, 1000);
   };
 
   return (
@@ -67,7 +67,7 @@ const FeatureJobs = () => {
                   : "Not specified",
                 location: job.location,
                 jobtype: job.categoryName,
-                description: job.jobDescription || "", // ✅ Ensure description is passed
+                description: job.jobDescription || "",
               }}
             />
           </Link>

@@ -4,7 +4,6 @@ const Footer = () => {
   return (
     <div className="pt-20 pb-12 bg-black">
       <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-8 border-b-2 border-white border-opacity-10">
-        {/* Logo & Description Section */}
         <div>
           <img
             src="/images/footer-logo.png"
@@ -74,7 +73,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* About Section */}
         <div>
           <h1 className="text-[22px] text-white font-semibold mb-6">About</h1>
           <ul className="space-y-2 text-white text-opacity-50  ">
@@ -111,7 +109,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Information Section */}
         <div>
           <h1 className="text-[22px] text-white font-semibold mb-6">
             Information
@@ -152,7 +149,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Contact Section */}
         <div className="text-white text-opacity-50">
           <h1 className="text-[22px] text-white font-semibold mb-6">
             Contact Us
@@ -183,7 +179,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Copyright Section */}
       <div className="text-center mt-8">
         <p className="text-sm text-white text-opacity-70 p-2">
           Copyright © 2025{" "}
@@ -202,14 +197,12 @@ const Footer = () => {
   );
 };
 
-// Social Icon Component
 const SocialIcon = ({ src, alt }: { src: string; alt: string }) => (
   <div className="w-10 h-10 rounded-full flex items-center justify-center">
     <img src={src} alt={alt} className="w-7 h-7" />
   </div>
 );
 
-// Common footer link styles
 const footerLinkStyle =
   "text-base w-fit text-white text-opacity-50 hover:text-[#8570C5] cursor-pointer";
 export default Footer;

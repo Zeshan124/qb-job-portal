@@ -3,13 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, InputNumber, Button, Select, message } from "antd";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css"; // Import Quill styles
-import { postJob } from "@/app/utils/api";
-
-interface Category {
-  id: number;
-  name: string;
-}
+import "react-quill/dist/quill.snow.css";
+import { postJob, getCategories } from "@/app/utils/api";
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -18,40 +13,26 @@ const JobPostForm: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [jobDescription, setJobDescription] = useState("");
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<
+    { categoryID: number; categoryName: string }[]
+  >([]);
   const [fetching, setFetching] = useState(true);
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const response = await fetch(
-          "http://192.168.18.47:4000/apis/categories/getAll"
+        const categoriesData = await getCategories();
+        setCategories(
+          categoriesData.map((c) => ({
+            categoryID: c.categoryID,
+            categoryName: c.categoryName,
+          }))
         );
-        if (!response.ok) throw new Error("Failed to fetch categories");
-
-        const result: {
-          message: string;
-          data: { categoryID: number; categoryName: string }[];
-        } = await response.json();
-
-        console.log("Fetched Categories:", result); // Debugging log 🚀
-
-        // Ensure correct type assignment
-        const formattedCategories: Category[] = result.data.map((category) => ({
-          id: category.categoryID, // Use correct key from API
-          name: category.categoryName, // Use correct key from API
-        }));
-
-        setCategories(formattedCategories); // Update state correctly
       } catch (error) {
-        console.error("Error fetching categories:", error);
-        message.error("Failed to load categories");
-        setCategories([]);
-      } finally {
-        setFetching(false);
+        console.error("Error loading categories:", error);
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
 
   const onFinish = async (values: {
@@ -64,10 +45,10 @@ const JobPostForm: React.FC = () => {
     setLoading(true);
 
     try {
-      await postJob({ ...values, jobDescription }); // Send jobDescription separately
+      await postJob({ ...values, jobDescription });
       message.success("Job posted successfully!");
       form.resetFields();
-      setJobDescription(""); // Clear editor after submission
+      setJobDescription("");
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -85,7 +66,6 @@ const JobPostForm: React.FC = () => {
         <Input placeholder="Enter job title" />
       </Form.Item>
 
-      {/* HTML Editor for Job Description */}
       <Form.Item
         label="Job Description"
         layout="vertical"
@@ -153,7 +133,6 @@ const JobPostForm: React.FC = () => {
         />
       </Form.Item>
 
-      {/* Dynamic Category Select */}
       <Form.Item
         label="Category"
         name="categoryID"
@@ -162,8 +141,8 @@ const JobPostForm: React.FC = () => {
         <Select placeholder="Select category" loading={fetching}>
           {categories.length > 0 ? (
             categories.map((category) => (
-              <Option key={category.id} value={category.id}>
-                {category.name}
+              <Option key={category.categoryID} value={category.categoryID}>
+                {category.categoryName}
               </Option>
             ))
           ) : (

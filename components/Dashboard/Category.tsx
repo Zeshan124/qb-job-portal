@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, message, Popconfirm, Input, Modal } from "antd";
 import axios from "axios";
 import AddCategoryModal from "./AddCategoryModal";
-
-const API_BASE_URL = "http://192.168.18.47:4000/apis/categories";
+import { getCategories, deleteCategory, updateCategory } from "@/app/utils/api";
 
 interface Job {
   jobID: number;
@@ -30,113 +29,48 @@ const Category: React.FC = () => {
   const [updatedCategoryName, setUpdatedCategoryName] = useState<string>("");
 
   useEffect(() => {
-    fetchCategories();
+    const loadCategories = async () => {
+      try {
+        const categoriesData = await getCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+
+    loadCategories();
   }, []);
 
-  // 🔄 Fetch Categories from API
-  const fetchCategories = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_BASE_URL}/getAll`);
-      setCategories([...response.data.data]);
-    } catch (error) {
-      message.error("Failed to fetch categories");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ❌ Delete Category
   const handleDelete = async (categoryId: number) => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (!token) {
-      message.error("Authentication token is missing! Please log in.");
-      return;
-    }
-
-    try {
-      const response = await axios.delete(`${API_BASE_URL}/delete`, {
-        headers: {
-          "x-access-token": token,
-          "Content-Type": "application/json",
-        },
-        data: { categoryId },
-      });
-
-      console.log("DELETE API Response:", response.data);
-      if (response.status === 200 || response.status === 201) {
-        message.success("Category deleted successfully");
-        setCategories((prevCategories) =>
-          prevCategories.filter(
-            (category) => category.categoryID !== categoryId
-          )
-        );
-      } else {
-        message.error("Failed to delete category");
-      }
-    } catch (error: any) {
-      console.error("DELETE API Error:", error.response || error.message);
-      message.error(
-        error.response?.data?.message || "Failed to delete category"
+    const success = await deleteCategory(categoryId);
+    if (success) {
+      setCategories((prev) =>
+        prev.filter((category) => category.categoryID !== categoryId)
       );
     }
   };
 
-  // ✏️ Handle Edit Click
   const handleEditClick = (category: Category) => {
     setEditingCategory(category);
     setUpdatedCategoryName(category.categoryName);
     setIsEditModalOpen(true);
   };
 
-  // 🔄 Handle Update Category
   const handleUpdateCategory = async () => {
     if (!editingCategory) return;
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (!token) {
-      message.error("Authentication token is missing! Please log in.");
-      return;
-    }
-
-    try {
-      const response = await axios.patch(
-        `${API_BASE_URL}/update`,
-        {
-          categoryId: editingCategory.categoryID,
-          categoryName: updatedCategoryName,
-        },
-        {
-          headers: {
-            "x-access-token": token,
-            "Content-Type": "application/json",
-          },
-        }
+    const success = await updateCategory(
+      editingCategory.categoryID,
+      updatedCategoryName
+    );
+    if (success) {
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat.categoryID === editingCategory.categoryID
+            ? { ...cat, categoryName: updatedCategoryName }
+            : cat
+        )
       );
-
-      console.log("PATCH API Response:", response.data);
-
-      if (response.status === 200 || response.status === 201) {
-        message.success("Category updated successfully");
-        setCategories((prevCategories) =>
-          prevCategories.map((cat) =>
-            cat.categoryID === editingCategory.categoryID
-              ? { ...cat, categoryName: updatedCategoryName }
-              : cat
-          )
-        );
-        setIsEditModalOpen(false);
-      } else {
-        message.error("Failed to update category");
-      }
-    } catch (error: any) {
-      console.error("PATCH API Error:", error.response || error.message);
-      message.error(
-        error.response?.data?.message || "Failed to update category"
-      );
+      setIsEditModalOpen(false);
     }
   };
 
@@ -212,10 +146,9 @@ const Category: React.FC = () => {
       <AddCategoryModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        refreshCategories={fetchCategories}
+        refreshCategories={getCategories}
       />
 
-      {/* Edit Category Modal */}
       <Modal
         title="Edit Category"
         open={isEditModalOpen}

@@ -1,5 +1,6 @@
 "use client";
 
+import { message } from "antd";
 import axios from "axios";
 import useSWR from "swr";
 
@@ -77,7 +78,7 @@ export const fetchJobs = async (
     };
   } catch (error) {
     console.error("Error fetching jobs:", error);
-    throw error; // Re-throw to handle errors in the component
+    throw error;
   }
 };
 
@@ -192,31 +193,99 @@ export const downloadResume = async (candidateID: number) => {
     .then((res) => res.data);
 };
 
-export interface Category {
-  id: number;
-  name: string;
+interface Category {
+  categoryID: number;
+  categoryName: string;
+  createdAt: string;
+  jobs: Job[];
 }
 
-// Function to fetch categories
+interface Job {
+  jobID: number;
+  jobTitle: string;
+  jobDescription: string;
+  location: string;
+  minSalary: number | null;
+  maxSalary: number | null;
+}
+
 export const getCategories = async (): Promise<Category[]> => {
   try {
-    const response = await fetch(
-      "http://192.168.18.47:4000/apis/categories/getAll"
+    const response = await axios.get(`${API_URL}/apis/categories/getAll`);
+
+    return response.data.data.map((category: any) => ({
+      categoryID: category.categoryID,
+      categoryName: category.categoryName,
+      createdAt: category.createdAt || new Date().toISOString(),
+      jobs: Array.isArray(category.jobs) ? category.jobs : [],
+    }));
+  } catch (error: any) {
+    console.error(
+      "❌ Error fetching categories:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const deleteCategory = async (categoryId: number) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (!token) {
+    message.error("Authentication token is missing! Please log in.");
+    return false;
+  }
+
+  try {
+    const response = await axios.delete(`${API_URL}/apis/categories/delete`, {
+      headers: {
+        "x-access-token": token,
+        "Content-Type": "application/json",
+      },
+      data: { categoryId },
+    });
+
+    if (response.status === 200 || response.status === 201) {
+      message.success("Category deleted successfully");
+      return true;
+    }
+  } catch (error: any) {
+    console.error("DELETE API Error:", error.response || error.message);
+    message.error(error.response?.data?.message || "Failed to delete category");
+  }
+  return false;
+};
+
+export const updateCategory = async (
+  categoryId: number,
+  categoryName: string
+) => {
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  if (!token) {
+    message.error("Authentication token is missing! Please log in.");
+    return false;
+  }
+
+  try {
+    const response = await axios.patch(
+      `${API_URL}/apis/categories/update`,
+      { categoryId, categoryName },
+      {
+        headers: {
+          "x-access-token": token,
+          "Content-Type": "application/json",
+        },
+      }
     );
 
-    if (!response.ok) throw new Error("Failed to fetch categories");
-
-    const result: {
-      message: string;
-      data: { categoryID: number; categoryName: string }[];
-    } = await response.json();
-
-    return result.data.map((category) => ({
-      id: category.categoryID,
-      name: category.categoryName,
-    }));
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error; // Rethrow error so it can be handled in the component
+    if (response.status === 200 || response.status === 201) {
+      message.success("Category updated successfully");
+      return true;
+    }
+  } catch (error: any) {
+    console.error("PATCH API Error:", error.response || error.message);
+    message.error(error.response?.data?.message || "Failed to update category");
   }
+  return false;
 };

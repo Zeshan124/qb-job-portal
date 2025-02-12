@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Spin } from "antd"; // Import Spin component from Ant Design
+import { Spin } from "antd";
 
 interface User {
   id: string;
@@ -20,31 +20,31 @@ interface UserContextType {
 const UserContext = createContext<UserContextType>({
   user: null,
   setUser: () => {},
-  logout: () => {}, 
+  logout: () => {},
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Add loading state
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-    setLoading(false); // Set loading to false once the data is retrieved
+    setLoading(false);
   }, []);
 
   const logout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("token")
+    localStorage.removeItem("token");
     setUser(null);
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" /> {/* Show Ant Design spinner */}
+        <Spin size="large" />
       </div>
     );
   }
