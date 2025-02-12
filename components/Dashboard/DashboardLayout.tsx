@@ -11,6 +11,7 @@ import {
   ArrowLeftOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  TagsOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
@@ -61,7 +62,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { id: "candidates", label: "Candidates", icon: <TeamOutlined /> },
     { id: "jobPost", label: "Job Post", icon: <FormOutlined /> },
     { id: "jobs", label: "Jobs", icon: <UnorderedListOutlined /> },
-    { id: "category", label: "Categories", icon: <UnorderedListOutlined /> },
+    { id: "category", label: "Categories", icon: <TagsOutlined /> },
   ];
 
   const settingsMenu: MenuProps["items"] = [
