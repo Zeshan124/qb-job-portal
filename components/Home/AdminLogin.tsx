@@ -63,12 +63,12 @@ const AdminLogin = () => {
           <Image
             src="/images/chair.jpg"
             alt="Login"
-            width={170}
-            height={120}
+            width={200}
+            height={180}
             className="rounded"
           />
         </div>
-        <Title level={3} className="text-center text-gray-800">
+        <Title level={3} className="text-center text-gray-700">
           Admin Login
         </Title>
         <Text type="secondary" className="block text-center mb-4">

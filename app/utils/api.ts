@@ -165,18 +165,6 @@ export const fetchApplications = async (page: number, pageSize: number) => {
   }
 };
 
-// export const getCandidates = async (page = 1, pageSize = 10) => {
-//   return axios
-//     .get(`${API_URL}/apis/application/get`, {
-//       params: { page, pageSize },
-//     })
-//     .then((res) => res.data.data)
-//     .catch((error) => {
-//       console.error("Error fetching candidates:", error);
-//       throw error;
-//     });
-// };
-
 export const getCandidateByID = async (candidateID: number) => {
   return axios
     .get(`${API_URL}/apis/application/getByID/${candidateID}`)
@@ -212,12 +200,16 @@ export interface Category {
 // Function to fetch categories
 export const getCategories = async (): Promise<Category[]> => {
   try {
-    const response = await fetch("http://192.168.18.47:4000/apis/categories/getAll");
+    const response = await fetch(
+      "http://192.168.18.47:4000/apis/categories/getAll"
+    );
 
     if (!response.ok) throw new Error("Failed to fetch categories");
 
-    const result: { message: string; data: { categoryID: number; categoryName: string }[] } =
-      await response.json();
+    const result: {
+      message: string;
+      data: { categoryID: number; categoryName: string }[];
+    } = await response.json();
 
     return result.data.map((category) => ({
       id: category.categoryID,
@@ -228,4 +220,3 @@ export const getCategories = async (): Promise<Category[]> => {
     throw error; // Rethrow error so it can be handled in the component
   }
 };
-

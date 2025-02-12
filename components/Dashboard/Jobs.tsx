@@ -125,41 +125,48 @@ const JobsTable: React.FC = () => {
 
   const handleUpdateJob = async () => {
     if (!editingJob) return;
-
+  
     try {
       setEditLoading(true);
       const values = form.getFieldsValue();
-
+  
       const updatedData = {
         jobTitle: values.jobTitle,
         jobDescription: values.jobDescription,
         jobStatus: values.jobStatus ?? editingJob.jobStatus,
-        categoryID: values.categoryID, // Ensure categoryID is updated
+        categoryID: values.categoryID,
       };
-
-      await updateJob(editingJob.jobID, updatedData);
-
+  
+      console.log("📤 Updating Job ID:", editingJob.jobID);
+      console.log("📝 Updated Data:", updatedData);
+  
+      const response = await updateJob(editingJob.jobID, updatedData);
+      
+      console.log("✅ Update Response:", response);
+  
       setJobs((prevJobs) =>
         prevJobs.map((job) =>
           job.jobID === editingJob.jobID
             ? {
                 ...job,
                 ...updatedData,
-                categoryName: categoryMap[updatedData.categoryID], // Update category name dynamically
+                categoryName: categoryMap[updatedData.categoryID],
               }
             : job
         )
       );
-
+  
       message.success("Job updated successfully!");
       setEditModalVisible(false);
       setEditingJob(null);
     } catch (error) {
+      console.error("❌ Error updating job:", error);
       message.error("Failed to update job. Please try again.");
     } finally {
       setEditLoading(false);
     }
   };
+  
 
   console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
