@@ -69,7 +69,7 @@ const PopupForm = ({
       setIsSubmitting(true);
 
       const response = await fetch(
-        "http://192.168.18.47:4000/apis/application/post",
+        "https://bhrportal.qist.pk/apis/application/post",
         {
           method: "POST",
           body: formPayload,

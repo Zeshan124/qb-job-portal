@@ -51,6 +51,22 @@
   line-height: 1;
 }
 
+.lottie {
+  width: 500px;
+  height: 550px;
+}
+
+.ant-spin-dot-item {
+  color: #8570c5;
+}
+
+@media (max-width: 768px) {
+  .lottie {
+    width: 300px;
+    height: 350px;
+  }
+}
+
 /* .ant-btn:hover {
   background: #9371f8 !important;
 } */
