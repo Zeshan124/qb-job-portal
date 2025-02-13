@@ -1,5 +1,3 @@
-"use client";
-
 import { message } from "antd";
 import axios from "axios";
 import useSWR from "swr";
@@ -138,13 +136,22 @@ export const getCategoryById = async (jobID: number) => {
 };
 
 export const getAllJobs = async () => {
-  return axios
-    .get(`${API_URL}/apis/job/get`)
-    .then((res) => res.data.data)
-    .catch((error) => {
-      console.error("Error fetching jobs:", error);
-      throw error;
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_URL_API; // Ensure API_URL is defined
+    const res = await fetch(`${API_URL}/apis/job/get`, {
+      cache: "no-store", // Ensures fresh data
     });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch jobs");
+    }
+
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    throw error;
+  }
 };
 
 export const fetchApplications = async (page: number, pageSize: number) => {

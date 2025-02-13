@@ -1,21 +1,6 @@
-"use client";
+import LottieAnimation from "./LottieAnimation";
 
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import animationData from "@/public/animations/Animation.json";
-
-const Player = dynamic(
-  () => import("@lottiefiles/react-lottie-player").then((mod) => mod.Player),
-  { ssr: false }
-);
-
-const Hero = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
+export default function Hero() {
   return (
     <div className="pt-16 md:pt-20 pb-8 md:pb-12">
       <div className="w-full min-h-[60vh] flex items-center justify-center">
@@ -32,21 +17,11 @@ const Hero = () => {
               more accessible through affordable monthly installments.
             </p>
           </div>
-          <div className="hidden lg:block">
-            {isClient && (
-              <Player
-                autoplay
-                loop
-                src={animationData}
-                style={{ height: "550px", width: "650px" }}
-                keepLastFrame
-              />
-            )}
+          <div className="lg:block">
+            <LottieAnimation />
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default Hero;
+}

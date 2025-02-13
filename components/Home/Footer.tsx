@@ -15,7 +15,7 @@ const Footer = () => {
             that comes with having what you need to improve your quality of
             life.
           </p>
-          <div className="mt-6 flex items-center space-x-3">
+          <div className="mt-6 flex items-center space-x-2">
             <a
               href="https://www.facebook.com/qistbazaar.pk/"
               target="_blank"
@@ -56,7 +56,7 @@ const Footer = () => {
               <SocialIcon src="/images/linkedin.svg" alt="LinkedIn" />
             </a>
 
-            <a
+            {/* <a
               href="https://api.whatsapp.com/send?phone=923000340428"
               target="_blank"
               rel="noopener noreferrer"
@@ -70,7 +70,7 @@ const Footer = () => {
               rel="noopener noreferrer"
             >
               <SocialIcon src="/images/tiktok.svg" alt="TikTok" />
-            </a>
+            </a> */}
           </div>
         </div>
 

@@ -42,13 +42,18 @@ const JobPostForm: React.FC = () => {
     maxSalary: number;
     categoryID: number;
   }) => {
+    if (!jobDescription.trim()) {
+      message.error("Please enter the job description.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       await postJob({ ...values, jobDescription });
       message.success("Job posted successfully!");
       form.resetFields();
-      setJobDescription("");
+      setJobDescription(""); // Reset description after posting
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -98,38 +103,44 @@ const JobPostForm: React.FC = () => {
       <Form.Item
         label="Minimum Salary"
         name="minSalary"
-        rules={[
-          { required: true, message: "Please enter the minimum salary" },
-          {
-            type: "number",
-            min: 0,
-            message: "Salary must be a positive number",
-          },
-        ]}
+        rules={[{ required: true, message: "Please enter the minimum salary" }]}
       >
         <InputNumber
           placeholder="Enter minimum salary"
           style={{ width: "100%" }}
           min={0}
+          controls={false} // Hides stepper controls
+          onKeyDown={(e) => {
+            if (
+              !/[\d]/.test(e.key) &&
+              e.key !== "Backspace" &&
+              e.key !== "Delete"
+            ) {
+              e.preventDefault(); // Prevents non-numeric input
+            }
+          }}
         />
       </Form.Item>
 
       <Form.Item
         label="Maximum Salary"
         name="maxSalary"
-        rules={[
-          { required: true, message: "Please enter the maximum salary" },
-          {
-            type: "number",
-            min: 0,
-            message: "Salary must be a positive number",
-          },
-        ]}
+        rules={[{ required: true, message: "Please enter the maximum salary" }]}
       >
         <InputNumber
           placeholder="Enter maximum salary"
           style={{ width: "100%" }}
           min={0}
+          controls={false} // Hides stepper controls
+          onKeyDown={(e) => {
+            if (
+              !/[\d]/.test(e.key) &&
+              e.key !== "Backspace" &&
+              e.key !== "Delete"
+            ) {
+              e.preventDefault(); // Prevents non-numeric input
+            }
+          }}
         />
       </Form.Item>
 
