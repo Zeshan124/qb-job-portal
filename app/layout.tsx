@@ -12,6 +12,9 @@ const font = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Qist-Bazaar Job Portal",
   description: "Find the best job opportunities across Qist-Bazaar",
+  // icons: {
+  //   icon: "/favicon",
+  // },
 };
 
 export default function RootLayout({

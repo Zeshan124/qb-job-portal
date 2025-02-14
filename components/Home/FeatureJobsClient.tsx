@@ -1,3 +1,4 @@
+// FeatureJobsClients.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,6 +15,7 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
+  slug: string; // Add slug to the job interface
 }
 
 interface FeatureJobsProps {
@@ -38,10 +40,10 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
     }, 500);
   };
 
-  const handleJobCardClick = (jobID: number) => {
+  const handleJobCardClick = (slug: string) => {
     setIsJobCardLoading(true); // ✅ Show full-screen spinner
     setTimeout(() => {
-      router.push(`/job/jobDetails/${jobID}`); // ✅ Navigate to job details
+      router.push(`/job/jobDetails/${slug}`); // ✅ Navigate to job details
     }, 500); // Simulate a delay for the spinner
   };
 
@@ -72,7 +74,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
           jobs.slice(0, 6).map((job) => (
             <div
               key={job.jobID}
-              onClick={() => handleJobCardClick(job.jobID)} // ✅ Add click handler
+              onClick={() => handleJobCardClick(job.slug)} // ✅ Add click handler
               className="cursor-pointer"
             >
               <JobCard
@@ -86,6 +88,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
                   location: job.location,
                   jobtype: job.categoryName,
                   description: job.jobDescription || "",
+                  slug: job.slug, // Pass the slug to the JobCard
                 }}
               />
             </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Form, Input, InputNumber, Button, Select, message } from "antd";
+import { Form, Input, InputNumber, Button, Select, message, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { postJob, getCategories } from "@/app/utils/api";
@@ -17,6 +18,8 @@ const JobPostForm: React.FC = () => {
     { categoryID: number; categoryName: string }[]
   >([]);
   const [fetching, setFetching] = useState(true);
+  const [jobPostImage, setJobPostImage] = useState<File | null>(null);
+
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -35,6 +38,12 @@ const JobPostForm: React.FC = () => {
     loadCategories();
   }, []);
 
+  const handleFileChange = (info: any) => {
+    // ✅ Properly store the selected file in state
+    const file = info.fileList[0]?.originFileObj || null;
+    setJobPostImage(file);
+  };
+
   const onFinish = async (values: {
     jobTitle: string;
     location: string;
@@ -47,13 +56,30 @@ const JobPostForm: React.FC = () => {
       return;
     }
 
+    if (!jobPostImage) {
+      message.error("Please upload a job post image.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await postJob({ ...values, jobDescription });
+      // ✅ Ensure we use FormData to match `multipart/form-data`
+      const formData = new FormData();
+      formData.append("jobTitle", values.jobTitle);
+      formData.append("jobDescription", jobDescription);
+      formData.append("location", values.location);
+      formData.append("minSalary", values.minSalary.toString());
+      formData.append("maxSalary", values.maxSalary.toString());
+      formData.append("categoryID", values.categoryID.toString());
+      formData.append("jobPostImage", jobPostImage);
+
+      await postJob(formData);
       message.success("Job posted successfully!");
+
       form.resetFields();
-      setJobDescription(""); // Reset description after posting
+      setJobDescription("");
+      setJobPostImage(null);
     } catch (error) {
       message.error(`Failed to post job: ${(error as Error).message}`);
     } finally {
@@ -109,16 +135,6 @@ const JobPostForm: React.FC = () => {
           placeholder="Enter minimum salary"
           style={{ width: "100%" }}
           min={0}
-          controls={false} // Hides stepper controls
-          onKeyDown={(e) => {
-            if (
-              !/[\d]/.test(e.key) &&
-              e.key !== "Backspace" &&
-              e.key !== "Delete"
-            ) {
-              e.preventDefault(); // Prevents non-numeric input
-            }
-          }}
         />
       </Form.Item>
 
@@ -131,16 +147,6 @@ const JobPostForm: React.FC = () => {
           placeholder="Enter maximum salary"
           style={{ width: "100%" }}
           min={0}
-          controls={false} // Hides stepper controls
-          onKeyDown={(e) => {
-            if (
-              !/[\d]/.test(e.key) &&
-              e.key !== "Backspace" &&
-              e.key !== "Delete"
-            ) {
-              e.preventDefault(); // Prevents non-numeric input
-            }
-          }}
         />
       </Form.Item>
 
@@ -164,16 +170,21 @@ const JobPostForm: React.FC = () => {
         </Select>
       </Form.Item>
 
-      <Form.Item>
-        <Button
-          type="primary"
-          size="large"
-          htmlType="submit"
-          loading={loading}
-          block
-          className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
-          style={{ width: "200px" }}
+      {/* 🔹 File Upload for Job Image */}
+      <Form.Item label="Job Post Image">
+        <Upload
+          beforeUpload={() => false} // Prevent automatic upload
+          onChange={handleFileChange} // Handle file selection
+          showUploadList={true}
+          maxCount={1}
+          accept="image/*"
         >
+          <Button icon={<UploadOutlined />}>Upload Image</Button>
+        </Upload>
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" size="large" htmlType="submit" loading={loading} block>
           Post Job
         </Button>
       </Form.Item>

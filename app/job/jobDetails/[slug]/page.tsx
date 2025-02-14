@@ -1,8 +1,9 @@
+// app/job/jobDetails/[slug]/page.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { ApplyButton } from "@/paths";
-import { fetchJobByID } from "@/app/utils/api";
+import { fetchJobBySlug } from "@/app/utils/api";
 import { Spin, message } from "antd";
 
 interface Job {
@@ -13,10 +14,10 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
+  images?: string; // ✅ Add this
 }
 
-const JobDetails = ({ params }: { params: { id: string } }) => {
-  const jobID = parseInt(params.id, 10); // Convert string to number
+const JobDetails = ({ params }: { params: { slug: string } }) => {
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +26,7 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
     const fetchJobDetails = async () => {
       try {
         setLoading(true);
-        const jobData = await fetchJobByID(jobID); // Fetch job details from API
+        const jobData = await fetchJobBySlug(params.slug); // Fetch job details by slug
         setJob(jobData); // Update state with job details
       } catch (error) {
         console.error("Error fetching job details:", error);
@@ -37,7 +38,7 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
     };
 
     fetchJobDetails();
-  }, [jobID]);
+  }, [params.slug]);
 
   if (loading) {
     return (
@@ -70,11 +71,13 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
         <div className="flex justify-between">
           <div>
             <h1 className="text-3xl font-semibold">{job.jobTitle}</h1>
-            {/* <div
-              className="mt-4 text-gray-600"
-              dangerouslySetInnerHTML={{ __html: job.jobDescription }}
-            /> */}
-
+            {job.images && (
+              <img
+                src={`http://192.168.18.47:4000${job.images}`} // ✅ Corrected Image Path
+                alt={job.jobTitle}
+                className="mt-4 w-64 h-auto rounded-lg shadow-md"
+              />
+            )}
             <p className="mt-4">
               <strong>Location:</strong> {job.location}
             </p>
@@ -88,7 +91,7 @@ const JobDetails = ({ params }: { params: { id: string } }) => {
             )}
           </div>
           <div className="flex items-start justify-end">
-            <ApplyButton jobID={jobID} />
+            <ApplyButton jobID={job.jobID} />
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import LogoImage from "@/public/images/QB-logo.webp";
+import LogoImage from "@/public/images/HR-Portal-Logo.png";
 import User from "../Helpers/User";
 import { useUser } from "@/contexts/UserContext";
 

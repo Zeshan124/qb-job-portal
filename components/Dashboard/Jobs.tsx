@@ -11,6 +11,7 @@ import {
   Form,
   Select,
   Typography,
+  InputNumber,
 } from "antd";
 import {
   EditOutlined,
@@ -122,9 +123,14 @@ const JobsTable: React.FC = () => {
     setEditingJob(job);
     setEditModalVisible(true);
 
+    // Remove HTML tags from job description
+    const cleanDescription = job.jobDescription.replace(/<\/?[^>]+(>|$)/g, "");
+
     form.setFieldsValue({
       jobTitle: job.jobTitle,
-      jobDescription: job.jobDescription,
+      jobDescription: cleanDescription, // Cleaned description
+      minSalary: job.minSalary,
+      maxSalary: job.maxSalary,
       jobStatus: job.jobStatus || "open",
       categoryID: job.categoryID,
     });
@@ -140,6 +146,8 @@ const JobsTable: React.FC = () => {
       const updatedData = {
         jobTitle: values.jobTitle,
         jobDescription: values.jobDescription,
+        minSalary: values.minSalary,
+        maxSalary: values.maxSalary,
         jobStatus: values.jobStatus ?? editingJob.jobStatus,
         categoryID: values.categoryID,
       };
@@ -330,6 +338,42 @@ const JobsTable: React.FC = () => {
           <Form.Item label="Job Description" name="jobDescription">
             <Input.TextArea />
           </Form.Item>
+          <Form.Item
+            label="Min Salary"
+            name="minSalary"
+            rules={[
+              { required: true, message: "Minimum salary is required" },
+              {
+                validator: (_, value) =>
+                  value >= 0
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error("Salary must be a positive number")
+                      ),
+              },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} min={0} />
+          </Form.Item>
+
+          <Form.Item
+            label="Max Salary"
+            name="maxSalary"
+            rules={[
+              { required: true, message: "Maximum salary is required" },
+              {
+                validator: (_, value) =>
+                  value >= 0
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error("Salary must be a positive number")
+                      ),
+              },
+            ]}
+          >
+            <InputNumber style={{ width: "100%" }} min={0} />
+          </Form.Item>
+
           <Form.Item label="Job Status" name="jobStatus">
             <Select>
               <Select.Option value="open">Open</Select.Option>

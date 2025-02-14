@@ -21,32 +21,22 @@ export const useJobs = (page = 1, limit = 10) => {
   return { jobs: data?.data, isLoading: !data && !error, error };
 };
 
-export const postJob = async (jobData: {
-  jobTitle: string;
-  jobDescription: string;
-  location: string;
-  minSalary: number;
-  maxSalary: number;
-  categoryID: number;
-}) => {
+export const postJob = async (formData: FormData) => {
   try {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    console.log("Using Token for POST API:", token);
 
     if (!token) {
       throw new Error("Authentication failed: No token found.");
     }
 
-    const response = await axios.post(`${API_URL}/apis/job/add`, jobData, {
+    const response = await axios.post(`${API_URL}/apis/job/add`, formData, {
       headers: {
         "x-access-token": token,
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
       },
     });
 
-    console.log("Job posted successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -118,12 +108,13 @@ export const updateJob = async (
     .then((res) => res.data);
 };
 
-export const fetchJobByID = async (jobID: number) => {
+// api.ts
+export const fetchJobBySlug = async (slug: string) => {
   try {
-    const response = await axios.get(`${API_URL}/apis/job/getByID/${jobID}`);
+    const response = await axios.get(`${API_URL}/apis/job/getByID/${slug}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching job by ID:", error);
+    console.error("Error fetching job by slug:", error);
     throw error;
   }
 };

@@ -1,3 +1,4 @@
+// JobCard.tsx
 "use client";
 
 import Image from "next/image";
@@ -14,6 +15,7 @@ interface JobCardProps {
     location: string;
     jobtype: string;
     description: string;
+    slug: string; // Add slug to the job interface
   };
 }
 

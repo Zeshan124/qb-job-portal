@@ -1,3 +1,4 @@
+// app/job/alljobs/AllJobsClient.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
+  slug: string; // Add slug to the job interface
 }
 
 interface Props {
@@ -76,7 +78,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
         <>
           <div className="space-y-10 pt-2">
             {jobs.map((job) => (
-              <Link key={job.jobID} href={`/job/jobDetails/${job.jobID}`}>
+              <Link key={job.jobID} href={`/job/jobDetails/${job.slug}`}>
                 <JobCard
                   job={{
                     id: job.jobID,
@@ -88,6 +90,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
                     location: job.location,
                     jobtype: job.categoryName,
                     description: job.jobDescription || "",
+                    slug: job.slug, // Pass the slug to the JobCard
                   }}
                 />
               </Link>
