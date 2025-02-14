@@ -73,7 +73,7 @@ const JobDetails = ({ params }: { params: { slug: string } }) => {
             <h1 className="text-3xl font-semibold">{job.jobTitle}</h1>
             {job.images && (
               <img
-                src={`http://192.168.18.47:4000${job.images}`} // ✅ Corrected Image Path
+                src={`https://bhrportal.qist.pk${job.images}`}
                 alt={job.jobTitle}
                 className="mt-4 w-64 h-auto rounded-lg shadow-md"
               />
