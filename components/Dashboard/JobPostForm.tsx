@@ -40,6 +40,7 @@ const JobPostForm: React.FC = () => {
 
   const handleFileChange = (info: any) => {
     // ✅ Properly store the selected file in state
+    // ✅ Properly store the selected file in state
     const file = info.fileList[0]?.originFileObj || null;
     setJobPostImage(file);
   };
