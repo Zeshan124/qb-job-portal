@@ -112,12 +112,19 @@ export const updateJob = async (
 export const fetchJobBySlug = async (slug: string) => {
   try {
     const response = await axios.get(`${API_URL}/apis/job/getByID/${slug}`);
-    return response.data.data;
+    const jobData = response.data.data;
+
+    if (jobData.images) {
+      jobData.images = `http://192.168.18.47:4000${jobData.images}`;
+    }
+
+    return jobData;
   } catch (error) {
     console.error("Error fetching job by slug:", error);
     throw error;
   }
 };
+
 
 export const getCategoryById = async (jobID: number) => {
   if (!token) throw new Error("Authentication failed: No token found.");
@@ -229,6 +236,7 @@ export const getCategories = async (): Promise<Category[]> => {
 export const deleteCategory = async (categoryId: number) => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  console.log(token, "token");
   if (!token) {
     message.error("Authentication token is missing! Please log in.");
     return false;

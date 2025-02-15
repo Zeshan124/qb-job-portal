@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Form, Input, InputNumber, Button, Select, message, Upload } from "antd";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Button,
+  Select,
+  message,
+  Upload,
+} from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
@@ -39,8 +47,6 @@ const JobPostForm: React.FC = () => {
   }, []);
 
   const handleFileChange = (info: any) => {
-    // ✅ Properly store the selected file in state
-    // ✅ Properly store the selected file in state
     const file = info.fileList[0]?.originFileObj || null;
     setJobPostImage(file);
   };
@@ -185,7 +191,13 @@ const JobPostForm: React.FC = () => {
       </Form.Item>
 
       <Form.Item>
-        <Button type="primary" size="large" htmlType="submit" loading={loading} block>
+        <Button
+          type="primary"
+          size="large"
+          htmlType="submit"
+          loading={loading}
+          block
+        >
           Post Job
         </Button>
       </Form.Item>

@@ -1,11 +1,10 @@
-// app/job/alljobs/AllJobsClient.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { fetchJobs } from "@/app/utils/api";
 import { Pagination, Spin, Input } from "antd";
 import JobCard from "@/components/Helpers/JobCard";
+import { useRouter } from "next/navigation";
 
 const { Search } = Input;
 
@@ -17,7 +16,8 @@ interface Job {
   minSalary: number | null;
   maxSalary: number | null;
   categoryName: string;
-  slug: string; // Add slug to the job interface
+  slug: string;
+  jobStatus: string; // 👈 Add this line
 }
 
 interface Props {
@@ -28,11 +28,13 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
+  const [isJobCardLoading, setIsJobCardLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: initialJobs.length,
   });
+  const router = useRouter();
 
   useEffect(() => {
     fetchData(pagination.current, pagination.pageSize, searchText);
@@ -53,6 +55,21 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleJobCardClick = (job: Job) => {
+    setIsJobCardLoading(true);
+    const slug = generateSlug(job.jobTitle);
+    setTimeout(() => {
+      router.push(`/job/jobDetails/${slug}`);
+    }, 500);
+  };
+
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase() // Convert to lowercase
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/[^a-z0-9-]/g, ""); // Remove special characters
   };
 
   return (
@@ -78,22 +95,27 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
         <>
           <div className="space-y-10 pt-2">
             {jobs.map((job) => (
-              <Link key={job.jobID} href={`/job/jobDetails/${job.slug}`}>
+              <div
+                key={job.jobID}
+                onClick={() => handleJobCardClick(job)} // Pass the entire job object
+                className="cursor-pointer"
+              >
                 <JobCard
                   job={{
                     id: job.jobID,
                     title: job.jobTitle,
-                    image: "/images/icon9.png",
+                    image: "/images/c1.png",
                     salary: job.minSalary
-                      ? `${job.minSalary} - ${job.maxSalary}`
+                      ? `${job.minSalary.toLocaleString()} - ${job.maxSalary?.toLocaleString()}`
                       : "Not specified",
                     location: job.location,
                     jobtype: job.categoryName,
                     description: job.jobDescription || "",
-                    slug: job.slug, // Pass the slug to the JobCard
+                    slug: job.slug ?? generateSlug(job.jobTitle), // Generate slug 
+                    jobStatus: job.jobStatus, // 👈 Pass status
                   }}
                 />
-              </Link>
+              </div>
             ))}
           </div>
 
