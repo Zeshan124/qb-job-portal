@@ -123,12 +123,11 @@ const JobsTable: React.FC = () => {
     setEditingJob(job);
     setEditModalVisible(true);
 
-    // Remove HTML tags from job description
     const cleanDescription = job.jobDescription.replace(/<\/?[^>]+(>|$)/g, "");
 
     form.setFieldsValue({
       jobTitle: job.jobTitle,
-      jobDescription: cleanDescription, // Cleaned description
+      jobDescription: cleanDescription,
       minSalary: job.minSalary,
       maxSalary: job.maxSalary,
       jobStatus: job.jobStatus || "open",

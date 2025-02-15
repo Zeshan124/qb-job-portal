@@ -115,7 +115,7 @@ export const fetchJobBySlug = async (slug: string) => {
     const jobData = response.data.data;
 
     if (jobData.images) {
-      jobData.images = `http://192.168.18.47:4000${jobData.images}`;
+      jobData.images = `https://bhrportal.qist.pk${jobData.images}`;
     }
 
     return jobData;
