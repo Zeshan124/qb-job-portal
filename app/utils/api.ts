@@ -125,7 +125,6 @@ export const fetchJobBySlug = async (slug: string) => {
   }
 };
 
-
 export const getCategoryById = async (jobID: number) => {
   if (!token) throw new Error("Authentication failed: No token found.");
   return axios

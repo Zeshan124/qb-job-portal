@@ -66,7 +66,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
               className={`text-[10px] sm:text-sm px-2 sm:px-6 py-1 rounded-full font-semibold capitalize 
   ${
     job?.jobStatus === "open"
-      ? "bg-green-400 text-white"
+      ? "bg-green-500 text-white"
       : "bg-red-400 text-white"
   }`}
             >

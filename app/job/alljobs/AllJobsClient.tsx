@@ -72,8 +72,21 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
       .replace(/[^a-z0-9-]/g, ""); // Remove special characters
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-32">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <div className="mt-12 w-[80%] mx-auto mb-12">
+      {isJobCardLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <Spin size="large" className="text-white" />
+        </div>
+      )}
       <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
         <h1 className="semi-bold">Show Result ({pagination.total})</h1>
 
@@ -104,14 +117,14 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
                   job={{
                     id: job.jobID,
                     title: job.jobTitle,
-                    image: "/images/c1.png",
+                    image: "/images/icon5.png",
                     salary: job.minSalary
                       ? `${job.minSalary.toLocaleString()} - ${job.maxSalary?.toLocaleString()}`
                       : "Not specified",
                     location: job.location,
                     jobtype: job.categoryName,
                     description: job.jobDescription || "",
-                    slug: job.slug ?? generateSlug(job.jobTitle), // Generate slug 
+                    slug: job.slug ?? generateSlug(job.jobTitle), // Generate slug
                     jobStatus: job.jobStatus, // 👈 Pass status
                   }}
                 />

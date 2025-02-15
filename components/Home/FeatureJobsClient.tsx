@@ -90,7 +90,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
                 job={{
                   id: job.jobID,
                   title: job.jobTitle,
-                  image: "/images/c1.png",
+                  image: "/images/icon5.png",
                   salary: job.minSalary
                     ? `${job.minSalary.toLocaleString()} - ${job.maxSalary?.toLocaleString()}`
                     : "Not specified",

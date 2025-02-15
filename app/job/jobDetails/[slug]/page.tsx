@@ -85,7 +85,7 @@ const JobDetails = ({ params }: { params: { slug: string } }) => {
               </p>
             )}
           </div>
-          <div className="flex items-start justify-end">
+          <div className="flex mt-2 items-start justify-start md:justify-end">
             <ApplyButton jobID={job.jobID} />
           </div>
         </div>
