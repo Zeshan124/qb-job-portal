@@ -72,13 +72,13 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
       .replace(/[^a-z0-9-]/g, ""); // Remove special characters
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-32">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center h-32">
+  //       <Spin size="large" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="mt-12 w-[80%] mx-auto mb-12">
