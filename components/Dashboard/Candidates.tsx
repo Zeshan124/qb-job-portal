@@ -22,6 +22,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 interface Candidate {
+  jobTitle: string;
   candidateID: number;
   name: string;
   email: string;
@@ -111,6 +112,13 @@ const Candidates = () => {
   });
 
   const columns = [
+    {
+      title: "Job Title",
+      dataIndex: "jobTitle",
+      key: "jobTitle",
+      sorter: (a: Candidate, b: Candidate) =>
+        a.jobTitle.localeCompare(b.jobTitle),
+    },
     {
       title: "Name",
       dataIndex: "name",
