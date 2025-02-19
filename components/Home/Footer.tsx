@@ -2,81 +2,40 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="pt-20 pb-12 bg-black">
-      <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-8 border-b-2 border-white border-opacity-10">
-        <div>
-          <img
-            src="/images/footer-logo.png"
-            alt="QB Logo"
-            className="w-40 h-35 mb-2"
-          />
-          <p className="text-sm text-white text-opacity-70">
-            At QistBazaar, we believe in the power of dreams and the dignity
-            that comes with having what you need to improve your quality of
-            life.
-          </p>
-          <div className="mt-6 flex items-center space-x-2">
-            <a
-              href="https://www.facebook.com/qistbazaar.pk/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/facebook.svg" alt="Facebook" />
-            </a>
+    <div className="pt-20 pb-12 bg-[#ffff] border-t-2 border-t-black border-opacity-10 border-b-2">
+      <div className="w-[80%] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 pb-8 border-b-2 border-black border-opacity-10">
+        <div className="text-grey text-opacity-50 ">
+          <h1 className="text-[22px] text-grey font-semibold mb-6">
+            Contact Us
+          </h1>
+          <ul className="space-y-2">
+            <li className="hover:text-[#8570C5]">
+              <a href="tel:021-111-11-55-66" className="footer-link">
+                📞 021-111-11-55-66
+              </a>
+            </li>
 
-            <a
-              href="https://twitter.com/QistBazaar"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/twitter.svg" alt="Twitter" />
-            </a>
+            <li className="hover:text-[#8570C5]">
+              <a href="mailto:support@qistbazaar.pk" className="footer-link">
+                ✉️ support@qistbazaar.pk
+              </a>
+            </li>
 
-            <a
-              href="https://www.youtube.com/@QistBazaar"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/youtube.svg" alt="YouTube" />
-            </a>
-
-            <a
-              href="https://www.instagram.com/qistbazaar.pk/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/instagram.svg" alt="Instagram" />
-            </a>
-
-            <a
-              href="https://www.linkedin.com/company/qist-bazaar/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/linkedin.svg" alt="LinkedIn" />
-            </a>
-
-            {/* <a
-              href="https://api.whatsapp.com/send?phone=923000340428"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/whatsapp.svg" alt="WhatsApp" />
-            </a>
-
-            <a
-              href="https://www.tiktok.com/@qistbazaarofficial"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <SocialIcon src="/images/tiktok.svg" alt="TikTok" />
-            </a> */}
-          </div>
+            <li className="hover:text-[#8570C5]">
+              <a
+                href="https://www.google.com/maps?q=Karachi,+Pakistan"
+                target="_blank"
+                className="footer-link"
+              >
+                📍 Karachi, Pakistan
+              </a>
+            </li>
+          </ul>
         </div>
 
         <div>
-          <h1 className="text-[22px] text-white font-semibold mb-6">About</h1>
-          <ul className="space-y-2 text-white text-opacity-50  ">
+          <h1 className="text-[22px] text-grey font-semibold mb-6">About</h1>
+          <ul className="space-y-2 text-grey text-opacity-50  ">
             <li className="hover:text-[#8570C5]">
               <a
                 href="https://qistbazaar.pk/page/about-us"
@@ -111,10 +70,10 @@ const Footer = () => {
         </div>
 
         <div>
-          <h1 className="text-[22px] text-white font-semibold mb-6">
+          <h1 className="text-[22px] text-grey font-semibold mb-6">
             Information
           </h1>
-          <ul className="space-y-2 text-white text-opacity-50">
+          <ul className="space-y-2 text-grey text-opacity-50">
             <li className="hover:text-[#8570C5]">
               <a
                 href="https://qistbazaar.pk/account/login"
@@ -150,30 +109,41 @@ const Footer = () => {
           </ul>
         </div>
 
-        <div className="text-white text-opacity-50">
-          <h1 className="text-[22px] text-white font-semibold mb-6">
-            Contact Us
+        <div>
+          <h1 className="text-[22px] text-grey font-semibold mb-6">
+            Quick Links
           </h1>
-          <ul className="space-y-2">
-            <li className="hover:text-[#8570C5]">
-              <a href="tel:021-111-11-55-66" className="footer-link">
-                📞 021-111-11-55-66
-              </a>
-            </li>
-
-            <li className="hover:text-[#8570C5]">
-              <a href="mailto:support@qistbazaar.pk" className="footer-link">
-                ✉️ support@qistbazaar.pk
-              </a>
-            </li>
-
+          <ul className="space-y-2 text-grey text-opacity-50">
             <li className="hover:text-[#8570C5]">
               <a
-                href="https://www.google.com/maps?q=Karachi,+Pakistan"
-                target="_blank"
+                href="https://qistbazaar.pk/page/terms-conditions"
                 className="footer-link"
               >
-                📍 Karachi, Pakistan
+                Terms & Conditions
+              </a>
+            </li>
+            <li className="hover:text-[#8570C5]">
+              <a
+                href="https://qistbazaar.pk/page/refund-return-policy"
+                className="footer-link"
+              >
+                Refund & Return Policy
+              </a>
+            </li>
+            <li className="hover:text-[#8570C5]">
+              <a
+                href="https://qistbazaar.pk/page/privacy-policy"
+                className="footer-link"
+              >
+                Privacy Policy
+              </a>
+            </li>
+            <li className="hover:text-[#8570C5]">
+              <a
+                href="https://qistbazaar.pk/page/press"
+                className="footer-link"
+              >
+                Press & Blog
               </a>
             </li>
           </ul>
@@ -181,7 +151,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center mt-8">
-        <p className="text-sm text-white text-opacity-70 p-2">
+        <p className="text-sm text-grey text-opacity-70 p-2">
           Copyright © 2025{" "}
           <a
             href="https://qistbazaar.pk/"

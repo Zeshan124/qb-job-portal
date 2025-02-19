@@ -17,7 +17,7 @@ interface Job {
   maxSalary: number | null;
   categoryName: string;
   slug: string;
-  jobStatus: string; // 👈 Add this line
+  jobStatus: string;
 }
 
 interface Props {
@@ -57,6 +57,11 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+    setPagination({ ...pagination, current: 1 }); // Reset to first page on search
+  };
+
   const handleJobCardClick = (job: Job) => {
     setIsJobCardLoading(true);
     const slug = generateSlug(job.jobTitle);
@@ -67,9 +72,9 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
 
   const generateSlug = (title: string) => {
     return title
-      .toLowerCase() // Convert to lowercase
-      .replace(/\s+/g, "-") // Replace spaces with hyphens
-      .replace(/[^a-z0-9-]/g, ""); // Remove special characters
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
   };
 
   // if (loading) {
@@ -94,7 +99,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
         <Search
           placeholder="Search jobs..."
           value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearchChange}
           allowClear
           style={{ maxWidth: "300px" }}
         />
@@ -124,8 +129,8 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
                     location: job.location,
                     jobtype: job.categoryName,
                     description: job.jobDescription || "",
-                    slug: job.slug ?? generateSlug(job.jobTitle), // Generate slug
-                    jobStatus: job.jobStatus, // 👈 Pass status
+                    slug: job.slug ?? generateSlug(job.jobTitle),
+                    jobStatus: job.jobStatus,
                   }}
                 />
               </div>

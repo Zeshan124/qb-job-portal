@@ -116,8 +116,6 @@ const Candidates = () => {
       title: "Job Title",
       dataIndex: "jobTitle",
       key: "jobTitle",
-      sorter: (a: Candidate, b: Candidate) =>
-        a.jobTitle.localeCompare(b.jobTitle),
     },
     {
       title: "Name",

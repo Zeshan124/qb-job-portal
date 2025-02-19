@@ -71,7 +71,6 @@ const JobPostForm: React.FC = () => {
     setLoading(true);
 
     try {
-      // ✅ Ensure we use FormData to match `multipart/form-data`
       const formData = new FormData();
       formData.append("jobTitle", values.jobTitle);
       formData.append("jobDescription", jobDescription);
@@ -142,6 +141,16 @@ const JobPostForm: React.FC = () => {
           placeholder="Enter minimum salary"
           style={{ width: "100%" }}
           min={0}
+          controls={false} // Hides stepper controls
+          onKeyDown={(e) => {
+            if (
+              !/[\d]/.test(e.key) &&
+              e.key !== "Backspace" &&
+              e.key !== "Delete"
+            ) {
+              e.preventDefault(); // Prevents non-numeric input
+            }
+          }}
         />
       </Form.Item>
 
@@ -154,6 +163,16 @@ const JobPostForm: React.FC = () => {
           placeholder="Enter maximum salary"
           style={{ width: "100%" }}
           min={0}
+          controls={false} // Hides stepper controls
+          onKeyDown={(e) => {
+            if (
+              !/[\d]/.test(e.key) &&
+              e.key !== "Backspace" &&
+              e.key !== "Delete"
+            ) {
+              e.preventDefault(); // Prevents non-numeric input
+            }
+          }}
         />
       </Form.Item>
 
@@ -197,6 +216,8 @@ const JobPostForm: React.FC = () => {
           htmlType="submit"
           loading={loading}
           block
+          className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
+          style={{ width: "200px" }}
         >
           Post Job
         </Button>
