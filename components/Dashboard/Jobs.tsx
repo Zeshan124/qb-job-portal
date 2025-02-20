@@ -199,7 +199,6 @@ const JobsTable: React.FC = () => {
       title: "Job Title",
       dataIndex: "jobTitle",
       key: "jobTitle",
-      sorter: (a: Job, b: Job) => a.jobTitle.localeCompare(b.jobTitle),
     },
     {
       title: "Description",

@@ -59,7 +59,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-    setPagination({ ...pagination, current: 1 }); // Reset to first page on search
+    setPagination({ ...pagination, current: 1 });
   };
 
   const handleJobCardClick = (job: Job) => {
@@ -115,7 +115,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
             {jobs.map((job) => (
               <div
                 key={job.jobID}
-                onClick={() => handleJobCardClick(job)} // Pass the entire job object
+                onClick={() => handleJobCardClick(job)}
                 className="cursor-pointer"
               >
                 <JobCard

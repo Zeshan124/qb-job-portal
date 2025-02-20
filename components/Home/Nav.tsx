@@ -14,7 +14,7 @@ const Nav = () => {
       <div className="w-[90%] md:w-[80%] p-2 h-full mx-auto flex items-center justify-between">
         <div>
           <Link href="/">
-            <div className="w-[100px] h-[45px] md:w-[180px] md:h-[50px]">
+            <div className="w-[110px] h-[42px] md:w-[180px] md:h-[55px]">
               <Image src={LogoImage} alt="logo" className="w-full h-full" />
             </div>
           </Link>
