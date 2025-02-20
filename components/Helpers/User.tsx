@@ -1,31 +1,34 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { message, Spin } from "antd";
-import { useUser } from "@/contexts/UserContext";
+import Cookies from "js-cookie";
 
-interface UserProps {
-  user: {
-    userName?: string;
-    role: string;
-  };
-}
-
-const User: React.FC<UserProps> = ({ user }) => {
+const User = () => {
   const router = useRouter();
-  const { setUser } = useUser();
   const [showMenu, setShowMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState<{ userName?: string; role: string } | null>(
+    null
+  );
+
+  // Load user data from cookies on mount
+  useEffect(() => {
+    const storedUser = Cookies.get("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    Cookies.remove("token");
+    Cookies.remove("user");
     setUser(null);
     message.success("You have successfully logged out.");
-    setIsLoading(true);
+    // setIsLoading(true);
     setTimeout(() => {
       router.push("/admin");
     }, 1000);
@@ -67,7 +70,7 @@ const User: React.FC<UserProps> = ({ user }) => {
           <ul className="py-1">
             <li>
               <button
-                onClick={() => handleNavigation("/portal")} // ✅ Use handleNavigation
+                onClick={() => handleNavigation("/portal")}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Portal
@@ -75,7 +78,7 @@ const User: React.FC<UserProps> = ({ user }) => {
             </li>
             <li>
               <button
-                onClick={handleLogout} // ✅ Already handles spinner
+                onClick={handleLogout}
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 Logout

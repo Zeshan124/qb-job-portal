@@ -1,17 +1,21 @@
 import { message } from "antd";
 import axios from "axios";
 import useSWR from "swr";
+import Cookies from "js-cookie";
 
 const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
-const token =
-  typeof window !== "undefined" ? localStorage.getItem("token") : null;
-const headers = token
-  ? { "x-access-token": token, "Content-Type": "application/json" }
-  : {};
+const getToken = () => Cookies.get("token");
+
+const getHeaders = () => {
+  const token = getToken();
+  return token
+    ? { "x-access-token": token, "Content-Type": "application/json" }
+    : {};
+};
 
 const fetcher = (url: string) =>
-  axios.get(url, { headers }).then((res) => res.data);
+  axios.get(url, { headers: getHeaders() }).then((res) => res.data);
 
 export const useJobs = (page = 1, limit = 10) => {
   const { data, error } = useSWR(
@@ -23,8 +27,7 @@ export const useJobs = (page = 1, limit = 10) => {
 
 export const postJob = async (formData: FormData) => {
   try {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = getToken();
 
     if (!token) {
       throw new Error("Authentication failed: No token found.");
@@ -57,7 +60,8 @@ export const fetchJobs = async (
     const response = await axios.get(
       `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(
         jobTitle
-      )}`
+      )}`,
+      { headers: getHeaders() }
     );
 
     return {
@@ -76,7 +80,8 @@ export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
     const response = await axios.get(
       `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(
         jobTitle
-      )}`
+      )}`,
+      { headers: getHeaders() }
     );
     return response.data;
   } catch (error) {
@@ -86,9 +91,13 @@ export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
 };
 
 export const deleteJob = async (jobID: number) => {
+  const token = getToken();
   if (!token) throw new Error("Authentication failed: No token found.");
   return axios
-    .delete(`${API_URL}/apis/job/delete`, { headers, data: { jobID } })
+    .delete(`${API_URL}/apis/job/delete`, {
+      headers: getHeaders(),
+      data: { jobID },
+    })
     .then((res) => res.data);
 };
 
@@ -101,10 +110,15 @@ export const updateJob = async (
     categoryID?: number;
   }
 ) => {
+  const token = getToken();
   if (!token) throw new Error("Authentication failed: No token found.");
   console.log("API Request Data:", updatedJob);
   return axios
-    .patch(`${API_URL}/apis/job/update`, { jobID, ...updatedJob }, { headers })
+    .patch(
+      `${API_URL}/apis/job/update`,
+      { jobID, ...updatedJob },
+      { headers: getHeaders() }
+    )
     .then((res) => res.data);
 };
 
@@ -126,9 +140,14 @@ export const fetchJobBySlug = async (slug: string) => {
 };
 
 export const getCategoryById = async (jobID: number) => {
+  const token = getToken();
   if (!token) throw new Error("Authentication failed: No token found.");
   return axios
-    .post(`${API_URL}/apis/categories/getById`, { jobID }, { headers })
+    .post(
+      `${API_URL}/apis/categories/getById`,
+      { jobID },
+      { headers: getHeaders() }
+    )
     .then((res) => res.data.data);
 };
 
@@ -184,7 +203,7 @@ export const updateCandidateStatus = async (
     .patch(
       `${API_URL}/apis/application/patch`,
       { candidateID, status },
-      { headers }
+      { headers: getHeaders() }
     )
     .then((res) => res.data);
 };
@@ -233,8 +252,7 @@ export const getCategories = async (): Promise<Category[]> => {
 };
 
 export const deleteCategory = async (categoryId: number) => {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = getToken();
   console.log(token, "token");
   if (!token) {
     message.error("Authentication token is missing! Please log in.");
@@ -265,8 +283,7 @@ export const updateCategory = async (
   categoryId: number,
   categoryName: string
 ) => {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = getToken();
   if (!token) {
     message.error("Authentication token is missing! Please log in.");
     return false;
@@ -296,8 +313,7 @@ export const updateCategory = async (
 };
 
 export const addCategory = async (categoryName: string) => {
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const token = getToken();
 
   if (!token) {
     message.error("Authentication token is missing! Please log in.");

@@ -7,6 +7,7 @@ import { authenticate } from "../../app/utils/action";
 import { Spin, message, Input, Button, Card, Typography } from "antd";
 import { useUser } from "../../contexts/UserContext";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import Cookies from "js-cookie";
 
 const { Title, Text } = Typography;
 
@@ -27,23 +28,20 @@ const AdminLogin = () => {
 
     try {
       const result = await authenticate({ username, password });
+
       if (result) {
-        if (typeof window !== "undefined") {
-          console.log("Received Token from API:", result.token);
+        console.log("Received Token from API:", result.token);
 
-          if (!result.token) {
-            message.error("Login failed: No token received!");
-            return;
-          }
-
-          localStorage.setItem("token", result.token);
-          localStorage.setItem("user", JSON.stringify(result));
-
-          console.log(
-            "Stored Token in localStorage:",
-            localStorage.getItem("token")
-          );
+        if (!result.token) {
+          message.error("Login failed: No token received!");
+          return;
         }
+
+        // Store token and user data in cookies instead of localStorage
+        Cookies.set("token", result.token, { expires: 7, secure: true });
+        Cookies.set("user", JSON.stringify(result), { expires: 7, secure: true });
+
+        console.log("Stored Token in Cookies:", Cookies.get("token"));
 
         setUser(result);
         message.success("Login successful! Redirecting...");

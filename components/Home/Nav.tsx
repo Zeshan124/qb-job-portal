@@ -1,13 +1,21 @@
 "use client";
-import React from "react";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import LogoImage from "@/public/images/HR-Portal-Logo.png";
 import User from "../Helpers/User";
-import { useUser } from "@/contexts/UserContext";
+import Cookies from "js-cookie";
 
 const Nav = () => {
-  const { user } = useUser();
+  const [user, setUser] = useState<{ userName?: string; role: string } | null>(null);
+
+  useEffect(() => {
+    const storedUser = Cookies.get("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <div className="h-[13vh] shadow-md">
@@ -21,7 +29,7 @@ const Nav = () => {
         </div>
         {user && user.role === "superadmin" && (
           <div className="flex space-x-4 items-center">
-            <User user={user} />
+            <User />
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ReactNode, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Tooltip, Dropdown, MenuProps, message, Modal } from "antd";
 import {
   SettingOutlined,
@@ -15,12 +15,12 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
+import Candidates from "@/components/Dashboard/Candidates";
+import JobPostForm from "@/components/Dashboard/JobPostForm";
+import JobsTable from "@/components/Dashboard/Jobs";
+import Category from "@/components/Dashboard/Category";
 
-interface DashboardLayoutProps {
-  children: (activeComponent: string) => ReactNode;
-}
-
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DashboardLayout = () => {
   const [activeComponent, setActiveComponent] = useState("candidates");
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
@@ -75,6 +75,21 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { key: "back", label: "Back", icon: <ArrowLeftOutlined />, onClick: back },
   ];
 
+  const renderComponent = (activeComponent: string) => {
+    switch (activeComponent) {
+      case "candidates":
+        return <Candidates />;
+      case "jobPost":
+        return <JobPostForm />;
+      case "jobs":
+        return <JobsTable />;
+      case "category":
+        return <Category />;
+      default:
+        return <Candidates />;
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       <div
@@ -121,7 +136,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       <div className={`flex-1 p-4 overflow-y-auto`}>
-        {children(activeComponent)}
+        {renderComponent(activeComponent)} {/* Render the active component */}
       </div>
     </div>
   );

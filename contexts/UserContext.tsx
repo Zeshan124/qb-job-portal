@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Spin } from "antd";
+import Cookies from "js-cookie";
 
 interface User {
   id: string;
@@ -28,7 +29,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = Cookies.get("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -36,8 +37,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    Cookies.remove("user");
+    Cookies.remove("token");
     setUser(null);
   };
 

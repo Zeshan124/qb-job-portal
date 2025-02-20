@@ -1,19 +1,16 @@
 import React from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import ClientPortal from "@/components/Dashboard/ClientPortal";
+import DashboardLayout from "@/components/Dashboard/DashboardLayout";
 
-const PortalPage = () => {
-  if (typeof window !== "undefined") {
-    const user = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
+export default function PortalPage() {
+  const cookieStore = cookies();
+  const user = cookieStore.get("user");
+  const token = cookieStore.get("token");
 
-    if (!user || !token) {
-      redirect("/admin");
-      return null;
-    }
+  if (!user || !token) {
+    return redirect("/admin");
   }
 
-  return <ClientPortal />;
-};
-
-export default PortalPage;
+  return <DashboardLayout />;
+}

@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import { Table, Button, message, Popconfirm, Input, Modal } from "antd";
 import AddCategoryModal from "./AddCategoryModal";
@@ -31,7 +32,7 @@ const Category: React.FC = () => {
     setLoading(true);
     try {
       const categoriesData = await getCategories();
-      setCategories(categoriesData); // ✅ Ensure state updates UI
+      setCategories(categoriesData);
     } catch (error) {
       console.error("Error loading categories:", error);
     } finally {

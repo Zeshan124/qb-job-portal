@@ -1,6 +1,5 @@
-"use client";
-
 import axios from "axios";
+import Cookies from "js-cookie";
 
 class AuthError extends Error {
   constructor(type) {
@@ -24,10 +23,11 @@ export async function authenticate(data) {
     if (response.status === 200) {
       const userData = response.data;
 
-      if (typeof window !== "undefined") {
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("user", JSON.stringify(userData));
-      }
+      Cookies.set("token", userData.token, { expires: 7, secure: true });
+      Cookies.set("user", JSON.stringify(userData), {
+        expires: 7,
+        secure: true,
+      });
 
       return userData;
     } else {
