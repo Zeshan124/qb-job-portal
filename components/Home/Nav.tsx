@@ -8,7 +8,9 @@ import User from "../Helpers/User";
 import Cookies from "js-cookie";
 
 const Nav = () => {
-  const [user, setUser] = useState<{ userName?: string; role: string } | null>(null);
+  const [user, setUser] = useState<{ userName?: string; role: string } | null>(
+    null
+  );
 
   useEffect(() => {
     const storedUser = Cookies.get("user");

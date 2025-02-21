@@ -101,6 +101,18 @@ export const deleteJob = async (jobID: number) => {
     .then((res) => res.data);
 };
 
+//delete candidate
+export const deleteCandidate = async (candidateID: number) => {
+  const token = getToken();
+  if (!token) throw new Error("Authentication failed: No token found.");
+  return axios
+    .delete(`${API_URL}/apis/application/delete`, {
+      headers: getHeaders(),
+      data: { candidateID },
+    })
+    .then((res) => res.data);
+};
+
 export const updateJob = async (
   jobID: number,
   updatedJob: {

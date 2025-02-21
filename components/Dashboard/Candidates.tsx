@@ -10,13 +10,15 @@ import {
   message,
   Typography,
   Select,
+  Modal,
 } from "antd";
 import {
   updateCandidateStatus,
   fetchApplications,
   downloadResume,
+  deleteCandidate,
 } from "@/app/utils/api";
-import { DownOutlined } from "@ant-design/icons";
+import { DeleteOutlined, DownOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -37,6 +39,10 @@ interface Candidate {
 
 const Candidates = () => {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+  const [deleteCandidateId, setDeleteCandidateId] = useState<number | null>(
+    null
+  );
+  const [isDeleting, setIsDeleting] = useState(false);
   const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>("all");
@@ -66,6 +72,33 @@ const Candidates = () => {
       message.error("Failed to load applications. Please check the API.");
     }
     setLoading(false);
+  };
+
+  const handleDelete = async (candidateID: number) => {
+    Modal.confirm({
+      title: "Are you sure?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          setIsDeleting(true);
+          await deleteCandidate(candidateID);
+          setData((prevCandidates) =>
+            prevCandidates.filter(
+              (candidate) => candidate.candidateID !== candidateID
+            )
+          );
+          message.success("Candidate deleted successfully!");
+          fetchData(pagination.current, pagination.pageSize);
+        } catch (error) {
+          message.error("Failed to delete candidate. Please try again.");
+        } finally {
+          setIsDeleting(false);
+        }
+      },
+    });
   };
 
   const handleStatusChange = async (candidateID: number, newStatus: string) => {
@@ -207,6 +240,20 @@ const Candidates = () => {
           </Dropdown>
         );
       },
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_: any, record: Candidate) => (
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          loading={isDeleting && deleteCandidateId === record.candidateID}
+          onClick={() => handleDelete(record.candidateID)}
+        >
+          Delete
+        </Button>
+      ),
     },
   ];
 

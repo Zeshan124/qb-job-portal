@@ -44,17 +44,9 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
 
   const handleJobCardClick = (job: Job) => {
     setIsJobCardLoading(true);
-    const slug = generateSlug(job.jobTitle);
     setTimeout(() => {
-      router.push(`/job/jobDetails/${slug}`);
+      router.push(`/job/jobDetails/${job.slug}`);
     }, 500);
-  };
-
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
   };
 
   if (loading) {
@@ -97,7 +89,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
                   location: job.location,
                   jobtype: job.categoryName,
                   description: job.jobDescription || "",
-                  slug: job.slug ?? generateSlug(job.jobTitle),
+                  slug: job.slug,
                   jobStatus: job.jobStatus,
                 }}
               />

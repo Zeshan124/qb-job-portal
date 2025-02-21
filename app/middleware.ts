@@ -3,17 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
 
-  // Define protected routes (only accessible if authenticated)
-  const protectedRoutes = ["/portal"]; // Add your protected routes here
+  const protectedRoutes = ["/portal"];
 
   if (protectedRoutes.includes(req.nextUrl.pathname) && !token) {
-    return NextResponse.redirect(new URL("/admin", req.url)); // Redirect to login
+    return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  return NextResponse.next(); // Continue if authenticated or not a protected route
+  return NextResponse.next();
 }
 
-// Apply middleware to specific routes
 export const config = {
-  matcher: ["/portal"], // Adjust as needed
+  matcher: ["/portal"],
 };

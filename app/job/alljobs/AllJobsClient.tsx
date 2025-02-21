@@ -64,26 +64,10 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
 
   const handleJobCardClick = (job: Job) => {
     setIsJobCardLoading(true);
-    const slug = generateSlug(job.jobTitle);
     setTimeout(() => {
-      router.push(`/job/jobDetails/${slug}`);
+      router.push(`/job/jobDetails/${job.slug}`);
     }, 500);
   };
-
-  const generateSlug = (title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
-  };
-
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-32">
-  //       <Spin size="large" />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="mt-12 w-[80%] mx-auto mb-12">
@@ -129,7 +113,7 @@ const AllJobsClient: React.FC<Props> = ({ jobs: initialJobs }) => {
                     location: job.location,
                     jobtype: job.categoryName,
                     description: job.jobDescription || "",
-                    slug: job.slug ?? generateSlug(job.jobTitle),
+                    slug: job.slug,
                     jobStatus: job.jobStatus,
                   }}
                 />

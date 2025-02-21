@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { message, Spin } from "antd";
 import Cookies from "js-cookie";
@@ -15,7 +14,6 @@ const User = () => {
     null
   );
 
-  // Load user data from cookies on mount
   useEffect(() => {
     const storedUser = Cookies.get("user");
     if (storedUser) {
@@ -28,7 +26,7 @@ const User = () => {
     Cookies.remove("user");
     setUser(null);
     message.success("You have successfully logged out.");
-    // setIsLoading(true);
+    setShowMenu(false);
     setTimeout(() => {
       router.push("/admin");
     }, 1000);
