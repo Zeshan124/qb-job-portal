@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect, useState } from "react";
 import { Table, Button, message, Popconfirm, Input, Modal } from "antd";
 import AddCategoryModal from "./AddCategoryModal";

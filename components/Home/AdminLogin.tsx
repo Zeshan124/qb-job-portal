@@ -37,9 +37,11 @@ const AdminLogin = () => {
           return;
         }
 
-        // Store token and user data in cookies instead of localStorage
         Cookies.set("token", result.token, { expires: 7, secure: true });
-        Cookies.set("user", JSON.stringify(result), { expires: 7, secure: true });
+        Cookies.set("user", JSON.stringify(result), {
+          expires: 7,
+          secure: true,
+        });
 
         console.log("Stored Token in Cookies:", Cookies.get("token"));
 

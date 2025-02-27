@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { fetchJobs } from "./api";
 
 class AuthError extends Error {
   constructor(type) {
@@ -41,4 +42,8 @@ export async function authenticate(data) {
       throw error;
     }
   }
+}
+
+export async function fetchJobsAction(page, pageSize, search) {
+  return await fetchJobs(page, pageSize, search);
 }
