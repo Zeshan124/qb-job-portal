@@ -168,12 +168,12 @@ const Footer = () => {
   );
 };
 
-const SocialIcon = ({ src, alt }: { src: string; alt: string }) => (
-  <div className="w-10 h-10 rounded-full flex items-center justify-center">
-    <img src={src} alt={alt} className="w-7 h-7" />
-  </div>
-);
+// const SocialIcon = ({ src, alt }: { src: string; alt: string }) => (
+//   <div className="w-10 h-10 rounded-full flex items-center justify-center">
+//     <img src={src} alt={alt} className="w-7 h-7" />
+//   </div>
+// );
 
-const footerLinkStyle =
-  "text-base w-fit text-white text-opacity-50 hover:text-[#8570C5] cursor-pointer";
+// const footerLinkStyle =
+//   "text-base w-fit text-white text-opacity-50 hover:text-[#8570C5] cursor-pointer";
 export default Footer;

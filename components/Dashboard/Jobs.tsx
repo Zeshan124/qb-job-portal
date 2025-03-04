@@ -184,7 +184,7 @@ const JobsTable: React.FC = () => {
     }
   };
 
-  console.log("hello", jobs);
+  // console.log("hello", jobs);
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchText = e.target.value;
     setSearchText(newSearchText);

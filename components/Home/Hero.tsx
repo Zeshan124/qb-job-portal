@@ -26,7 +26,7 @@ export default function Hero() {
             </h1>
             <p className="text-black text-[16px] md:text-[18px] mt-[1rem] leading-relaxed">
               Qist Bazaar is a prominent e-commerce platform based in Pakistan
-              that offers a "Buy Now, Pay Later" (BNPL) service. It was
+              that offers a Buy Now, Pay Later (BNPL) service. It was
               established in 2021 with the aim of improving the standard of
               living for the average Pakistani by making a variety of products
               more accessible through affordable monthly installments.

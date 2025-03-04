@@ -1,20 +1,22 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-100 px-4">
       <div className="max-w-md">
-        {/* Fancy 404 Illustration */}
-        <img
+        <Image
           src="https://illustrations.popsy.co/white/error.svg"
           alt="404 Not Found"
+          width={240}
+          height={240}
           className="w-60 mx-auto mb-6"
         />
 
         <h1 className="text-5xl font-bold text-gray-800">Oops!</h1>
         <p className="text-lg text-gray-600 mt-2">
-          We can't seem to find the page you're looking for.
+          We can not seem to find the page you are looking for.
         </p>
 
         <Link

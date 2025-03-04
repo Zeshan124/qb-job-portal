@@ -3,6 +3,7 @@ import { ApplyButton } from "@/paths";
 import { fetchJobBySlug } from "@/app/utils/api";
 import { Spin, message } from "antd";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 interface Job {
   jobID: number;
@@ -52,9 +53,12 @@ const JobDetails = async ({ params }: { params: { slug: string } }) => {
         <div className="mt-20 mb-12 w-[80%] mx-auto">
           {job.images && (
             <div className="mt-6">
-              <img
+              <Image
                 src={job.images}
                 alt="Job Post"
+                width={800} // ✅ Set a width
+                height={500} // ✅ Set a height
+                layout="responsive" // ✅ Responsive resizing
                 className="w-full h-auto max-h-65 object-cover rounded-lg"
               />
             </div>
