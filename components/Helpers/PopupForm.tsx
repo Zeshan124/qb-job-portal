@@ -215,7 +215,7 @@ const PopupForm = ({
         <div className="flex justify-center">
           <button
             type="submit"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+            className="bg-[#8570C5] text-white px-6 py-2 rounded-lg"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Submit"}

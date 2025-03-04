@@ -11,6 +11,7 @@ import {
   Typography,
   Select,
   Modal,
+  Progress,
 } from "antd";
 import {
   updateCandidateStatus,
@@ -18,7 +19,12 @@ import {
   downloadResume,
   deleteCandidate,
 } from "@/app/utils/api";
-import { DeleteOutlined, DownOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  LineChartOutlined,
+} from "@ant-design/icons";
+import { title } from "process";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -29,6 +35,7 @@ interface Candidate {
   name: string;
   email: string;
   phoneNo: string;
+  matchScore: number;
   cvPDF: string;
   availabilityDate: string;
   availabilityTime: string;
@@ -46,6 +53,15 @@ const Candidates = () => {
   const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>("all");
+  const [showScoreForCandidates, setShowScoreForCandidates] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const [loadingScores, setLoadingScores] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const [progressValues, setProgressValues] = useState<{
+    [key: number]: number;
+  }>({});
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -139,6 +155,57 @@ const Candidates = () => {
     }
   };
 
+  const startLoadingScore = (candidateID: number) => {
+    setLoadingScores((prev) => ({
+      ...prev,
+      [candidateID]: true,
+    }));
+    setProgressValues((prev) => ({
+      ...prev,
+      [candidateID]: 0,
+    }));
+
+    const interval = setInterval(() => {
+      setProgressValues((prev) => {
+        const currentValue = prev[candidateID] || 0;
+        if (currentValue >= 100) {
+          clearInterval(interval);
+
+          // Show the score after the progress is complete
+          setTimeout(() => {
+            setLoadingScores((prev) => ({
+              ...prev,
+              [candidateID]: false,
+            }));
+            setShowScoreForCandidates((prev) => ({
+              ...prev,
+              [candidateID]: true,
+            }));
+          }, 200);
+
+          return prev;
+        }
+
+        return {
+          ...prev,
+          [candidateID]: currentValue + 4, // Increment by 4 for faster animation
+        };
+      });
+    }, 40); // Update approximately every 40ms for smooth animation
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score < 30) return "text-red-500";
+    if (score < 50) return "text-yellow-500";
+    return "text-green-500";
+  };
+
+  const getProgressStrokeColor = (score: number) => {
+    if (score < 30) return "#f5222d"; // Red
+    if (score < 50) return "#faad14"; // Yellow
+    return "#52c41a"; // Green
+  };
+
   const filteredCandidates = data.filter((candidate) => {
     if (filter === "all") return true;
     return candidate.status?.toLowerCase() === filter.toLowerCase();
@@ -165,6 +232,7 @@ const Candidates = () => {
       dataIndex: "phoneNo",
       key: "phoneNo",
     },
+
     {
       title: "Resume",
       key: "resume",
@@ -186,6 +254,47 @@ const Candidates = () => {
           {record.availabilityTime}
         </span>
       ),
+    },
+    {
+      title: "Match Score",
+      key: "matchScore",
+      width: 150,
+      render: (_: unknown, record: Candidate) => {
+        const isLoading = loadingScores[record.candidateID];
+        const showScore = showScoreForCandidates[record.candidateID];
+        const progressValue = progressValues[record.candidateID] || 0;
+
+        if (isLoading) {
+          return (
+            <Progress
+              percent={progressValue}
+              size="small"
+              strokeColor={getProgressStrokeColor(record.matchScore)}
+              className="mb-0"
+            />
+          );
+        } else if (showScore) {
+          return (
+            <span
+              className={`font-semibold ${getScoreColor(record.matchScore)}`}
+            >
+              {record.matchScore}%
+            </span>
+          );
+        } else {
+          return (
+            <Button
+              type="primary"
+              size="small"
+              icon={<LineChartOutlined />}
+              onClick={() => startLoadingScore(record.candidateID)}
+              className="bg-violet-500 hover:bg-violet-200 !important"
+            >
+              ATS Track
+            </Button>
+          );
+        }
+      },
     },
     {
       title: "Status",

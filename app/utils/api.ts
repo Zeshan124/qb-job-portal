@@ -182,10 +182,10 @@ export const getAllJobs = async () => {
   }
 };
 
-export const fetchApplications = async (page: number, pageSize: number) => {
+export const fetchApplications = async (page: number, pageSize: number, jobId?: number) => {
   try {
     const response = await axios.get(`${API_URL}/apis/application/get`, {
-      params: { page, pageSize }, // Using params object for cleaner syntax
+      params: { page, pageSize, jobId }, // Using params object for cleaner syntax
     });
 
     return {
