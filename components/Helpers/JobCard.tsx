@@ -80,7 +80,7 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
           {/* Description */}
           <p className="text-sm text-gray-600 mb-4 leading-relaxed">
             {showFullDescription ? plainTextDescription : truncatedText}
-            {plainTextDescription.length > 100 && (
+            {plainTextDescription.length > 40 && (
               <button
                 onClick={() => setShowFullDescription(!showFullDescription)}
                 className="text-indigo-600 font-semibold text-sm ml-2 hover:underline"

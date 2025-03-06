@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Heading } from "../../paths";
 import JobCard from "../Helpers/JobCard";
 import { Button, Spin } from "antd";
+import LoadingSpinner from "../loader/LoadingSpinner";
 
 interface Job {
   jobID: number;
@@ -52,7 +53,8 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-32">
-        <Spin size="large" />
+        {/* <Spin size="large" /> */}
+        <LoadingSpinner />
       </div>
     );
   }
@@ -61,7 +63,8 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
     <div className="pt-8 md:pt-20 pb-8 md:pb-12">
       {isJobCardLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <Spin size="large" className="text-white" />
+          {/* <Spin size="large" className="text-white" /> */}
+          <LoadingSpinner />
         </div>
       )}
 
@@ -106,7 +109,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
           size="large"
           onClick={handleViewAllJobs}
           disabled={isLoading}
-          className="bg-[#8570C5] hover:bg-purple-500 px-6 py-2"
+          className="bg-indigo-600 px-6 py-2"
         >
           {isLoading ? <Spin size="small" /> : "View all jobs"}
         </Button>

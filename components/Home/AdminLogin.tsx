@@ -8,6 +8,7 @@ import { Spin, message, Input, Button, Card, Typography } from "antd";
 import { useUser } from "../../contexts/UserContext";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
+import LoadingSpinner from "../loader/LoadingSpinner";
 
 const { Title, Text } = Typography;
 
@@ -101,7 +102,7 @@ const AdminLogin = () => {
           disabled={isLoading}
           className="bg-[#8570C5] hover:bg-[#8169ca] transition-colors duration-300"
         >
-          {isLoading ? <Spin /> : "Log In"}
+          {isLoading ? <LoadingSpinner /> : "Log In"}
         </Button>
       </Card>
     </div>

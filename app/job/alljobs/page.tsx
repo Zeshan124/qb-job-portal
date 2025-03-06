@@ -33,7 +33,7 @@ export default async function Page({
         <SearchForm initialSearch={searchText} />
       </div>
 
-      <div className="space-y-10 pt-2">
+      <div className="mt-12 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
         {jobs.map((job: Job) => (
           <a href={`/job/jobDetails/${job.slug}`} key={job.jobID}>
             <JobCard

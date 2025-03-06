@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Spin } from "antd";
 import Cookies from "js-cookie";
+import LoadingSpinner from "@/components/loader/LoadingSpinner";
 
 interface User {
   id: string;
@@ -45,7 +46,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <Spin size="large" />
+        {/* <Spin size="large" /> */}
+        <LoadingSpinner />
       </div>
     );
   }

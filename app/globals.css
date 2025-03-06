@@ -4,10 +4,10 @@
 @import "swiper/css";
 @import "swiper/css/pagination";
 @import "swiper/css/autoplay";
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap");
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   /* You can use 'Poppins' as well depending on your needs */
 }
 
@@ -64,6 +64,82 @@ body {
 
 .ant-spin-dot-item {
   color: #8570c5;
+}
+
+/* Loading */
+.perspective-3d {
+  perspective: 500px; /* Adds 3D depth to the container */
+}
+
+@keyframes spin-orbit-3d {
+  0% {
+    transform: rotateX(60deg) rotateY(0deg) rotateZ(0deg);
+    border-color: rgba(99, 102, 241, 0.8); /* Indigo-400 */
+  }
+  50% {
+    transform: rotateX(60deg) rotateY(180deg) rotateZ(180deg);
+    border-color: rgba(147, 51, 234, 0.8); /* Purple-600 */
+  }
+  100% {
+    transform: rotateX(60deg) rotateY(360deg) rotateZ(360deg);
+    border-color: rgba(99, 102, 241, 0.8);
+  }
+}
+
+@keyframes pulse-core {
+  0%,
+  100% {
+    transform: scale(1) translateZ(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15) translateZ(20px);
+    opacity: 1;
+  }
+}
+
+@keyframes orbit-particle-3d {
+  0% {
+    transform: translateX(35px) translateY(0) translateZ(10px) rotateZ(0deg);
+  }
+  25% {
+    transform: translateX(0) translateY(35px) translateZ(-10px) rotateZ(90deg);
+  }
+  50% {
+    transform: translateX(-35px) translateY(0) translateZ(10px) rotateZ(180deg);
+  }
+  75% {
+    transform: translateX(0) translateY(-35px) translateZ(-10px) rotateZ(270deg);
+  }
+  100% {
+    transform: translateX(35px) translateY(0) translateZ(10px) rotateZ(360deg);
+  }
+}
+
+@keyframes pulse-text {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-spin-orbit-3d {
+  animation: spin-orbit-3d 2s infinite linear;
+}
+
+.animate-pulse-core {
+  animation: pulse-core 1.2s infinite ease-in-out;
+}
+
+.animate-orbit-particle-3d {
+  animation: orbit-particle-3d 1.5s infinite linear;
+}
+
+.animate-pulse-text {
+  animation: pulse-text 1.5s infinite ease-in-out;
 }
 
 @media (max-width: 768px) {

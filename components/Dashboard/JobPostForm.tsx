@@ -14,6 +14,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import { postJob, getCategories } from "@/app/utils/api";
+import { Heading } from "@/paths";
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -95,6 +96,7 @@ const JobPostForm: React.FC = () => {
 
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
+      <h1 className="text-[#858484]  text-[30px] font-bold">Post a Job</h1>
       <Form.Item
         label="Job Title"
         name="jobTitle"
