@@ -100,7 +100,7 @@ const AdminLogin = () => {
           size="large"
           onClick={handleLogin}
           disabled={isLoading}
-          className="bg-[#8570C5] hover:bg-[#8169ca] transition-colors duration-300"
+          className="bg-indigo-600 hover:bg-[#8169ca] transition-colors duration-300"
         >
           {isLoading ? <LoadingSpinner /> : "Log In"}
         </Button>

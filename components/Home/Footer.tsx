@@ -9,19 +9,19 @@ const Footer = () => {
             Contact Us
           </h1>
           <ul className="space-y-2">
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a href="tel:021-111-11-55-66" className="footer-link">
                 📞 021-111-11-55-66
               </a>
             </li>
 
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a href="mailto:support@qistbazaar.pk" className="footer-link">
                 ✉️ support@qistbazaar.pk
               </a>
             </li>
 
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://www.google.com/maps?q=Karachi,+Pakistan"
                 target="_blank"
@@ -36,7 +36,7 @@ const Footer = () => {
         <div>
           <h1 className="text-[22px] text-grey font-semibold mb-6">About</h1>
           <ul className="space-y-2 text-grey text-opacity-50  ">
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/about-us"
                 target="_blank"
@@ -45,12 +45,12 @@ const Footer = () => {
                 About Us
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a href="https://qistbazaar.pk/page/faqs" className="footer-link">
                 FAQs
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/contact-us"
                 className="footer-link"
@@ -58,7 +58,7 @@ const Footer = () => {
                 Contact
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/visit-us"
                 className="footer-link"
@@ -74,7 +74,7 @@ const Footer = () => {
             Information
           </h1>
           <ul className="space-y-2 text-grey text-opacity-50">
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/account/login"
                 className="footer-link"
@@ -82,7 +82,7 @@ const Footer = () => {
                 Account
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/verification-process"
                 className="footer-link"
@@ -90,7 +90,7 @@ const Footer = () => {
                 Verification Process
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/delivery-policy"
                 className="footer-link"
@@ -98,7 +98,7 @@ const Footer = () => {
                 Delivery Policy
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/musawamah-agreement"
                 className="footer-link"
@@ -114,7 +114,7 @@ const Footer = () => {
             Quick Links
           </h1>
           <ul className="space-y-2 text-grey text-opacity-50">
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/terms-conditions"
                 className="footer-link"
@@ -122,7 +122,7 @@ const Footer = () => {
                 Terms & Conditions
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800]">
               <a
                 href="https://qistbazaar.pk/page/refund-return-policy"
                 className="footer-link"
@@ -130,7 +130,7 @@ const Footer = () => {
                 Refund & Return Policy
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/privacy-policy"
                 className="footer-link"
@@ -138,7 +138,7 @@ const Footer = () => {
                 Privacy Policy
               </a>
             </li>
-            <li className="hover:text-[#8570C5]">
+            <li className="hover:text-indigo-800">
               <a
                 href="https://qistbazaar.pk/page/press"
                 className="footer-link"
@@ -157,7 +157,7 @@ const Footer = () => {
             href="https://qistbazaar.pk/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:underline text-[#8570C5]"
+            className="hover:underline hover:text-indigo-800"
           >
             Qist Bazaar
           </a>{" "}
