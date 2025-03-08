@@ -229,7 +229,7 @@ export default function Hero() {
             </div>
           ) : (
             selectedCategory && (
-              <p className="mt-6 text-red-400 font-medium bg-red-500/10 px-4 py-2 rounded-lg inline-block">
+              <p className="">
                 {/* No opportunities found for this category yet! */}
               </p>
             )
