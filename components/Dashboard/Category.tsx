@@ -3,22 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, message, Popconfirm, Input, Modal } from "antd";
 import AddCategoryModal from "./AddCategoryModal";
 import { getCategories, deleteCategory, updateCategory } from "@/app/utils/api";
-
-interface Job {
-  jobID: number;
-  jobTitle: string;
-  jobDescription: string;
-  location: string;
-  minSalary: number | null;
-  maxSalary: number | null;
-}
-
-interface Category {
-  categoryID: number;
-  categoryName: string;
-  createdAt: string;
-  jobs: Job[];
-}
+import type { Category } from "../types";
 
 const Category: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
