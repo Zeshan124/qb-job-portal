@@ -13,8 +13,9 @@ import {
 import { UploadOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
-import { postJob, getCategories } from "@/app/utils/api";
+import { postJob, getCategories, getCities } from "@/app/utils/api";
 import { Heading } from "@/paths";
+import { City } from "../types";
 
 const { Option } = Select;
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
@@ -23,6 +24,7 @@ const JobPostForm: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [jobDescription, setJobDescription] = useState("");
+  const [cities, setCities] = useState<City[]>([]);
   const [categories, setCategories] = useState<
     { categoryID: number; categoryName: string }[]
   >([]);
@@ -30,21 +32,19 @@ const JobPostForm: React.FC = () => {
   const [jobPostImage, setJobPostImage] = useState<File | null>(null);
 
   useEffect(() => {
-    const loadCategories = async () => {
+    async function fetchData() {
       try {
-        const categoriesData = await getCategories();
-        setCategories(
-          categoriesData.map((c) => ({
-            categoryID: c.categoryID,
-            categoryName: c.categoryName,
-          }))
-        );
+        const [categoryData, cityData] = await Promise.all([
+          getCategories(),
+          getCities(),
+        ]);
+        setCategories(categoryData);
+        setCities(cityData);
       } catch (error) {
-        console.error("Error loading categories:", error);
+        console.error("Error fetching data:", error);
       }
-    };
-
-    loadCategories();
+    }
+    fetchData();
   }, []);
 
   const handleFileChange = (info: any) => {
@@ -55,6 +55,8 @@ const JobPostForm: React.FC = () => {
   const onFinish = async (values: {
     jobTitle: string;
     location: string;
+    cityID: number;
+    cityName: string;
     minSalary: number;
     maxSalary: number;
     categoryID: number;
@@ -70,12 +72,14 @@ const JobPostForm: React.FC = () => {
     }
 
     setLoading(true);
-
+    location;
+    const [cityName, cityID] = values.location.split("-");
     try {
       const formData = new FormData();
       formData.append("jobTitle", values.jobTitle);
       formData.append("jobDescription", jobDescription);
-      formData.append("location", values.location);
+      formData.append("location", cityName);
+      formData.append("cityID", cityID);
       formData.append("minSalary", values.minSalary.toString());
       formData.append("maxSalary", values.maxSalary.toString());
       formData.append("categoryID", values.categoryID.toString());
@@ -127,11 +131,20 @@ const JobPostForm: React.FC = () => {
       </Form.Item>
 
       <Form.Item
-        label="Location"
+        label="City"
         name="location"
-        rules={[{ required: true, message: "Please enter the job location" }]}
+        rules={[{ required: true, message: "Please select a city" }]}
       >
-        <Input placeholder="Enter location" />
+        <Select placeholder="Select city">
+          {cities.map((city) => (
+            <Select.Option
+              key={city.cityID}
+              value={`${city.cityName}-${city.cityID}`}
+            >
+              {city.cityName}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.Item

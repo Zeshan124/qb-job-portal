@@ -2,6 +2,7 @@ import { message } from "antd";
 import axios from "axios";
 import useSWR from "swr";
 import Cookies from "js-cookie";
+import { Category } from "@/components/types";
 
 const API_URL = process.env.NEXT_PUBLIC_URL_API;
 
@@ -74,6 +75,33 @@ export const fetchJobs = async (
   }
 };
 
+export const getFilterJobs = async (cityID: string, categoryName: string) => {
+  try {
+    if (!cityID || !categoryName) {
+      throw new Error("City ID and Category Name are required.");
+    }
+
+    const formattedCityID = Number(cityID);
+
+    const apiUrl = `${API_URL}/apis/job/get?page=1&pageSize=40&cityID=${formattedCityID}&categoryName=${encodeURIComponent(
+      categoryName
+    )}`;
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch jobs.");
+    }
+
+    const result = await response.json();
+
+    return result.data || [];
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    return [];
+  }
+};
+
 export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
   try {
     console.log(`Fetching page ${page} with search text "${jobTitle}"`);
@@ -86,6 +114,18 @@ export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
     return response.data;
   } catch (error) {
     console.error("API Fetch Error:", error);
+    throw error;
+  }
+};
+
+export const getCities = async () => {
+  try {
+    const response = await axios.get(
+      `https://backend.qistbazaar.pk/api/cities/get`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching cities:", error);
     throw error;
   }
 };
@@ -231,22 +271,6 @@ export const downloadResume = async (candidateID: number) => {
     })
     .then((res) => res.data);
 };
-
-interface Category {
-  categoryID: number;
-  categoryName: string;
-  createdAt: string;
-  jobs: Job[];
-}
-
-interface Job {
-  jobID: number;
-  jobTitle: string;
-  jobDescription: string;
-  location: string;
-  minSalary: number | null;
-  maxSalary: number | null;
-}
 
 export const getCategories = async (): Promise<Category[]> => {
   try {

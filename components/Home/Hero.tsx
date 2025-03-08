@@ -1,34 +1,16 @@
 "use client";
 
-import { getCategories } from "@/app/utils/api";
+import { getCategories, getCities, getFilterJobs } from "@/app/utils/api";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Spin } from "antd";
-
-// Define types for category and job
-interface Job {
-  jobID: number;
-  jobTitle: string;
-  minSalary?: number;
-  maxSalary?: number;
-  location: string;
-  categoryName: string;
-  jobDescription?: string;
-  slug: string;
-  jobStatus: string;
-}
-
-interface Category {
-  categoryID: number;
-  categoryName: string;
-  createdAt: string;
-  jobs: Job[];
-}
+import { Category, City, Job } from "../types";
+import { message } from "antd";
 
 export default function Hero() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isJobCardLoading, setIsJobCardLoading] = useState<boolean>(false);
   const [loadingJobId, setLoadingJobId] = useState<number | null>(null);
@@ -37,47 +19,56 @@ export default function Hero() {
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchCategories() {
+    async function fetchData() {
       try {
-        const data: Category[] = await getCategories();
-        setCategories(data);
+        const [categoryData, cityData] = await Promise.all([
+          getCategories(),
+          getCities(),
+        ]);
+        setCategories(categoryData);
+        setCities(cityData);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching data:", error);
       }
     }
-    fetchCategories();
+    fetchData();
   }, []);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
   };
 
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCity(e.target.value);
+  };
+
   const handleSearchQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedCategory) return;
 
-    const category = categories.find(
-      (cat) => cat.categoryID.toString() === selectedCategory
-    );
+    if (!selectedCity || !selectedCategory) {
+      message.warning("Please select both a city and a category.");
+      return;
+    }
 
-    if (category) {
-      let filteredJobs = [...category.jobs];
+    try {
+      setIsLoading(true);
 
-      if (searchQuery) {
-        filteredJobs = filteredJobs.filter(
-          (job) =>
-            job.jobTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            job.location.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+      const jobData = await getFilterJobs(selectedCity, selectedCategory);
+
+      if (jobData.length > 0) {
+        setJobs(jobData);
+      } else {
+        setJobs([]);
+        message.warning("No jobs found for the selected filters.");
       }
-
-      setJobs(filteredJobs);
-    } else {
-      setJobs([]);
+    } catch (error) {
+      message.error("Failed to fetch jobs. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,7 +106,7 @@ export default function Hero() {
           </p>
 
           {/* Search Form */}
-          <div className="mt-8 bg-gray-900 bg-opacity-50 p-6 rounded-lg shadow-lg">
+          <div className="mt-8 bg-gray-800 bg-opacity-30 p-6 rounded-lg shadow-lg ">
             <form
               className=" justify-center flex flex-col md:flex-row gap-4"
               onSubmit={handleSearch}
@@ -127,10 +118,19 @@ export default function Hero() {
                 value={searchQuery}
                 onChange={handleSearchQueryChange}
               /> */}
-              <select className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 focus:outline-none">
-                <option value="">Select City</option>
-                <option value="">Karachi</option>
+              <select
+                className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 focus:outline-none"
+                value={selectedCity}
+                onChange={handleCityChange}
+              >
+                <option value="">Choose a city...</option>
+                {cities.map((city) => (
+                  <option key={city.cityID} value={city.cityID}>
+                    {city.cityName}
+                  </option>
+                ))}
               </select>
+
               <select
                 className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 focus:outline-none"
                 value={selectedCategory}
@@ -140,12 +140,13 @@ export default function Hero() {
                 {categories.map((category) => (
                   <option
                     key={category.categoryID}
-                    value={category.categoryID.toString()}
+                    value={category.categoryName}
                   >
                     {category.categoryName}
                   </option>
                 ))}
               </select>
+
               <button
                 type="submit"
                 className="w-full md:w-auto px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition"
@@ -155,7 +156,6 @@ export default function Hero() {
             </form>
           </div>
 
-          {/* Display Jobs */}
           {jobs.length > 0 ? (
             <div className="mt-6">
               <h2 className="text-2xl text-white font-bold mb-6 tracking-wide">
@@ -166,7 +166,7 @@ export default function Hero() {
                 {jobs.map((job) => (
                   <div
                     key={job.jobID}
-                    className="group relative bg-gradient-to-br from-gray-800 to-gray-900 p-5 rounded-xl cursor-pointer 
+                    className="group relative bg-gradient-to-br from-gray-700 to-gray-900 p-5 rounded-xl cursor-pointer 
             transform hover:-translate-y-2 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 
             border border-gray-700/50 overflow-hidden"
                     onClick={() => handleJobCardClick(job)}
