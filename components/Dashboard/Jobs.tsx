@@ -24,6 +24,7 @@ import {
   updateJob,
   getCategories,
 } from "@/app/utils/api";
+import TextArea from "antd/es/input/TextArea";
 
 const { Title } = Typography;
 
@@ -255,7 +256,7 @@ const JobsTable: React.FC = () => {
         <div className="flex gap-2">
           <Button
             type="primary"
-            className="bg-[#8570C5]"
+            className="bg-indigo-600"
             icon={<EditOutlined />}
             onClick={() => handleEditClick(record)}
           >
@@ -274,20 +275,29 @@ const JobsTable: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 sm:p-6">
-      <Title level={3} className="text-center sm:text-left">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-6 bg-white rounded-xl shadow-lg mx-auto max-w-[100%] sm:max-w-8xl">
+      {/* Header Section */}
+      <Title
+        level={3}
+        className="text-gray-800 mb-6 text-xl sm:text-2xl lg:text-3xl"
+        style={{ fontFamily: "Inter, sans-serif" }}
+      >
         Posted Jobs
       </Title>
-      <div className="mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+
+      {/* Search Bar */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <Input
           placeholder="Search jobs"
-          prefix={<SearchOutlined />}
+          prefix={<SearchOutlined className="text-gray-500" />}
           value={searchText}
           onChange={handleSearch}
           allowClear
-          style={{ maxWidth: "300px" }}
+          className="rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 w-full sm:max-w-[300px]"
         />
       </div>
+
+      {/* Loading State or Table */}
       {loading ? (
         <div className="flex justify-center mt-20">
           <Spin size="large" />
@@ -305,81 +315,191 @@ const JobsTable: React.FC = () => {
               total: pagination.total,
               onChange: (page, pageSize) =>
                 setPagination({ ...pagination, current: page, pageSize }),
+              responsive: true,
+              showSizeChanger: true,
+              pageSizeOptions: ["10", "20", "50"],
+              className: "px-2",
             }}
+            className="custom-table min-w-full"
+            scroll={{ x: "max-content" }}
           />
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
       <Modal
-        title="Confirm Deletion"
+        title={
+          <span className="text-lg font-semibold text-gray-800">
+            Confirm Deletion
+          </span>
+        }
         open={deleteJobId !== null}
         onOk={handleDelete}
         onCancel={() => setDeleteJobId(null)}
         confirmLoading={isDeleting}
+        okText="Delete"
+        cancelText="Cancel"
+        okButtonProps={{
+          className: "bg-red-600 hover:bg-red-700 rounded-md w-full sm:w-auto",
+        }}
+        cancelButtonProps={{ className: "rounded-md w-full sm:w-auto" }}
+        width="90%"
+        className="max-w-[400px]"
+        centered
+        footer={[
+          <div
+            key="footer"
+            className="flex flex-col sm:flex-row gap-2 justify-end"
+          >
+            <Button
+              key="cancel"
+              onClick={() => setDeleteJobId(null)}
+              className="rounded-md w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              key="delete"
+              type="primary"
+              danger
+              onClick={handleDelete}
+              loading={isDeleting}
+              className="bg-red-600 hover:bg-red-700 rounded-md w-full sm:w-auto"
+            >
+              Delete
+            </Button>
+          </div>,
+        ]}
       >
-        <p>Are you sure you want to delete this job?</p>
+        <p className="text-gray-600">
+          Are you sure you want to delete this job?
+        </p>
       </Modal>
+
+      {/* Edit Job Modal */}
       <Modal
-        title="Edit Job"
+        title={
+          <span className="text-lg font-semibold text-gray-800">Edit Job</span>
+        }
         open={editModalVisible}
         onOk={handleUpdateJob}
         onCancel={() => setEditModalVisible(false)}
         confirmLoading={editLoading}
+        okText="Update"
+        cancelText="Cancel"
+        okButtonProps={{
+          className:
+            "bg-indigo-600 hover:bg-indigo-700 rounded-md w-full sm:w-auto",
+        }}
+        cancelButtonProps={{ className: "rounded-md w-full sm:w-auto" }}
+        width="90%"
+        className="max-w-[600px]"
+        centered
+        footer={[
+          <div
+            key="footer"
+            className="flex flex-col sm:flex-row gap-2 justify-end"
+          >
+            <Button
+              key="cancel"
+              onClick={() => setEditModalVisible(false)}
+              className="rounded-md w-full sm:w-auto"
+            >
+              Cancel
+            </Button>
+            <Button
+              key="submit"
+              type="primary"
+              onClick={handleUpdateJob}
+              loading={editLoading}
+              className="bg-indigo-600 hover:bg-indigo-700 rounded-md w-full sm:w-auto"
+            >
+              Update
+            </Button>
+          </div>,
+        ]}
       >
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" className="py-4 space-y-4">
           <Form.Item
-            label="Job Title"
+            label={<span className="text-gray-700 font-medium">Job Title</span>}
             name="jobTitle"
             rules={[{ required: true, message: "Job title is required" }]}
           >
-            <Input />
-          </Form.Item>
-          <Form.Item label="Job Description" name="jobDescription">
-            <Input.TextArea />
+            <Input className="rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" />
           </Form.Item>
           <Form.Item
-            label="Min Salary"
-            name="minSalary"
-            rules={[
-              { required: true, message: "Minimum salary is required" },
-              {
-                validator: (_, value) =>
-                  value >= 0
-                    ? Promise.resolve()
-                    : Promise.reject(
-                        new Error("Salary must be a positive number")
-                      ),
-              },
-            ]}
+            label={
+              <span className="text-gray-700 font-medium">Job Description</span>
+            }
+            name="jobDescription"
           >
-            <InputNumber style={{ width: "100%" }} min={0} />
+            <TextArea
+              rows={4}
+              className="rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+            />
           </Form.Item>
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Form.Item
+              label={
+                <span className="text-gray-700 font-medium">Min Salary</span>
+              }
+              name="minSalary"
+              rules={[
+                { required: true, message: "Minimum salary is required" },
+                {
+                  validator: (_, value) =>
+                    value >= 0
+                      ? Promise.resolve()
+                      : Promise.reject(
+                          new Error("Salary must be a positive number")
+                        ),
+                },
+              ]}
+            >
+              <InputNumber
+                className="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                min={0}
+              />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span className="text-gray-700 font-medium">Max Salary</span>
+              }
+              name="maxSalary"
+              rules={[
+                { required: true, message: "Maximum salary is required" },
+                {
+                  validator: (_, value) =>
+                    value >= 0
+                      ? Promise.resolve()
+                      : Promise.reject(
+                          new Error("Salary must be a positive number")
+                        ),
+                },
+              ]}
+            >
+              <InputNumber
+                className="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                min={0}
+              />
+            </Form.Item>
+          </div>
           <Form.Item
-            label="Max Salary"
-            name="maxSalary"
-            rules={[
-              { required: true, message: "Maximum salary is required" },
-              {
-                validator: (_, value) =>
-                  value >= 0
-                    ? Promise.resolve()
-                    : Promise.reject(
-                        new Error("Salary must be a positive number")
-                      ),
-              },
-            ]}
+            label={
+              <span className="text-gray-700 font-medium">Job Status</span>
+            }
+            name="jobStatus"
           >
-            <InputNumber style={{ width: "100%" }} min={0} />
-          </Form.Item>
-
-          <Form.Item label="Job Status" name="jobStatus">
-            <Select>
+            <Select className="rounded-md">
               <Select.Option value="open">Open</Select.Option>
               <Select.Option value="close">Closed</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item label="Category" name="categoryID">
-            <Select>
+          <Form.Item
+            label={<span className="text-gray-700 font-medium">Category</span>}
+            name="categoryID"
+          >
+            <Select className="rounded-md">
               {categories.map((category) => (
                 <Select.Option
                   key={category.categoryID}
@@ -392,6 +512,38 @@ const JobsTable: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      {/* Custom Styles */}
+      <style jsx>{`
+        .custom-table :global(.ant-table) {
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .custom-table :global(.ant-table-thead > tr > th) {
+          background-color: #f8f9fa;
+          color: #374151;
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 8px;
+        }
+        .custom-table :global(.ant-table-tbody > tr > td) {
+          padding: 12px 8px;
+          font-size: 14px;
+        }
+        .custom-table :global(.ant-table-row) {
+          transition: all 0.3s ease;
+        }
+        .custom-table :global(.ant-table-row:hover) {
+          background-color: #f5f6ff;
+        }
+        @media (max-width: 640px) {
+          .custom-table :global(.ant-table-thead > tr > th),
+          .custom-table :global(.ant-table-tbody > tr > td) {
+            font-size: 12px;
+            padding: 8px 4px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

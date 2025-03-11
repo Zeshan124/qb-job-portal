@@ -75,8 +75,8 @@ export default function Hero() {
   const handleJobCardClick = (job: Job) => {
     setIsJobCardLoading(true);
     setLoadingJobId(job.jobID);
-    const urlSlug = job.slug || job.jobTitle.toLowerCase().replace(/\s+/g, "-");
-    router.push(`/job/jobDetails/${urlSlug}`);
+    // Directly using the slug for routing, like in FeatureJobs
+    router.push(`/job/jobDetails/${job.slug}`);
   };
 
   return (

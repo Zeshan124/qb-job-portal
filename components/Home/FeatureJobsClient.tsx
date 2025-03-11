@@ -69,8 +69,8 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
       )}
 
       <Heading
-        mainHeading="Feature Jobs"
-        subHeading="Find the job that fits you best"
+        mainHeading="Featured Opportunities"
+        subHeading="Discover Your Ideal Job Match"
       />
 
       <div className="mt-12 w-[80%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">

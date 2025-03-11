@@ -8,40 +8,35 @@ const { Panel } = Collapse;
 
 const faqs = [
   {
-    question: "How do I create a profile on the Job Portal?",
-    answer:
-      "To create a profile on the Job Portal, go to the registration page, sign up, and complete the required details such as your resume and personal information.",
-  },
-  {
     question: "How does the Job Portal work?",
     answer:
-      "The Job Portal allows job seekers to create profiles, search for job openings, and apply directly to employers. Employers can post jobs and review applications.",
+      "Please explore the available job opportunities as per your preferences, submit your application, and our HR team will get in touch with you.",
   },
   {
-    question: "What are the Job Portal fees for employers?",
+    question: "Can you explain the company's recruitment process?",
     answer:
-      "The Job Portal charges a fee for employers to post job openings. The fee depends on the type of job post and additional features they choose to include.",
+      "Our recruitment process involves multiple stages, including an initial review of your application, followed by interviews with our hiring team. We may also conduct skill assessments or background checks depending on the role. Once selected, our HR team will extend an offer, and we will guide you through the onboarding process.",
+  },
+  // {
+  //   question: "How can I check the status of my job applications?",
+  //   answer:
+  //     "You can check the status of your job applications by logging into your profile and navigating to the 'My Applications' section.",
+  // },
+  {
+    question: "What qualities do you look for in a candidate?",
+    answer:
+      "We value candidates who demonstrate strong communication skills, problem-solving abilities, and a collaborative mindset. We also look for individuals who align with our company values, are adaptable, and show a willingness to learn and grow within the role.",
   },
   {
-    question: "How can I check the status of my job applications?",
+    question: "How long does the recruitment process typically take?",
     answer:
-      "You can check the status of your job applications by logging into your profile and navigating to the 'My Applications' section.",
-  },
-  {
-    question: "How can I apply for jobs on the Job Portal?",
-    answer:
-      "To apply for jobs, simply browse the available listings, click on the job you're interested in, and submit your application along with your updated resume.",
-  },
-  {
-    question: "Is it beneficial to post jobs on the Job Portal?",
-    answer:
-      "Yes, posting jobs on the Job Portal helps you reach a large pool of candidates and streamline your hiring process with features like application tracking.",
+      "The timeline can vary depending on the role and the number of applicants. However, we typically complete the process within 2 to 4 weeks. You will be informed of the progress and next steps at each stage.",
   },
   {
     question:
-      "Can I use a referral code for discounts on job postings after the referral period has passed?",
+      "What is the company's approach to work-life balance",
     answer:
-      "No, referral codes must be used within the valid period, and any unused codes after that period will no longer be valid.",
+      "We believe in maintaining a healthy work-life balance for our employees. We encourage time off when needed and provide flexible working arrangements when possible. Our goal is to ensure that employees can thrive both professionally and personally",
   },
 ];
 

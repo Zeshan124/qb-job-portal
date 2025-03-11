@@ -5,7 +5,7 @@ export interface Job {
   location: string;
   minSalary?: number | null;
   maxSalary?: number | null;
-  slug?: string;
+  slug: string;
   cityID?: number;
   jobStatus?: string;
 }

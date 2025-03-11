@@ -9,6 +9,7 @@ import {
   Select,
   message,
   Upload,
+  Typography,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
@@ -18,6 +19,7 @@ import { Heading } from "@/paths";
 import { City } from "../types";
 
 const { Option } = Select;
+const { Title } = Typography;
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const JobPostForm: React.FC = () => {
@@ -99,145 +101,203 @@ const JobPostForm: React.FC = () => {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
-      <h1 className="text-[#858484]  text-[30px] font-bold">Post a Job</h1>
-      <Form.Item
-        label="Job Title"
-        name="jobTitle"
-        rules={[{ required: true, message: "Please enter the job title" }]}
-      >
-        <Input placeholder="Enter job title" />
-      </Form.Item>
-
-      <Form.Item
-        label="Job Description"
+    <div className="max-w-8xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+      <Form
+        form={form}
         layout="vertical"
-        required
-        rules={[
-          {
-            validator: (_, value) =>
-              jobDescription.trim()
-                ? Promise.resolve()
-                : Promise.reject(new Error("Please enter the job description")),
-          },
-        ]}
+        onFinish={onFinish}
+        className="space-y-6"
       >
-        <ReactQuill
-          value={jobDescription}
-          onChange={setJobDescription}
-          theme="snow"
-          placeholder="Enter job description..."
-        />
-      </Form.Item>
+        {/* Header */}
+        <Title
+          level={3}
+          className=" text-gray-800 mb-6 !important"
+          style={{ fontFamily: "Inter, sans-serif" }}
+        >
+          Create Job Posting
+        </Title>
 
-      <Form.Item
-        label="City"
-        name="location"
-        rules={[{ required: true, message: "Please select a city" }]}
-      >
-        <Select placeholder="Select city">
-          {cities.map((city) => (
-            <Select.Option
-              key={city.cityID}
-              value={`${city.cityName}-${city.cityID}`}
+        {/* Job Title */}
+        <Form.Item
+          label={<span className="text-gray-700 font-medium">Job Title</span>}
+          name="jobTitle"
+          rules={[{ required: true, message: "Please enter the job title" }]}
+        >
+          <Input
+            placeholder="Enter job title"
+            className="rounded-md border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+          />
+        </Form.Item>
+
+        {/* Job Description */}
+        <Form.Item
+          label={
+            <span className="text-gray-700 font-medium">Job Description</span>
+          }
+          required
+          rules={[
+            {
+              validator: (_, value) =>
+                jobDescription.trim()
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error("Please enter the job description")
+                    ),
+            },
+          ]}
+        >
+          <ReactQuill
+            value={jobDescription}
+            onChange={setJobDescription}
+            theme="snow"
+            placeholder="Enter job description..."
+            className="border-gray-300 rounded-md"
+          />
+        </Form.Item>
+
+        {/* City Selection */}
+        <Form.Item
+          label={<span className="text-gray-700 font-medium">Location</span>}
+          name="location"
+          rules={[{ required: true, message: "Please select a city" }]}
+        >
+          <Select
+            placeholder="Select city"
+            className="rounded-md"
+            dropdownClassName="border-gray-300 rounded-md"
+          >
+            {cities.map((city) => (
+              <Select.Option
+                key={city.cityID}
+                value={`${city.cityName}-${city.cityID}`}
+              >
+                {city.cityName}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* Salary Range */}
+        <div className="grid grid-cols-2 gap-4">
+          <Form.Item
+            label={
+              <span className="text-gray-700 font-medium">Minimum Salary</span>
+            }
+            name="minSalary"
+            rules={[
+              { required: true, message: "Please enter the minimum salary" },
+            ]}
+          >
+            <InputNumber
+              placeholder="Enter minimum salary"
+              className="w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+              min={0}
+              controls={false}
+              onKeyDown={(e) => {
+                if (
+                  !/[\d]/.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={
+              <span className="text-gray-700 font-medium">Maximum Salary</span>
+            }
+            name="maxSalary"
+            rules={[
+              { required: true, message: "Please enter the maximum salary" },
+            ]}
+          >
+            <InputNumber
+              placeholder="Enter maximum salary"
+              className="w-full rounded-md border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+              min={0}
+              controls={false}
+              onKeyDown={(e) => {
+                if (
+                  !/[\d]/.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete"
+                ) {
+                  e.preventDefault();
+                }
+              }}
+            />
+          </Form.Item>
+        </div>
+
+        {/* Category */}
+        <Form.Item
+          label={<span className="text-gray-700 font-medium">Category</span>}
+          name="categoryID"
+          rules={[{ required: true, message: "Please select a category" }]}
+        >
+          <Select
+            placeholder="Select category"
+            loading={fetching}
+            className="rounded-md"
+            dropdownClassName="border-gray-300 rounded-md"
+          >
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <Select.Option
+                  key={category.categoryID}
+                  value={category.categoryID}
+                >
+                  {category.categoryName}
+                </Select.Option>
+              ))
+            ) : (
+              <Select.Option disabled value="">
+                No categories available
+              </Select.Option>
+            )}
+          </Select>
+        </Form.Item>
+
+        {/* File Upload */}
+        <Form.Item
+          label={
+            <span className="text-gray-700 font-medium">Job Post Image</span>
+          }
+        >
+          <Upload
+            beforeUpload={() => false}
+            onChange={handleFileChange}
+            showUploadList={true}
+            maxCount={1}
+            accept="image/*"
+            className="w-full"
+          >
+            <Button
+              icon={<UploadOutlined />}
+              className="w-full border-gray-300 text-gray-700 hover:border-purple-500 hover:text-purple-500 rounded-md"
             >
-              {city.cityName}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+              Upload Image
+            </Button>
+          </Upload>
+        </Form.Item>
 
-      <Form.Item
-        label="Minimum Salary"
-        name="minSalary"
-        rules={[{ required: true, message: "Please enter the minimum salary" }]}
-      >
-        <InputNumber
-          placeholder="Enter minimum salary"
-          style={{ width: "100%" }}
-          min={0}
-          controls={false} // Hides stepper controls
-          onKeyDown={(e) => {
-            if (
-              !/[\d]/.test(e.key) &&
-              e.key !== "Backspace" &&
-              e.key !== "Delete"
-            ) {
-              e.preventDefault(); // Prevents non-numeric input
-            }
-          }}
-        />
-      </Form.Item>
-
-      <Form.Item
-        label="Maximum Salary"
-        name="maxSalary"
-        rules={[{ required: true, message: "Please enter the maximum salary" }]}
-      >
-        <InputNumber
-          placeholder="Enter maximum salary"
-          style={{ width: "100%" }}
-          min={0}
-          controls={false} // Hides stepper controls
-          onKeyDown={(e) => {
-            if (
-              !/[\d]/.test(e.key) &&
-              e.key !== "Backspace" &&
-              e.key !== "Delete"
-            ) {
-              e.preventDefault(); // Prevents non-numeric input
-            }
-          }}
-        />
-      </Form.Item>
-
-      <Form.Item
-        label="Category"
-        name="categoryID"
-        rules={[{ required: true, message: "Please select a category" }]}
-      >
-        <Select placeholder="Select category" loading={fetching}>
-          {categories.length > 0 ? (
-            categories.map((category) => (
-              <Option key={category.categoryID} value={category.categoryID}>
-                {category.categoryName}
-              </Option>
-            ))
-          ) : (
-            <Option disabled value="">
-              No categories available
-            </Option>
-          )}
-        </Select>
-      </Form.Item>
-
-      {/* 🔹 File Upload for Job Image */}
-      <Form.Item label="Job Post Image">
-        <Upload
-          beforeUpload={() => false} // Prevent automatic upload
-          onChange={handleFileChange} // Handle file selection
-          showUploadList={true}
-          maxCount={1}
-          accept="image/*"
-        >
-          <Button icon={<UploadOutlined />}>Upload Image</Button>
-        </Upload>
-      </Form.Item>
-
-      <Form.Item>
-        <Button
-          type="primary"
-          size="large"
-          htmlType="submit"
-          loading={loading}
-          block
-          className="transition-transform duration-300 bg-[#8570C5] hover:bg-purple-500 px-6 py-2 font-semibold text-white rounded-lg w-[200px] ml-0"
-          style={{ width: "200px" }}
-        >
-          Post Job
-        </Button>
-      </Form.Item>
-    </Form>
+        {/* Submit Button */}
+        <Form.Item>
+          <Button
+            type="primary"
+            size="large"
+            htmlType="submit"
+            loading={loading}
+            className="w-[200px] bg-indigo-600 hover:to-indigo-700 !important text-white font-semibold rounded-md transition-all duration-300 transform"
+          >
+            Post Job
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

@@ -18,14 +18,6 @@ const getHeaders = () => {
 const fetcher = (url: string) =>
   axios.get(url, { headers: getHeaders() }).then((res) => res.data);
 
-export const useJobs = (page = 1, limit = 10) => {
-  const { data, error } = useSWR(
-    `${API_URL}/apis/job/get?page=${page}&limit=${limit}`,
-    fetcher
-  );
-  return { jobs: data?.data, isLoading: !data && !error, error };
-};
-
 export const postJob = async (formData: FormData) => {
   try {
     const token = getToken();
@@ -99,22 +91,6 @@ export const getFilterJobs = async (cityID: string, categoryName: string) => {
   } catch (error) {
     console.error("Error fetching jobs:", error);
     return [];
-  }
-};
-
-export const getJobs = async (page = 1, pageSize = 10, jobTitle = "") => {
-  try {
-    console.log(`Fetching page ${page} with search text "${jobTitle}"`);
-    const response = await axios.get(
-      `${API_URL}/apis/job/get?page=${page}&pageSize=${pageSize}&jobTitle=${encodeURIComponent(
-        jobTitle
-      )}`,
-      { headers: getHeaders() }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("API Fetch Error:", error);
-    throw error;
   }
 };
 
@@ -201,25 +177,6 @@ export const getCategoryById = async (jobID: number) => {
       { headers: getHeaders() }
     )
     .then((res) => res.data.data);
-};
-
-export const getAllJobs = async () => {
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_URL_API; // Ensure API_URL is defined
-    const res = await fetch(`${API_URL}/apis/job/get`, {
-      cache: "no-store", // Ensures fresh data
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch jobs");
-    }
-
-    const data = await res.json();
-    return data.data;
-  } catch (error) {
-    console.error("Error fetching jobs:", error);
-    throw error;
-  }
 };
 
 export const fetchApplications = async (
