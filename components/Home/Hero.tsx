@@ -112,12 +112,12 @@ export default function Hero() {
               onSubmit={handleSearch}
             >
               {/* <input
-                type="text"
-                placeholder="What are you looking for?"
-                className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
-                value={searchQuery}
-                onChange={handleSearchQueryChange}
-              /> */}
+                  type="text"
+                  placeholder="What are you looking for?"
+                  className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none"
+                  value={searchQuery}
+                  onChange={handleSearchQueryChange}
+                /> */}
               <select
                 className="w-full md:w-1/3 p-3 rounded-lg bg-white text-gray-900 focus:outline-none"
                 value={selectedCity}
@@ -167,8 +167,8 @@ export default function Hero() {
                   <div
                     key={job.jobID}
                     className="group relative bg-gradient-to-br from-gray-700 to-gray-900 p-5 rounded-xl cursor-pointer 
-            transform hover:-translate-y-2 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 
-            border border-gray-700/50 overflow-hidden"
+              transform hover:-translate-y-2 transition-all duration-300 shadow-lg hover:shadow-indigo-500/20 
+              border border-gray-700/50 overflow-hidden"
                     onClick={() => handleJobCardClick(job)}
                   >
                     {/* Decorative Corner Element */}
@@ -203,7 +203,6 @@ export default function Hero() {
                           {job.location}
                         </p>
 
-                        {/* Additional Info (you can customize this based on available job data) */}
                         <div className="flex items-center justify-between text-xs">
                           <span className="text-gray-400 bg-gray-700/50 px-2 py-1 rounded-full">
                             Full Time
@@ -215,13 +214,11 @@ export default function Hero() {
                       </div>
                     </div>
 
-                    {/* Hover Effect Overlay */}
                     <div className="absolute inset-0 bg-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
 
-                    {/* Animated Border Effect */}
                     <div
                       className="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/0 via-indigo-500/20 to-indigo-500/0 
-            opacity-0 group-hover:opacity-100 animate-pulse"
+              opacity-0 group-hover:opacity-100 animate-pulse"
                     ></div>
                   </div>
                 ))}

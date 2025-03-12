@@ -139,10 +139,18 @@ body {
   animation: slideIn 0.5s ease-out forwards;
 }
 
+.mobile-pic {
+  transform: translateY(47px);
+}
+
 @media (max-width: 768px) {
   .lottie {
     width: 300px;
     height: 350px;
+  }
+
+  .mobile-pic {
+    transform: translateY(-15px);
   }
 }
 

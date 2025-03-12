@@ -6,6 +6,7 @@ import { fetchJobs } from "./utils/api";
 import FAQ from "@/components/Home/FAQ";
 import LoadingSpinner from "@/components/loader/LoadingSpinner";
 import SponsoredCarousel from "@/components/Home/SponsoredCarousel";
+import MyServices from "@/components/Home/Services";
 
 const page = async () => {
   const { jobs } = await fetchJobs(1, 10, "");
@@ -18,6 +19,7 @@ const page = async () => {
           <SponsoredCarousel />
         </div> */}
         <FeatureJobsClient jobs={jobs} />
+        <MyServices />
         <div className="bg-gray-50 py-6 px-6">
           <FAQ />
         </div>
