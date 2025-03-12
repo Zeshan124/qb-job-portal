@@ -7,6 +7,7 @@ import FAQ from "@/components/Home/FAQ";
 import LoadingSpinner from "@/components/loader/LoadingSpinner";
 import SponsoredCarousel from "@/components/Home/SponsoredCarousel";
 import MyServices from "@/components/Home/Services";
+import EasiestWayToUse from "@/components/Home/EasiestWay";
 
 const page = async () => {
   const { jobs } = await fetchJobs(1, 10, "");
@@ -15,6 +16,9 @@ const page = async () => {
     <div>
       <Hero />
       <Suspense fallback={<LoadingSpinner />}>
+        <main className="font-poppins">
+          <EasiestWayToUse />
+        </main>
         {/* <div className=" bg-gray-100 flex items-center justify-center">
           <SponsoredCarousel />
         </div> */}

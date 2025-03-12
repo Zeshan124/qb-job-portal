@@ -60,7 +60,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
   }
 
   return (
-    <div className="pt-8 md:pt-20 pb-8 md:pb-12">
+    <div className="pt-8 md:pt-20 pb-8 md:pb-12 ">
       {isJobCardLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           {/* <Spin size="large" className="text-white" /> */}

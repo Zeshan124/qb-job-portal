@@ -114,7 +114,7 @@ const FAQSection = () => {
                       {faq.answer}
                     </p>
 
-                    {index === 0 && (
+                    {/* {index === 0 && (
                       <button className="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center">
                         Browse job openings
                         <svg
@@ -132,9 +132,9 @@ const FAQSection = () => {
                           />
                         </svg>
                       </button>
-                    )}
+                    )} */}
 
-                    {index === 1 && (
+                    {/* {index === 1 && (
                       <button className="mt-4 text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center">
                         Learn about our process
                         <svg
@@ -152,7 +152,7 @@ const FAQSection = () => {
                           />
                         </svg>
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </Panel>
               ))}
