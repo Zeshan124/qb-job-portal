@@ -158,6 +158,7 @@ const JobsTable: React.FC = () => {
       const response = await updateJob(editingJob.jobID, updatedData);
 
       console.log("✅ Update Response:", response);
+
       const updatedCategory = categories.find(
         (category) => category.categoryID === updatedData.categoryID
       )?.categoryName;
@@ -168,7 +169,13 @@ const JobsTable: React.FC = () => {
             ? {
                 ...job,
                 ...updatedData,
-                categoryName: updatedCategory || "Unknown Category",
+                categoryName:
+                  updatedData.categoryID !== undefined
+                    ? categories.find(
+                        (category) =>
+                          category.categoryID === updatedData.categoryID
+                      )?.categoryName || "Unknown Category"
+                    : job.categoryName, 
               }
             : job
         )

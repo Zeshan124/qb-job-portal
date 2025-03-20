@@ -38,7 +38,7 @@ export const postJob = async (formData: FormData) => {
     console.error(
       "Error posting job:",
       (error as { response?: { data?: string } })?.response?.data ||
-        (error as Error).message
+      (error as Error).message
     );
     throw error;
   }

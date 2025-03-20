@@ -1,81 +1,61 @@
-import { Carousel, CarouselProps } from "antd";
-import "antd/dist/reset.css"; // Ensure Ant Design styles are included
-import Image from "next/image";
+import React from "react";
 
 // Define the sponsor type
 interface Sponsor {
   id: number;
   name: string;
-  logo: string; // Path relative to /public (e.g., "/sponsor1.png")
 }
 
-// Sample sponsor data (update with your actual image filenames in /public)
+// Sample sponsor data (no logos needed since we're using text)
 const sponsors: Sponsor[] = [
-  { id: 1, name: "Sponsor 1", logo: "/images/logo1.png" },
-  { id: 2, name: "Sponsor 2", logo: "/images/icon2.png" },
-  { id: 3, name: "Sponsor 3", logo: "/images/icon3.png" },
-  { id: 4, name: "Sponsor 4", logo: "/images/icon4.png" },
-  { id: 5, name: "Sponsor 5", logo: "/images/icon1.png" },
-  { id: 6, name: "Sponsor 6", logo: "/images/icon2.png" },
-  { id: 7, name: "Sponsor 7", logo: "/images/icon3.png" },
-  { id: 8, name: "Sponsor 8", logo: "/images/icon4.png" },
-  { id: 9, name: "Sponsor 9", logo: "/images/icon4.png" },
-  { id: 10, name: "Sponsor 10", logo: "/images/icon2.png" },
+  { id: 1, name: "Qist Bazaar" },
+  { id: 2, name: " is Pakistan’s" },
+  { id: 3, name: "leading" },
+  { id: 4, name: "buy now" },
+  { id: 5, name: "pay later" },
+  { id: 6, name: "(BNPL)" },
+  { id: 7, name: "platform" },
+  { id: 8, name: "uniquely" },
+  { id: 9, name: "serving" },
+  { id: 10, name: "the underserved" },
+  { id: 11, name: "population" },
+  { id: 12, name: "-" },
 ];
 
-const SponsoredCarousel: React.FC = () => {
-  // Settings for the carousel with TypeScript typing
-  const settings: CarouselProps = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4, // Show 4 sponsors at a time (adjust to 3 if needed)
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 1024, // Tablet
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768, // Mobile
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480, // Small screens
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
-  };
-
+const SponsoredMarquee: React.FC = () => {
   return (
-    <div className="h-[40vh] w-full max-w-8xl mx-auto py-14">
-      <h2 className="text-2xl font-bold text-center mb-6">Our Sponsors</h2>
-      <Carousel {...settings} className="sponsor-carousel">
-        {sponsors.map((sponsor) => (
-          <div key={sponsor.id} className="p-4">
-            <div className="flex flex-col items-center justify-center h-full">
-              <Image
-                src={sponsor.logo}
-                alt={sponsor.name}
-                width={150}
-                height={150}
-                className="object-contain"
-              />
-              <p className="mt-2 text-center text-gray-700">{sponsor.name}</p>
+    <section className="bg-gradient-to-r from-[#1A2A44] to-[#6a7383] py-8 px-6 overflow-hidden">
+      <div className="max-w-8xl mx-auto">
+        {/* <h2 className="text-3xl md:text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-[#22D3EE] to-[#A855F7] mb-8">
+          Our Trusted Sponsors
+        </h2> */}
+        <div className="relative w-full overflow-hidden py-4">
+          {/* Marquee Container */}
+          <div className="marquee-wrapper">
+            <div className="marquee">
+              {sponsors.concat(sponsors).map((sponsor, index) => (
+                <span
+                  key={`${sponsor.id}-${index}`}
+                  className="text-gray-200 text-lg font-medium mx-6 tracking-wide uppercase hover:text-indigo-500 transition-colors duration-300"
+                >
+                  {sponsor.name}
+                </span>
+              ))}
             </div>
           </div>
-        ))}
-      </Carousel>
-    </div>
+        </div>
+        {/* Optional Call-to-Action
+        <div className="text-center mt-8">
+          <a
+            href="#sponsor-info"
+            className="inline-block bg-gradient-to-r from-[#22D3EE] to-[#A855F7] text-white font-semibold py-3 px-6 rounded-full hover:from-[#A855F7] hover:to-[#22D3EE] transition-all duration-300"
+          >
+            Become a Sponsor
+          </a>
+        </div> */}
+      </div>
+    </section>
   );
 };
 
-export default SponsoredCarousel;
+export default SponsoredMarquee;

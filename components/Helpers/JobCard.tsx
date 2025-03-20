@@ -26,8 +26,8 @@ const JobCard: React.FC<JobCardProps> = ({ job }) => {
 
   const plainTextDescription = job.description.replace(/<\/?[^>]+(>|$)/g, "");
   const truncatedText =
-    plainTextDescription.length > 100
-      ? plainTextDescription.slice(0, 50) + "..."
+    plainTextDescription.length > 40
+      ? plainTextDescription.slice(0, 30) + "..."
       : plainTextDescription;
 
   return (

@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "antd";
 import { AppleOutlined, AndroidOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import Link from "next/link";
 
 const JobPortalBanner: React.FC = () => {
   return (
@@ -86,7 +87,11 @@ const JobPortalBanner: React.FC = () => {
             type="default"
             size="large"
           >
-            <span className="font-medium text-sm sm:text-base">LEARN MORE</span>
+            <Link href="https://qistbazaar.pk" target="_blank">
+              <span className="font-medium text-sm sm:text-base">
+                LEARN MORE
+              </span>
+            </Link>
           </Button>
         </div>
 

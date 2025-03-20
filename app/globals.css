@@ -143,6 +143,67 @@ body {
   transform: translateY(47px);
 }
 
+.feedback-carousel {
+  padding: 0 20px;
+}
+
+.custom-dots.slick-dots--light {
+  bottom: -30px;
+}
+
+.custom-dots li button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4b5563;
+  transition: all 0.3s ease;
+}
+
+.custom-dots li.slick-active button {
+  width: 14px;
+  height: 14px;
+  background: #9c22ee; /* Cyan color from the banner */
+}
+
+.feedback-carousel .ant-rate-star {
+  font-size: 18px;
+}
+
+/* Text line  */
+.marquee-wrapper {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 10px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.marquee {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee span {
+  display: inline-block;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pause animation on hover */
+.marquee-wrapper:hover .marquee {
+  animation-play-state: paused;
+}
+
 @media (max-width: 768px) {
   .lottie {
     width: 300px;

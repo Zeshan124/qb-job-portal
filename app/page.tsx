@@ -8,6 +8,7 @@ import LoadingSpinner from "@/components/loader/LoadingSpinner";
 import SponsoredCarousel from "@/components/Home/SponsoredCarousel";
 import MyServices from "@/components/Home/Services";
 import EasiestWayToUse from "@/components/Home/EasiestWay";
+import FeedbackSection from "@/components/Home/FeedbackCard";
 
 const page = async () => {
   const { jobs } = await fetchJobs(1, 10, "");
@@ -24,6 +25,8 @@ const page = async () => {
         </div> */}
         <FeatureJobsClient jobs={jobs} />
         <MyServices />
+          <SponsoredCarousel />
+        <FeedbackSection />
         <div className="bg-gray-50 py-6 px-6">
           <FAQ />
         </div>

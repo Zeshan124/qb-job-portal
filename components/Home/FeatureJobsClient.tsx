@@ -72,6 +72,7 @@ export default function FeatureJobsClient({ jobs }: FeatureJobsProps) {
         mainHeading="Featured Opportunities"
         subHeading="Discover Your Ideal Job Match"
       />
+      <div className="mt-6 w-24 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 mx-auto rounded-full"></div>
 
       <div className="mt-12 w-[80%] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
         {jobs.length > 0 ? (
