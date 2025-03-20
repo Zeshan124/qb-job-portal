@@ -53,15 +53,15 @@ const Candidates = () => {
   const [data, setData] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>("all");
-  const [showScoreForCandidates, setShowScoreForCandidates] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const [loadingScores, setLoadingScores] = useState<{
-    [key: number]: boolean;
-  }>({});
-  const [progressValues, setProgressValues] = useState<{
-    [key: number]: number;
-  }>({});
+  // const [showScoreForCandidates, setShowScoreForCandidates] = useState<{
+  //   [key: number]: boolean;
+  // }>({});
+  // const [loadingScores, setLoadingScores] = useState<{
+  //   [key: number]: boolean;
+  // }>({});
+  // const [progressValues, setProgressValues] = useState<{
+  //   [key: number]: number;
+  // }>({});
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,

@@ -2,7 +2,6 @@ import React from "react";
 import { Rate, Avatar, Carousel } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
-// Define types for feedback data
 interface Feedback {
   id: string;
   name: string;
@@ -14,7 +13,6 @@ interface Feedback {
 
 interface FeedbackCardProps extends Feedback {}
 
-// Feedback Card Component with Qist Bazaar-inspired styling
 const FeedbackCard: React.FC<FeedbackCardProps> = ({
   name,
   title,
@@ -36,7 +34,7 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({
         className="mb-4 !text-yellow-400 [&>li]:mx-1"
       />
       <blockquote className="text-center text-sm italic text-gray-200 mb-4 max-w-xs leading-relaxed">
-        "{feedback}"
+        {feedback}
       </blockquote>
       <div className="text-center">
         <h4 className="font-semibold text-indigo-500 text-lg">{name}</h4>
@@ -46,7 +44,6 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({
   );
 };
 
-// Main Feedback Section Component with Qist Bazaar-inspired styling
 const FeedbackSection: React.FC = () => {
   const feedbackData: Feedback[] = [
     {
