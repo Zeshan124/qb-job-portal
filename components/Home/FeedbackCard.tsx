@@ -46,15 +46,15 @@ const FeedbackCard: React.FC<FeedbackCardProps> = ({
 
 const FeedbackSection: React.FC = () => {
   const feedbackData: Feedback[] = [
-    {
-      id: "1",
-      name: "Sardar Kawish Zaman",
-      title: "TECH LEAD",
-      rating: 5,
-      feedback:
-        "Exceptional service that exceeded my expectations. The attention to detail and commitment to excellence is truly remarkable.",
-      image: "/images/kawish.JPG",
-    },
+    // {
+    //   id: "1",
+    //   name: "Sardar Kawish Zaman",
+    //   title: "TECH LEAD",
+    //   rating: 5,
+    //   feedback:
+    //     "Exceptional service that exceeded my expectations. The attention to detail and commitment to excellence is truly remarkable.",
+    //   image: "/images/kawish.JPG",
+    // },
     {
       id: "2",
       name: "Haris Ahmed",
